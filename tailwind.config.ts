@@ -1,5 +1,9 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
+import forms from "@tailwindcss/forms";
+import typography from "@tailwindcss/typography";
+import aspectRatio from "@tailwindcss/aspect-ratio";
+import lineClamp from "@tailwindcss/line-clamp";
 
 const config: Config = {
   content: ["./src/**/*.{html,js,ts,jsx,tsx}"],
@@ -95,7 +99,7 @@ const config: Config = {
       lg: { min: "1200px" }, // PC: 1200px 이상
     },
   },
-  plugins: [],
+  plugins: [forms, typography, aspectRatio, lineClamp],
 };
 
 export default config;
