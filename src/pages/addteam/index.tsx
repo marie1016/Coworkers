@@ -1,3 +1,4 @@
+import Button from "@/components/@shared/UI/Button";
 import FileInput from "@/components/@shared/UI/FileInput";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import ProfileImagePreview from "@/components/@shared/UI/ProfileImagePreview";
@@ -78,8 +79,10 @@ export default function Addteam() {
           </InputLabel>
         </div>
       </div>
-      <div className="itmes-center flex flex-col gap-6">
-        <button type="submit">생성하기</button>
+      <div className="itmes-center flex w-full flex-col items-center gap-6">
+        <Button type="submit" variant="solid" size="large">
+          생성하기
+        </Button>
         <p className="text-text-lg font-regular text-text-primary sm:text-text-md">
           팀 이름은 회사명이나 모임 이름 등으로 설정하면 좋아요.
         </p>
