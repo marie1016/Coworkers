@@ -1,5 +1,3 @@
-// src/components/@shared/UI/Button.tsx
-
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
 import React from "react";
@@ -46,7 +44,6 @@ interface StyleProps {
 interface ButtonProps extends BaseButtonProps, StyleProps {
   /**
    * 버튼의 비활성화 상태를 설정합니다.
-   * 비활성화된 버튼은 클릭 이벤트가 발생하지 않으며, 스타일이 변경됩니다.
    */
   disabled?: boolean;
 }
@@ -96,7 +93,7 @@ export default function Button({
             ],
           isSolid &&
             isDisabled && [
-              "bg-interaction-inactive text-text-disabled",
+              "bg-interaction-inactive text-text-primary",
               "cursor-not-allowed",
             ],
           /* Outlined 스타일 */
