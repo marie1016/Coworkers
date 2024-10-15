@@ -1,50 +1,12 @@
-import React from "react";
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
-/**
- * FloatingButton 컴포넌트의 props를 정의합니다.
- *
- * @interface FloatingButtonProps
- * @extends React.ButtonHTMLAttributes<HTMLButtonElement>
- */
 interface FloatingButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /**
-   * 버튼의 크기를 지정합니다.
-   *
-   * - `'large'`: 높이 48px, 폰트 크기 16px
-   * - `'medium'`: 높이 40px, 폰트 크기 14px
-   */
-  size: "large" | "medium";
-
-  /**
-   * 버튼의 스타일 변형을 지정합니다.
-   *
-   * - `'solid'`: 배경색이 채워진 스타일
-   * - `'outlined'`: 테두리만 있는 스타일
-   */
   variant: "solid" | "outlined";
-
-  /**
-   * 버튼의 비활성화 여부를 지정합니다.
-   *
-   * `true`로 설정하면 버튼이 비활성화되고 클릭할 수 없게 됩니다.
-   *
-   * @default false
-   */
+  size: "large" | "medium";
   disabled?: boolean;
-
-  /**
-   * 버튼의 내용으로 표시될 React 노드입니다.
-   * 텍스트, 아이콘 또는 JSX 요소를 포함할 수 있습니다.
-   */
   children: React.ReactNode;
-
-  /**
-   * 추가적인 CSS 클래스를 지정할 수 있습니다.
-   * 기존의 스타일을 오버라이드하거나 새로운 스타일을 추가할 때 사용합니다.
-   */
   className?: string;
 }
 
@@ -54,25 +16,26 @@ interface FloatingButtonProps
  *
  * @param {FloatingButtonProps} props - FloatingButton 컴포넌트의 속성
  * @param {React.ReactNode} props.children - 버튼 내부에 표시될 콘텐츠
- * @param {'solid' | 'outlined'} props.variant - 버튼의 스타일 변형
- * @param {'large' | 'medium'} props.size - 버튼의 크기
- * @param {boolean} [props.disabled=false] - 버튼의 비활성화 상태
+ * @param {'solid' | 'outlined'} [props.variant='solid'] - 버튼의 스타일 변형 (기본값: 'solid')
+ * @param {'large' | 'medium'} [props.size='large'] - 버튼의 크기 (기본값: 'large')
+ * @param {boolean} [props.disabled=false] - 버튼의 비활성화 상태 (기본값: false)
  * @param {string} [props.className] - 추가적인 커스텀 클래스 이름
  * @returns {JSX.Element} 렌더링된 FloatingButton 컴포넌트
  */
 export default function FloatingButton({
-  size,
-  variant,
-  disabled = false,
   children,
+  variant = "solid",
+  size = "large",
+  disabled = false,
   className,
   ...rest
 }: FloatingButtonProps): JSX.Element {
   // 사이즈와 스타일에 따른 상태 변수 설정
-  const isLarge = size === "large";
-  const isMedium = size === "medium";
   const isSolid = variant === "solid";
   const isOutlined = variant === "outlined";
+  const isLarge = size === "large";
+  const isMedium = size === "medium";
+  const isDisabled = disabled;
 
   return (
     <button
@@ -88,20 +51,20 @@ export default function FloatingButton({
           isMedium && "h-10 text-sm leading-[17px]",
           // Solid 스타일
           isSolid &&
-            !disabled &&
+            !isDisabled &&
             "bg-brand-primary text-text-primary hover:bg-interaction-hover active:bg-interaction-pressed",
           isSolid &&
-            disabled &&
+            isDisabled &&
             "cursor-not-allowed bg-interaction-inactive text-text-primary",
           // Outlined 스타일
           isOutlined &&
-            !disabled && [
+            !isDisabled && [
               "border border-brand-primary bg-white text-brand-primary",
               "hover:border-interaction-hover hover:text-interaction-hover",
               "active:border-interaction-pressed active:text-interaction-pressed",
             ],
           isOutlined &&
-            disabled &&
+            isDisabled &&
             "cursor-not-allowed border border-interaction-inactive text-text-disabled",
           className,
         ),
