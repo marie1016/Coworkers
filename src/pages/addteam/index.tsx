@@ -1,5 +1,4 @@
 import Button from "@/components/@shared/UI/Button";
-import FileInput from "@/components/@shared/UI/FileInput";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import ProfileImagePreview from "@/components/@shared/UI/ProfileImagePreview";
 import addTeam from "@/core/api/group/addTeam";
@@ -52,23 +51,20 @@ export default function Addteam() {
         </h2>
         <div className="flex w-full flex-col gap-6">
           <InputLabel label="팀 프로필">
-            <FileInput
+            <ProfileImagePreview
               value={fileInputValue}
               onInputChange={handleFileInputChange}
+              preview={imagePreview}
+              clearFile={clearFileInput}
             >
-              <ProfileImagePreview
-                preview={imagePreview}
-                clearFile={clearFileInput}
-              >
-                <div className="relative h-6 w-6">
-                  <Image
-                    fill
-                    src="/icons/icon-imagePlaceholder.svg"
-                    alt="이미지"
-                  />
-                </div>
-              </ProfileImagePreview>
-            </FileInput>
+              <div className="relative h-6 w-6">
+                <Image
+                  fill
+                  src="/icons/icon-imagePlaceholder.svg"
+                  alt="이미지"
+                />
+              </div>
+            </ProfileImagePreview>
           </InputLabel>
           <InputLabel label="팀 이름">
             <input
