@@ -1,8 +1,11 @@
 import Image from "next/image";
-import { HTMLProps, MouseEvent } from "react";
+import { ChangeEvent, HTMLProps, MouseEvent } from "react";
 import { twMerge } from "tailwind-merge";
+import FileInput from "./FileInput";
 
 interface Props extends HTMLProps<HTMLDivElement> {
+  value: string;
+  onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   preview?: string | null;
   clearFile: () => void;
 }
@@ -12,6 +15,8 @@ export default function ProfileImagePreview({
   children,
   preview,
   clearFile,
+  value,
+  onInputChange,
   ...props
 }: Props) {
   const classCombined = twMerge(
@@ -25,27 +30,29 @@ export default function ProfileImagePreview({
   };
 
   return (
-    <div className={classCombined} {...props}>
-      {preview ? (
-        <Image
-          fill
-          src={preview}
-          style={{ objectFit: "contain", borderRadius: "9999px" }}
-          alt="미리보기"
-        />
-      ) : (
-        children
-      )}
-      {preview ? (
-        <div
-          className="boder-solid absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-background-primary bg-background-tertiary hover:bg-point-rose"
-          onClick={handleClear}
-        >
-          <div className="relative h-3 w-3">
-            <Image src="/icons/icon-x.svg" fill alt="취소" />
+    <FileInput value={value} onInputChange={onInputChange}>
+      <div className={classCombined} {...props}>
+        {preview ? (
+          <Image
+            fill
+            src={preview}
+            style={{ objectFit: "contain", borderRadius: "9999px" }}
+            alt="미리보기"
+          />
+        ) : (
+          children
+        )}
+        {preview ? (
+          <div
+            className="boder-solid absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border-2 border-background-primary bg-background-tertiary hover:bg-point-rose"
+            onClick={handleClear}
+          >
+            <div className="relative h-3 w-3">
+              <Image src="/icons/icon-x.svg" fill alt="취소" />
+            </div>
           </div>
-        </div>
-      ) : null}
-    </div>
+        ) : null}
+      </div>
+    </FileInput>
   );
 }
