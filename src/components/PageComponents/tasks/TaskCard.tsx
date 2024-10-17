@@ -31,7 +31,7 @@ export default function TaskCard({ taskItem: initialTask }: TaskCardProps) {
             onChange={handleCheckboxChange}
           />
           <Image
-            className="ml-3 mr-0.5"
+            className="ml-3 mr-0.5 sm:ml-12"
             src="/icons/icon-comment.svg"
             width={16}
             height={16}

@@ -19,4 +19,9 @@ export interface Task {
   frequency: string;
   checked: boolean;
   date: Date;
+  updatedAt: Date;
+  writer: {
+    nickname: string;
+    image: string;
+  };
 }
