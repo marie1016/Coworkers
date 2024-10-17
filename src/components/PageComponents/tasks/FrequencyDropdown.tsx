@@ -28,7 +28,7 @@ export default function FrequencyDropdown() {
         <div className="flex h-11 w-28 items-center justify-between px-1.5 py-2.5">
           <span>{selectedOption ? selectedOption.label : "반복 안함"}</span>
           <Image
-            src="/icons/icon-toggle.png"
+            src="/icons/icon-toggle.svg"
             width={24}
             height={24}
             alt="토글 아이콘"

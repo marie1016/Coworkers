@@ -91,6 +91,10 @@ const config: Config = {
         semibold: "600",
         bold: "700",
       },
+
+      width: {
+        "1200": "1200px",
+      },
     },
     screens: {
       // 브레이크포인트 설정
