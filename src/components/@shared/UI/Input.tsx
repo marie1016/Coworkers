@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface InputProps {
   type?: string; // 입력 필드 타입
@@ -25,6 +26,11 @@ export default function Input({
   onChange,
   onButtonClick,
 }: InputProps) {
+  const inputClasses = twMerge(
+    `h-[48px] w-[460px] rounded-xl border-border-primary border-opacity-10 bg-background-secondary p-4 placeholder:text-text-default hover:border-interaction-hover focus:border-interaction-hover focus:outline-none focus:ring-0 ${isValid ? "border-border-primary" : "border-status-danger focus:border-status-danger"}`,
+    inputClassName,
+  );
+
   return (
     <div className="relative flex flex-col gap-1">
       <input
@@ -32,7 +38,7 @@ export default function Input({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`h-[48px] w-[460px] rounded-xl border-border-primary border-opacity-10 bg-background-secondary p-4 placeholder:text-text-default hover:border-interaction-hover focus:border-interaction-hover focus:outline-none focus:ring-0 ${isValid ? "border-border-primary" : "border-status-danger focus:border-status-danger"} ${inputClassName}`}
+        className={inputClasses}
       />
       {buttonContent && (
         <button
