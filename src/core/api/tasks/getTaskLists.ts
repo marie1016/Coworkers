@@ -1,4 +1,4 @@
-import { TaskListsResponse } from "@/core/dtos/tasks/taskList";
+import { TaskListsResponse } from "@/core/dtos/tasks/tasks";
 import axiosInstance from "../axiosInstance";
 
 export default async function getTaskLists(teamId: string) {

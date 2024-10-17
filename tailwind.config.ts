@@ -95,6 +95,10 @@ const config: Config = {
       width: {
         "1200": "1200px",
       },
+
+      spacing: {
+        "884": "884px",
+      },
     },
     screens: {
       // 브레이크포인트 설정
