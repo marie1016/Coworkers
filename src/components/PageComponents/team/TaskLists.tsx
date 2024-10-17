@@ -21,7 +21,7 @@ export default function TaskLists({ tasks, teamId }: Props) {
     const indexClassName = `h-full w-3 absolute left-0 rounded-l-xl ${indexColors[index % 7]}`;
 
     return (
-      <Link href={`${teamId}/tasks?default=${task.id}`} key={task.id}>
+      <Link href={`${teamId}/tasks?task=${task.id}`} key={task.id}>
         <div className="relative flex h-10 items-center rounded-xl bg-background-secondary px-6 text-text-md font-medium text-text-primary">
           <div className={indexClassName} />
           {task.name}

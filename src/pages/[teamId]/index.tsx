@@ -9,13 +9,13 @@ export default function Team() {
   const router = useRouter();
   const groupId = router.query.teamId as string;
 
-  const response = useQuery({
+  const groupResponse = useQuery({
     queryKey: ["group", groupId],
     queryFn: () => getTeamData(groupId),
     staleTime: 1000 * 60,
   });
 
-  const group = response.data?.data;
+  const group = groupResponse.data?.data;
   console.log(group);
 
   const addTask = () => {
