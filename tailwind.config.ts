@@ -42,7 +42,7 @@ const config: Config = {
         },
         // 테두리 색상
         border: {
-          primary: "#F8FAFC",
+          primary: "rgba(248, 250, 252, 0.1)",
         },
         // 텍스트 색상
         text: {
