@@ -1,16 +1,16 @@
 import getTasks, { SelectedDate } from "@/core/api/tasks/getTasks";
 import getTaskLists from "@/core/api/tasks/getTaskLists";
-import { Task, TaskListsResponse } from "@/core/dtos/tasks/tasks";
+import { Task, TaskList, TaskListsResponse } from "@/core/dtos/tasks/tasks";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Calendar from "react-calendar";
 import moment from "moment";
 import TaskCard from "@/components/PageComponents/tasks/TaskCard";
 import "moment/locale/ko";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskDetail from "@/components/PageComponents/tasks/TaskDetail";
+import TaskLists from "@/components/PageComponents/tasks/TaskLists";
+import TaskDate from "@/components/PageComponents/tasks/TaskDate";
 
 export default function Tasks() {
   const router = useRouter();
@@ -22,7 +22,6 @@ export default function Tasks() {
     numericTaskId,
   );
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
 
@@ -37,11 +36,7 @@ export default function Tasks() {
     retry: 0,
   });
 
-  const taskLists = taskListsData?.taskLists ?? [];
-
-  const toggleCalendar = () => {
-    setIsCalendarOpen((prev) => !prev);
-  };
+  const taskLists: TaskList[] = taskListsData?.taskLists ?? [];
 
   const utcDate = new Date(selectedDate as Date).toISOString();
 
@@ -62,10 +57,6 @@ export default function Tasks() {
   const taskItems = tasksData ?? [];
 
   moment.locale("ko");
-
-  const formattedDate =
-    selectedDate instanceof Date &&
-    moment(selectedDate).format("MM월 DD일 (ddd)");
 
   const handleTaskListClick = (taskListId: number) => {
     setSelectedTaskListId(taskListId);
@@ -88,39 +79,10 @@ export default function Tasks() {
         <section className="relative">
           <h1 className="text-text-xl font-bold text-text-primary">할 일</h1>
           <div className="my-6 flex items-center justify-between">
-            <div className="flex items-center">
-              <h2 className="mr-3 text-text-lg font-medium text-text-primary">
-                {formattedDate}
-              </h2>
-              <Image
-                src="/icons/icon-leftArrow.svg"
-                width={16}
-                height={16}
-                alt="왼쪽 버튼 아이콘"
-              />
-              <Image
-                className="ml-1"
-                src="/icons/icon-rightArrow.svg"
-                width={16}
-                height={16}
-                alt="오른쪽 버튼 아이콘"
-              />
-              <Image
-                className="ml-3"
-                src="/icons/icon-calendar.svg"
-                width={24}
-                height={24}
-                alt="캘린더 아이콘"
-                onClick={toggleCalendar}
-              />
-              {isCalendarOpen && (
-                <Calendar
-                  className="text-text-md"
-                  onChange={setSelectedDate}
-                  value={selectedDate}
-                />
-              )}
-            </div>
+            <TaskDate
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+            />
             <p className="text-text-md font-regular text-brand-primary">
               +새로운 목록 추가하기
             </p>
@@ -135,17 +97,11 @@ export default function Tasks() {
         </section>
         <section>
           {taskLists.length > 0 ? (
-            <ul className="flex items-center gap-3">
-              {taskLists.map((taskList) => (
-                <li
-                  key={taskList.id}
-                  onClick={() => handleTaskListClick(taskList.id)}
-                  className={`text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
-                >
-                  {taskList.name}
-                </li>
-              ))}
-            </ul>
+            <TaskLists
+              taskLists={taskLists}
+              selectedTaskListId={selectedTaskListId}
+              onHandleTaskListClick={handleTaskListClick}
+            />
           ) : (
             <div className="mt-text-center mt-96 text-text-md text-text-default sm:mt-56">
               <p>아직 할 일 목록이 없습니다.</p>
