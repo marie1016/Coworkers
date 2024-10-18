@@ -28,7 +28,7 @@ export default function Tasks() {
   const {
     data: taskListsData,
     isLoading: loadingTaskLists,
-    error: taskListsError,
+    isError: taskListsError,
   } = useQuery<TaskListsResponse>({
     queryKey: ["taskLists", groupId],
     queryFn: () => getTaskLists(groupId),
@@ -48,7 +48,11 @@ export default function Tasks() {
 
   const utcDate = new Date(selectedDate as Date).toISOString();
 
-  const { data: tasksData, isLoading: loadingTasks } = useQuery<Task[]>({
+  const {
+    data: tasksData,
+    isLoading: loadingTasks,
+    isError: tasksError,
+  } = useQuery<Task[]>({
     queryKey: ["tasks", selectedTaskListId, utcDate],
     queryFn: () =>
       getTasks({
@@ -68,7 +72,7 @@ export default function Tasks() {
     moment(selectedDate).format("MM월 DD일 (ddd)");
 
   if (loadingTaskLists || loadingTasks) return <div>Loading...</div>;
-  if (taskListsError) return <div>Error</div>;
+  if (taskListsError || tasksError) return <div>Error</div>;
 
   return (
     <>
