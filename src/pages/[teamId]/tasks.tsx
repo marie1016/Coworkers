@@ -4,7 +4,7 @@ import { Task, TaskListsResponse } from "@/core/dtos/tasks/tasks";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import Calendar from "react-calendar";
 import moment from "moment";
 import TaskCard from "@/components/PageComponents/tasks/TaskCard";
@@ -24,6 +24,7 @@ export default function Tasks() {
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
+  const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
 
   const {
     data: taskListsData,
@@ -37,10 +38,6 @@ export default function Tasks() {
   });
 
   const taskLists = taskListsData?.taskLists ?? [];
-
-  const handleTaskListClick = useCallback((taskListId: number) => {
-    setSelectedTaskListId(taskListId);
-  }, []);
 
   const toggleCalendar = () => {
     setIsCalendarOpen((prev) => !prev);
@@ -60,7 +57,6 @@ export default function Tasks() {
         id: selectedTaskListId,
         date: utcDate,
       }),
-    staleTime: 0,
   });
 
   const taskItems = tasksData ?? [];
@@ -70,6 +66,18 @@ export default function Tasks() {
   const formattedDate =
     selectedDate instanceof Date &&
     moment(selectedDate).format("MM월 DD일 (ddd)");
+
+  const handleTaskListClick = (taskListId: number) => {
+    setSelectedTaskListId(taskListId);
+  };
+
+  const openTaskDetail = (taskItem: Task) => {
+    setSelectedTaskItem(taskItem);
+    setIsTaskDetailOpen(true);
+  };
+  const closeTaskDetail = () => {
+    setIsTaskDetailOpen(false);
+  };
 
   if (loadingTaskLists || loadingTasks) return <div>Loading...</div>;
   if (taskListsError || tasksError) return <div>Error</div>;
@@ -129,13 +137,12 @@ export default function Tasks() {
           {taskLists.length > 0 ? (
             <ul className="flex items-center gap-3">
               {taskLists.map((taskList) => (
-                <li key={taskList.id}>
-                  <button
-                    onClick={() => handleTaskListClick(taskList.id)}
-                    className={`text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
-                  >
-                    {taskList.name}
-                  </button>
+                <li
+                  key={taskList.id}
+                  onClick={() => handleTaskListClick(taskList.id)}
+                  className={`text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
+                >
+                  {taskList.name}
                 </li>
               ))}
             </ul>
@@ -148,10 +155,7 @@ export default function Tasks() {
           {taskItems.length > 0 ? (
             <ul>
               {taskItems.map((taskItem) => (
-                <li
-                  key={taskItem.id}
-                  onClick={() => setSelectedTaskItem(taskItem)}
-                >
+                <li key={taskItem.id} onClick={() => openTaskDetail(taskItem)}>
                   <TaskCard taskItem={taskItem} />
                 </li>
               ))}
@@ -165,7 +169,13 @@ export default function Tasks() {
         </section>
       </div>
 
-      {selectedTaskItem && <TaskDetail selectedTaskItem={selectedTaskItem} />}
+      {isTaskDetailOpen && selectedTaskItem && (
+        <TaskDetail
+          selectedTaskItem={selectedTaskItem}
+          isTaskDetailOpen={isTaskDetailOpen}
+          onCloseTaskDetail={closeTaskDetail}
+        />
+      )}
     </>
   );
 }

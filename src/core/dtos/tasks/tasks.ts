@@ -25,3 +25,16 @@ export interface Task {
     image: string;
   };
 }
+
+export interface TaskComment {
+  id: number;
+  content: string;
+  updatedAt: Date;
+  taskId: number;
+  userId: number;
+  user: {
+    id: number;
+    nickname: string;
+    image: string;
+  };
+}
