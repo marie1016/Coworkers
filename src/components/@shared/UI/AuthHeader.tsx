@@ -58,6 +58,7 @@ export default function AuthHeader() {
                 width={102}
                 height={20}
                 alt="홈 바로가기"
+                className="sm:w-[102px] md:w-[102px]"
               />
             </Link>
 
