@@ -12,7 +12,7 @@ export default function SectionHeader({
   onAddClick,
 }: Props) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex cursor-default items-center justify-between">
       <div className="flex gap-2">
         <span className="text-text-lg font-medium text-text-primary">
           {title}

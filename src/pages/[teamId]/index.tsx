@@ -1,6 +1,7 @@
 import Members from "@/components/PageComponents/team/Members";
 import SectionHeader from "@/components/PageComponents/team/SectionHeader";
 import TaskLists from "@/components/PageComponents/team/TaskLists";
+import TeamGear from "@/components/PageComponents/team/TeamGear";
 import getTeamData from "@/core/api/group/getTeamData";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -28,6 +29,7 @@ export default function Team() {
     <main className="mx-auto mt-[5.25rem] max-w-[78rem] px-6">
       <div className="mb-6 flex h-16 w-full cursor-default justify-between rounded-xl border border-solid border-border-primary bg-background-secondary bg-[url('/images/image-thumbnailTeam.png')] bg-[right_5rem_top_0] bg-no-repeat px-6 py-5 text-text-xl font-bold text-text-inverse">
         {group.name}
+        <TeamGear />
       </div>
       <section className="mb-16 flex flex-col gap-4">
         <SectionHeader
