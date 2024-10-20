@@ -11,6 +11,7 @@ import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskDetail from "@/components/PageComponents/tasks/TaskDetail";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
 import TaskDate from "@/components/PageComponents/tasks/TaskDate";
+import AddTask from "@/components/PageComponents/tasks/AddTask";
 
 export default function Tasks() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function Tasks() {
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
   const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
 
   const {
     data: taskListsData,
@@ -70,6 +72,14 @@ export default function Tasks() {
     setIsTaskDetailOpen(false);
   };
 
+  const openAddTask = () => {
+    setIsAddTaskOpen(true);
+  };
+
+  const closeAddTask = () => {
+    setIsAddTaskOpen(false);
+  };
+
   if (loadingTaskLists || loadingTasks) return <div>Loading...</div>;
   if (taskListsError || tasksError) return <div>Error</div>;
 
@@ -91,6 +101,7 @@ export default function Tasks() {
             className="md: md: absolute -right-8 right-0 top-[55.25rem] top-[62.06rem] sm:top-[41.06rem]"
             variant="solid"
             size="large"
+            onClick={openAddTask}
           >
             + 할 일 추가
           </FloatingButton>
@@ -132,6 +143,8 @@ export default function Tasks() {
           onCloseTaskDetail={closeTaskDetail}
         />
       )}
+
+      {isAddTaskOpen && <AddTask onCloseAddTask={closeAddTask} />}
     </>
   );
 }
