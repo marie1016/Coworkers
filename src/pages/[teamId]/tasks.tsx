@@ -19,9 +19,8 @@ export default function Tasks() {
   const { task } = router.query;
   const numericTaskId = parseInt(task as string, 10);
 
-  const [selectedTaskListId, setSelectedTaskListId] = useState<number | null>(
-    numericTaskId,
-  );
+  const [selectedTaskListId, setSelectedTaskListId] =
+    useState<number>(numericTaskId);
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
   const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
@@ -144,7 +143,13 @@ export default function Tasks() {
         />
       )}
 
-      {isAddTaskOpen && <AddTask onCloseAddTask={closeAddTask} />}
+      {isAddTaskOpen && (
+        <AddTask
+          onCloseAddTask={closeAddTask}
+          groupId={groupId}
+          selectedTaskListId={selectedTaskListId}
+        />
+      )}
     </>
   );
 }

@@ -22,7 +22,7 @@ export default function TaskCard({ taskItem: initialTask }: TaskCardProps) {
   const formattedDate = moment(task.date).format("yy년 MM월 DD일");
 
   return (
-    <div className="mt-4 h-20 w-1200 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
+    <div className="w-1200 mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Checkbox
