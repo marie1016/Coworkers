@@ -1,16 +1,16 @@
 // /src/components/@shared/UI/Modal/ExampleModal.tsx
 
 import React from "react";
+import useModalStore from "@/store/modalStore";
 import Modal from "./Modal";
 
-interface ExampleModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+export default function ExampleModal() {
+  const modalName = "exampleModal";
+  const isOpen = useModalStore((state) => state.modals[modalName] || false);
+  const closeModal = useModalStore((state) => state.closeModal);
 
-export default function ExampleModal({ isOpen, onClose }: ExampleModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCloseButton>
+    <Modal isOpen={isOpen} onClose={() => closeModal(modalName)} isCloseButton>
       <div className="inline-flex h-[131px] flex-col items-center justify-center gap-10">
         <div className="flex flex-col items-center justify-center gap-2">
           <div className="font-['Pretendard'] text-base font-medium leading-[19px] text-slate-50">
