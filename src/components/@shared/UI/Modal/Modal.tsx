@@ -12,6 +12,16 @@ interface ModalProps {
   isCloseButton?: boolean; // X 버튼 표시 여부
 }
 
+/**
+ * 모달 컴포넌트는 사용자에게 중요한 정보를 표시하거나 사용자 상호작용을 요구하는 오버레이 창을 제공합니다.
+ * 모달이 열리면 포커스가 모달 내부로 이동하며, 닫힐 때 이전 포커스로 돌아갑니다.
+ *
+ * @param {ModalProps} props - 모달 컴포넌트의 속성들.
+ * @param {boolean} props.isOpen - 모달이 열려 있는지 여부를 결정합니다.
+ * @param {() => void} props.onClose - 모달을 닫는 함수입니다.
+ * @param {React.ReactNode} props.children - 모달 내부에 표시될 콘텐츠입니다.
+ * @param {boolean} [props.isCloseButton=false] - 닫기 버튼을 표시할지 여부입니다.
+ */
 export default function Modal({
   isOpen,
   onClose,
