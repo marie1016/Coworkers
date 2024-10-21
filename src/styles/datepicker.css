@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .react-datepicker,
 .react-datepicker__header,
 .react-datepicker__time-container .react-datepicker__time {
@@ -47,4 +51,25 @@
 
 .custom-datepicker-wrapper {
   @apply h-6;
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list::-webkit-scrollbar {
+  @apply w-2.5; /* 스크롤바의 너비 */
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list::-webkit-scrollbar-thumb {
+  @apply /* 스크롤바의 색상 */ h-12 rounded-xl bg-brand-primary;
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list::-webkit-scrollbar-track {
+  background: rgba(33, 122, 244, 0.1); /*스크롤바 뒷 배경 색상*/
 }
