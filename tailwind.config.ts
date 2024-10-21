@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import defaultTheme from "tailwindcss/defaultTheme";
 import forms from "@tailwindcss/forms";
 import typography from "@tailwindcss/typography";
@@ -42,7 +43,7 @@ const config: Config = {
         },
         // 테두리 색상
         border: {
-          primary: "#F8FAFC",
+          primary: "rgba(248, 250, 252, 0.1)",
         },
         // 텍스트 색상
         text: {

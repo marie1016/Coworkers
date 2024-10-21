@@ -16,12 +16,14 @@ export default function Checkbox({ title, checked, onChange }: CheckboxProps) {
         className="hidden"
       />
       <Image
-        src={checked ? "/icons/icon-faCheck.png" : "/icons/icon-faSquare.png"}
+        src={checked ? "/icons/icon-faCheck.svg" : "/icons/icon-faSquare.svg"}
         width={24}
         height={24}
         alt="체크박스 아이콘"
       />
-      <div className={`text-md font-regular ${checked ? "line-through" : ""}`}>
+      <div
+        className={`text-text-md font-regular text-text-primary ${checked ? "line-through" : ""}`}
+      >
         {title}
       </div>
     </label>
