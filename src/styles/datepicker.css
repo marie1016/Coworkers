@@ -13,10 +13,6 @@
   @apply text-text-primary !important;
 }
 
-.react-datepicker {
-  @apply w-[21rem];
-}
-
 .react-datepicker__time-container
   .react-datepicker__time
   .react-datepicker__time-box
@@ -47,4 +43,8 @@
 .react-datepicker__quarter-text,
 .react-datepicker__year-text {
   @apply hover:bg-brand-primary !important;
+}
+
+.custom-datepicker-wrapper {
+  @apply h-6;
 }

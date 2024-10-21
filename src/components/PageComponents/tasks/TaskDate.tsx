@@ -1,21 +1,30 @@
 import Image from "next/image";
-import { useState } from "react";
-import Calendar from "react-calendar";
+import { forwardRef } from "react";
+import DatePicker from "react-datepicker";
 import moment from "moment";
-import { SelectedDate } from "@/core/api/tasks/getTasks";
 
 interface DateProps {
-  selectedDate: SelectedDate;
-  setSelectedDate: React.Dispatch<React.SetStateAction<SelectedDate>>;
+  selectedDate: Date | null;
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date | null>>;
 }
 
+const CustomInput = forwardRef<
+  HTMLButtonElement,
+  React.HTMLProps<HTMLButtonElement>
+>(({ onClick }, ref) => (
+  <button className="ml-3" onClick={onClick} ref={ref}>
+    <Image
+      src="/icons/icon-calendar.svg"
+      width={24}
+      height={24}
+      alt="캘린더 아이콘"
+    />
+  </button>
+));
+
+CustomInput.displayName = "CustomInput";
+
 export default function TaskDate({ selectedDate, setSelectedDate }: DateProps) {
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
-  const toggleCalendar = () => {
-    setIsCalendarOpen((prev) => !prev);
-  };
-
   const formattedDate =
     selectedDate instanceof Date &&
     moment(selectedDate).format("MM월 DD일 (ddd)");
@@ -38,21 +47,15 @@ export default function TaskDate({ selectedDate, setSelectedDate }: DateProps) {
         height={16}
         alt="오른쪽 버튼 아이콘"
       />
-      <Image
-        className="ml-3"
-        src="/icons/icon-calendar.svg"
-        width={24}
-        height={24}
-        alt="캘린더 아이콘"
-        onClick={toggleCalendar}
-      />
-      {isCalendarOpen && (
-        <Calendar
-          className="text-text-md"
+      <div className="custom-datepicker-wrapper">
+        <DatePicker
           onChange={setSelectedDate}
-          value={selectedDate}
+          selected={selectedDate}
+          shouldCloseOnSelect
+          customInput={<CustomInput />}
+          popperPlacement="right"
         />
-      )}
+      </div>
     </div>
   );
 }

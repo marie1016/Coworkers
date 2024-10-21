@@ -1,6 +1,6 @@
 import InputLabel from "@/components/@shared/UI/InputLabel";
 
-export default function FrequencyDay() {
+export default function FrequencyWeekly() {
   const dayOptions = [
     { label: "일" },
     { label: "월" },

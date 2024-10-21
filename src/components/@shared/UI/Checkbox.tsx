@@ -2,7 +2,7 @@ import Image from "next/image";
 
 interface CheckboxProps {
   title: string;
-  checked?: boolean;
+  checked: boolean;
   onChange: (checked: boolean) => void;
 }
 

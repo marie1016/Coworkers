@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import "@/styles/calendar.css";
+import "react-datepicker/dist/react-datepicker.css";
 import "@/styles/datepicker.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -13,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
         defaultOptions: {
           queries: {
             staleTime: 1000,
+            throwOnError: true,
           },
         },
       }),

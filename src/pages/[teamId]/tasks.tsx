@@ -1,9 +1,9 @@
-import getTasks, { SelectedDate } from "@/core/api/tasks/getTasks";
+import getTasks from "@/core/api/tasks/getTasks";
 import getTaskLists from "@/core/api/tasks/getTaskLists";
 import { Task, TaskList, TaskListsResponse } from "@/core/dtos/tasks/tasks";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import moment from "moment";
 import TaskCard from "@/components/PageComponents/tasks/TaskCard";
 import "moment/locale/ko";
@@ -22,7 +22,7 @@ export default function Tasks() {
   const [selectedTaskListId, setSelectedTaskListId] =
     useState<number>(numericTaskId);
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
-  const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
 
@@ -39,19 +39,17 @@ export default function Tasks() {
 
   const taskLists: TaskList[] = taskListsData?.taskLists ?? [];
 
-  const utcDate = new Date(selectedDate as Date).toISOString();
-
   const {
     data: tasksData,
     isLoading: loadingTasks,
     isError: tasksError,
   } = useQuery<Task[]>({
-    queryKey: ["tasks", selectedTaskListId, utcDate],
+    queryKey: ["tasks", selectedTaskListId, selectedDate],
     queryFn: () =>
       getTasks({
         groupId,
         id: selectedTaskListId,
-        date: utcDate,
+        date: selectedDate,
       }),
   });
 

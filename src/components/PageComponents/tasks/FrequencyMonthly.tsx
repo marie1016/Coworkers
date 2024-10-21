@@ -2,7 +2,7 @@ import InputLabel from "@/components/@shared/UI/InputLabel";
 import Input from "@/components/@shared/UI/Input";
 import { useState } from "react";
 
-export default function FrequencyDay() {
+export default function FrequencyMonthly() {
   const [value, setValue] = useState();
   const handleInputChange = () => {
     setValue(value);

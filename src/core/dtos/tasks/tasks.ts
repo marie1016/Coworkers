@@ -18,9 +18,9 @@ export interface Task {
   commentCount: number;
   frequency: string;
   checked: boolean;
-  date: string | null;
-  updatedAt?: string;
-  writer?: {
+  date: string;
+  updatedAt: string;
+  writer: {
     nickname: string;
     image: string;
   };

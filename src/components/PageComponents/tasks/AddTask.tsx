@@ -4,13 +4,11 @@ import React, { useState } from "react";
 import moment from "moment";
 import Button from "@/components/@shared/UI/Button";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "react-calendar/dist/Calendar.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import addTask from "@/core/api/tasks/addTask";
 import { AddTaskForm } from "@/core/dtos/tasks/tasks";
-import FrequencyDay from "./FrequencyDay";
-import FrequencyDate from "./FrequencyDate";
+import FrequencyWeekly from "./FrequencyWeekly";
+import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
 
 interface AddTaskProps {
@@ -128,13 +126,14 @@ export default function AddTask({
             dateFormat="yyyy년 MM월 dd일 HH:mm aa"
             timeFormat="HH:mm aa"
             timeIntervals={30}
+            popperPlacement="bottom"
           />
         </InputLabel>
         <InputLabel className="text-md text-text-primary" label="반복 설정">
           <FrequencyDropdown onChange={handleFrequencyChange} />
         </InputLabel>
-        {taskData.frequencyType === "WEEKLY" && <FrequencyDay />}
-        {taskData.frequencyType === "MONTHLY" && <FrequencyDate />}
+        {taskData.frequencyType === "WEEKLY" && <FrequencyWeekly />}
+        {taskData.frequencyType === "MONTHLY" && <FrequencyMonthly />}
         <InputLabel className="text-md text-text-primary" label="할 일 메모">
           <textarea
             name="description"
