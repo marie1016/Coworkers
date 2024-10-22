@@ -45,5 +45,5 @@ export interface AddTaskForm {
   description: string;
   startDate: string;
   monthDay?: number;
-  weekDays?: string[];
+  weekDays?: number[];
 }

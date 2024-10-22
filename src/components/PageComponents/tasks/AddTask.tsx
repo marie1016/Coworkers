@@ -26,9 +26,10 @@ export default function AddTask({
     name: "",
     description: "",
     startDate: new Date().toISOString(),
-    frequencyType: "",
+    frequencyType: "ONCE",
   });
-
+  const [selectedMonthDay, setSelectedMonthDay] = useState<number>(0);
+  const [selectedWeekDays, setSelectedWeekDays] = useState<number[]>([]);
   const queryClient = useQueryClient();
 
   const handleInputChange = (
@@ -68,10 +69,13 @@ export default function AddTask({
   });
 
   const isFormValid =
-    taskData.name.trim() !== "" &&
-    taskData.frequencyType !== "" &&
+    taskData.name.trim() &&
+    taskData.frequencyType &&
     taskData.startDate !== null &&
-    taskData.description.trim() !== "";
+    taskData.description.trim() &&
+    (taskData.frequencyType !== "MONTHLY" ||
+      (selectedMonthDay >= 1 && selectedMonthDay <= 31)) &&
+    (taskData.frequencyType !== "WEEKLY" || selectedWeekDays.length > 0);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,10 +83,10 @@ export default function AddTask({
       const dataToSubmit = {
         ...taskData,
         ...(taskData.frequencyType === "MONTHLY" && {
-          monthDay: 0,
+          monthDay: selectedMonthDay,
         }),
         ...(taskData.frequencyType === "WEEKLY" && {
-          weekDays: [],
+          weekDays: selectedWeekDays,
         }),
       };
       onCloseAddTask();
@@ -132,8 +136,18 @@ export default function AddTask({
         <InputLabel className="text-md text-text-primary" label="반복 설정">
           <FrequencyDropdown onChange={handleFrequencyChange} />
         </InputLabel>
-        {taskData.frequencyType === "WEEKLY" && <FrequencyWeekly />}
-        {taskData.frequencyType === "MONTHLY" && <FrequencyMonthly />}
+        {taskData.frequencyType === "WEEKLY" && (
+          <FrequencyWeekly
+            selectedWeekDays={selectedWeekDays}
+            setSelectedWeekDays={setSelectedWeekDays}
+          />
+        )}
+        {taskData.frequencyType === "MONTHLY" && (
+          <FrequencyMonthly
+            selectedMonthDay={selectedMonthDay}
+            setSelectedMonthDay={setSelectedMonthDay}
+          />
+        )}
         <InputLabel className="text-md text-text-primary" label="할 일 메모">
           <textarea
             name="description"

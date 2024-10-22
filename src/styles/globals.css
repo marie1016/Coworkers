@@ -12,6 +12,8 @@ body {
   box-sizing: border-box;
 }
 
-.add-task-datepicker {
-  @apply w-[21rem] !important;
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
