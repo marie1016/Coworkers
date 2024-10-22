@@ -26,7 +26,13 @@ export interface AddTeamForm {
   name: string;
 }
 
-export interface AddTeamResponse {
+export interface PatchTeamForm {
+  teamId: string;
+  image?: string;
+  name?: string;
+}
+
+export interface SubmitTeamResponse {
   id: number;
   name: string;
   image: string;

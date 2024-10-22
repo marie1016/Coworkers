@@ -3,14 +3,25 @@ import Input from "@/components/@shared/UI/Input";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import ProfileImagePreview from "@/components/@shared/UI/ProfileImagePreview";
 import addTeam from "@/core/api/group/addTeam";
-import { AddTeamResponse } from "@/core/dtos/group/group";
+import patchTeam from "@/core/api/group/patchTeam";
+import { SubmitTeamResponse } from "@/core/dtos/group/group";
 import useImageUpload from "@/lib/hooks/useImageUpload";
 import { AxiosResponse } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 
-export default function TeamSubmitForm() {
+interface Props {
+  teamId?: string;
+  defaultImage?: string;
+  defaultName?: string;
+}
+
+export default function TeamSubmitForm({
+  teamId,
+  defaultImage,
+  defaultName = "",
+}: Props) {
   const {
     fileInputValue,
     file,
@@ -18,8 +29,8 @@ export default function TeamSubmitForm() {
     getImageUrl,
     clearFileInput,
     imagePreview,
-  } = useImageUpload();
-  const [teamName, setTeamName] = useState("");
+  } = useImageUpload(defaultImage);
+  const [teamName, setTeamName] = useState(defaultName);
 
   const router = useRouter();
 
@@ -30,19 +41,25 @@ export default function TeamSubmitForm() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let imageUrl: string | undefined;
-    let res: AxiosResponse<AddTeamResponse>;
+    let res: AxiosResponse<SubmitTeamResponse>;
     try {
       if (file) imageUrl = await getImageUrl(file);
-      res = await addTeam({ image: imageUrl, name: teamName });
+      else if (imagePreview) imageUrl = imagePreview;
+      res = teamId
+        ? await patchTeam({ teamId, image: imageUrl, name: teamName })
+        : await addTeam({ image: imageUrl, name: teamName });
     } catch (error) {
       console.error(error);
       return;
     }
-    router.push(`/${res.data.id}`);
+    if (!teamId) router.push(`/${res.data.id}`);
   };
 
   return (
-    <form className="flex flex-col items-center gap-10" onSubmit={handleSubmit}>
+    <form
+      className="flex w-full flex-col items-center gap-10"
+      onSubmit={handleSubmit}
+    >
       <div className="flex w-full flex-col items-center gap-20 sm:gap-6">
         <h2 className="text-4xl font-medium text-text-primary sm:text-2xl md:text-2xl">
           팀 생성하기
@@ -73,7 +90,7 @@ export default function TeamSubmitForm() {
         <Button type="submit" variant="solid" size="large">
           생성하기
         </Button>
-        <p className="text-text-lg font-regular text-text-primary sm:text-text-md">
+        <p className="break-keep text-text-lg font-regular text-text-primary sm:text-text-md">
           팀 이름은 회사명이나 모임 이름 등으로 설정하면 좋아요.
         </p>
       </div>
