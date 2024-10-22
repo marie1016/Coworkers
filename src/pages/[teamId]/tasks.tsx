@@ -1,9 +1,9 @@
-import getTasks, { SelectedDate } from "@/core/api/tasks/getTasks";
+import getTasks from "@/core/api/tasks/getTasks";
 import getTaskLists from "@/core/api/tasks/getTaskLists";
 import { Task, TaskList, TaskListsResponse } from "@/core/dtos/tasks/tasks";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import moment from "moment";
 import TaskCard from "@/components/PageComponents/tasks/TaskCard";
 import "moment/locale/ko";
@@ -11,6 +11,7 @@ import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskDetail from "@/components/PageComponents/tasks/TaskDetail";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
 import TaskDate from "@/components/PageComponents/tasks/TaskDate";
+import AddTask from "@/components/PageComponents/tasks/AddTask";
 
 export default function Tasks() {
   const router = useRouter();
@@ -18,12 +19,12 @@ export default function Tasks() {
   const { task } = router.query;
   const numericTaskId = parseInt(task as string, 10);
 
-  const [selectedTaskListId, setSelectedTaskListId] = useState<number | null>(
-    numericTaskId,
-  );
+  const [selectedTaskListId, setSelectedTaskListId] =
+    useState<number>(numericTaskId);
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
-  const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
 
   const {
     data: taskListsData,
@@ -38,19 +39,17 @@ export default function Tasks() {
 
   const taskLists: TaskList[] = taskListsData?.taskLists ?? [];
 
-  const utcDate = new Date(selectedDate as Date).toISOString();
-
   const {
     data: tasksData,
     isLoading: loadingTasks,
     isError: tasksError,
   } = useQuery<Task[]>({
-    queryKey: ["tasks", selectedTaskListId, utcDate],
+    queryKey: ["tasks", selectedTaskListId, selectedDate],
     queryFn: () =>
       getTasks({
         groupId,
         id: selectedTaskListId,
-        date: utcDate,
+        date: selectedDate,
       }),
   });
 
@@ -68,6 +67,14 @@ export default function Tasks() {
   };
   const closeTaskDetail = () => {
     setIsTaskDetailOpen(false);
+  };
+
+  const openAddTask = () => {
+    setIsAddTaskOpen(true);
+  };
+
+  const closeAddTask = () => {
+    setIsAddTaskOpen(false);
   };
 
   if (loadingTaskLists || loadingTasks) return <div>Loading...</div>;
@@ -91,6 +98,7 @@ export default function Tasks() {
             className="md: md: absolute -right-8 right-0 top-[55.25rem] top-[62.06rem] sm:top-[41.06rem]"
             variant="solid"
             size="large"
+            onClick={openAddTask}
           >
             + 할 일 추가
           </FloatingButton>
@@ -130,6 +138,14 @@ export default function Tasks() {
           selectedTaskItem={selectedTaskItem}
           isTaskDetailOpen={isTaskDetailOpen}
           onCloseTaskDetail={closeTaskDetail}
+        />
+      )}
+
+      {isAddTaskOpen && (
+        <AddTask
+          onCloseAddTask={closeAddTask}
+          groupId={groupId}
+          selectedTaskListId={selectedTaskListId}
         />
       )}
     </>

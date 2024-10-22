@@ -1,8 +1,8 @@
 export interface TaskList {
   id: number;
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   groupId: number;
   displayIndex: number;
 }
@@ -18,8 +18,8 @@ export interface Task {
   commentCount: number;
   frequency: string;
   checked: boolean;
-  date: Date;
-  updatedAt: Date;
+  date: string;
+  updatedAt: string;
   writer: {
     nickname: string;
     image: string;
@@ -29,7 +29,7 @@ export interface Task {
 export interface TaskComment {
   id: number;
   content: string;
-  updatedAt: Date;
+  updatedAt: string;
   taskId: number;
   userId: number;
   user: {
@@ -37,4 +37,13 @@ export interface TaskComment {
     nickname: string;
     image: string;
   };
+}
+
+export interface AddTaskForm {
+  name: string;
+  frequencyType: string;
+  description: string;
+  startDate: string;
+  monthDay?: number;
+  weekDays?: number[];
 }

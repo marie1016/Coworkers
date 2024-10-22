@@ -6,7 +6,7 @@ interface Option {
   label: string;
 }
 
-export default function FrequencyDropdown() {
+export default function EditDropdown() {
   const handleSelect = (option: Option) => {
     console.log(option.label);
   };

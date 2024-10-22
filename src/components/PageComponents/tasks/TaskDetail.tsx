@@ -1,7 +1,10 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import TaskComment from "./TaskComments";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import TaskComments from "./TaskComments";
 import TaskInfo from "./TaskInfo";
+import CommentTextarea from "./CommentTextarea";
 
 interface TaskDetailProps {
   selectedTaskItem: Task;
@@ -27,7 +30,14 @@ export default function TaskDetail({
         onClick={onCloseTaskDetail}
       />
       <TaskInfo selectedTaskItem={selectedTaskItem} />
-      <TaskComment selectedTaskItem={selectedTaskItem} />
+      <div className="mt-4 text-text-md text-text-primary">
+        <CommentTextarea />
+        <ErrorBoundary fallback={<div>error</div>}>
+          <Suspense fallback={<div>loading...</div>}>
+            <TaskComments selectedTaskItem={selectedTaskItem} />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
     </div>
   );
 }
