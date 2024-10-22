@@ -27,7 +27,6 @@ export interface AddTeamForm {
 }
 
 export interface PatchTeamForm {
-  teamId: string;
   image?: string | null;
   name?: string;
 }

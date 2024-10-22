@@ -47,3 +47,7 @@ export interface AddTaskForm {
   monthDay?: number;
   weekDays?: number[];
 }
+
+export interface AddTaskListForm {
+  name: string;
+}

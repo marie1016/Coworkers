@@ -48,8 +48,8 @@ export default function TeamSubmitForm({
       if (file) imageUrl = await getImageUrl(file);
       else if (imagePreview) imageUrl = imagePreview;
       res = teamId
-        ? await patchTeam({ teamId, image: imageUrl, name: teamName })
-        : await addTeam({ image: imageUrl, name: teamName });
+        ? await patchTeam(teamId, { image: imageUrl, name: teamName })
+        : await addTeam({ image: imageUrl ?? undefined, name: teamName });
     } catch (error) {
       alert("에러 발생: 에러 정보는 콘솔에서 확인");
       console.error(error);
