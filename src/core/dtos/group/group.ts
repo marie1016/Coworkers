@@ -22,13 +22,13 @@ export interface GroupResponse {
 }
 
 export interface AddTeamForm {
-  image?: string;
+  image?: string | null;
   name: string;
 }
 
 export interface PatchTeamForm {
   teamId: string;
-  image?: string;
+  image?: string | null;
   name?: string;
 }
 
