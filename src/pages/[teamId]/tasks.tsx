@@ -11,6 +11,7 @@ import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskDetail from "@/components/PageComponents/tasks/TaskDetail";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
 import TaskDate from "@/components/PageComponents/tasks/TaskDate";
+import useModalStore from "@/store/modalStore";
 import AddTask from "@/components/PageComponents/tasks/AddTask";
 
 export default function Tasks() {
@@ -24,7 +25,6 @@ export default function Tasks() {
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
-  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
 
   const {
     data: taskListsData,
@@ -65,16 +65,15 @@ export default function Tasks() {
     setSelectedTaskItem(taskItem);
     setIsTaskDetailOpen(true);
   };
+
   const closeTaskDetail = () => {
     setIsTaskDetailOpen(false);
   };
 
-  const openAddTask = () => {
-    setIsAddTaskOpen(true);
-  };
+  const openModal = useModalStore((state) => state.openModal);
 
-  const closeAddTask = () => {
-    setIsAddTaskOpen(false);
+  const openAddTask = () => {
+    openModal("addTaskModal");
   };
 
   if (loadingTaskLists || loadingTasks) return <div>Loading...</div>;
@@ -132,7 +131,6 @@ export default function Tasks() {
           )}
         </section>
       </div>
-
       {isTaskDetailOpen && selectedTaskItem && (
         <TaskDetail
           selectedTaskItem={selectedTaskItem}
@@ -141,13 +139,7 @@ export default function Tasks() {
         />
       )}
 
-      {isAddTaskOpen && (
-        <AddTask
-          onCloseAddTask={closeAddTask}
-          groupId={groupId}
-          selectedTaskListId={selectedTaskListId}
-        />
-      )}
+      <AddTask groupId={groupId} selectedTaskListId={selectedTaskListId} />
     </>
   );
 }
