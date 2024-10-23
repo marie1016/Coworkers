@@ -89,7 +89,11 @@ export default function TeamSubmitForm({
             </ProfileImagePreview>
           </InputLabel>
           <InputLabel label="팀 이름">
-            <Input value={teamName} onChange={handleNameChange} />
+            <Input
+              value={teamName}
+              onChange={handleNameChange}
+              className="w-full"
+            />
           </InputLabel>
         </div>
       </div>

@@ -38,17 +38,18 @@ export default function AddTaskListModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCloseButton>
       <form
-        className="flex max-w-[17.5rem] flex-col gap-6"
+        className="flex w-[22rem] flex-col gap-6 px-9"
         onSubmit={handleSubmit}
       >
         <div className="flex w-full flex-col gap-4">
-          <h3 className="text-text-lg font-medium text-text-primary">
+          <h3 className="text-center text-text-lg font-medium text-text-primary">
             할 일 목록
           </h3>
           <Input
             placeholder="목록 명을 입력해주세요."
             value={taskListName}
             onChange={handleInputChange}
+            className="w-full"
           />
         </div>
         <Button type="submit" variant="solid" size="large">
