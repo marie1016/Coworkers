@@ -3,6 +3,7 @@ import DropdownItem from "@/components/@shared/UI/Item";
 import Image from "next/image";
 import { useState } from "react";
 import PatchTeamModal from "./PatchTeamModal";
+import DeleteTeamModal from "./DeleteTeamModal";
 
 interface Props {
   teamId: string;
@@ -18,6 +19,7 @@ export default function TeamGear({
   refreshGroup,
 }: Props) {
   const [isPatchModalOpen, setIsPatchModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const patchTeamForm = {
     teamId,
     defaultName: teamName,
@@ -45,7 +47,7 @@ export default function TeamGear({
           수정하기
         </DropdownItem>
         <DropdownItem
-          onClick={() => {}}
+          onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
           itemClassName="h-10 flex justify-center items-center"
         >
           삭제하기
@@ -56,6 +58,11 @@ export default function TeamGear({
         onClose={() => setIsPatchModalOpen(false)}
         submitCallback={patchTeamCallback}
         formValues={patchTeamForm}
+      />
+      <DeleteTeamModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        teamId={teamId}
       />
     </>
   );

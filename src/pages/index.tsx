@@ -77,6 +77,8 @@ export default function Home() {
       <br />
       <Link href="/addboard">게시물 등록 페이지</Link>
       <br />
+      <Link href="/landing">랜딩 페이지</Link>
+      <br />
       <br />
       <h2 className="text-text-3xl">내가 속한 팀</h2>
       <br />
