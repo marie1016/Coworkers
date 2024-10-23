@@ -143,7 +143,7 @@ export default function Signup() {
   return (
     <div>
       <SetupHeader />
-      <div className="mt-[84px] flex w-full items-center justify-center">
+      <div className="mt-[160px] flex w-full items-center justify-center sm:mt-[84px]">
         <form
           className="flex flex-col items-center gap-6 sm:w-[343px]"
           onSubmit={handleSubmit}
