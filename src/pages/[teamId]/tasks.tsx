@@ -119,7 +119,7 @@ export default function Tasks() {
             <ul>
               {taskItems.map((taskItem) => (
                 <li key={taskItem.id} onClick={() => openTaskDetail(taskItem)}>
-                  <TaskCard taskItem={taskItem} />
+                  <TaskCard openAddTask={openAddTask} taskItem={taskItem} />
                 </li>
               ))}
             </ul>
