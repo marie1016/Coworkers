@@ -14,17 +14,17 @@ import FrequencyWeekly from "./FrequencyWeekly";
 import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
 
-interface AddTaskProps {
+interface AddEditTaskProps {
   groupId: string;
   selectedTaskListId: number;
   taskToEdit: Task | null;
 }
 
-export default function AddTask({
+export default function TaskFormModal({
   taskToEdit,
   groupId,
   selectedTaskListId,
-}: AddTaskProps) {
+}: AddEditTaskProps) {
   const defaultTaskData = (task: Task | null) => ({
     name: task?.name ?? "",
     description: task?.description ?? "",
@@ -40,7 +40,7 @@ export default function AddTask({
     setTaskData(defaultTaskData(taskToEdit));
   }, [taskToEdit]);
 
-  const modalName = "addTaskModal";
+  const modalName = "taskFormModal";
   const isOpen = useModalStore((state) => state.modals[modalName] || false);
   const closeModal = useModalStore((state) => state.closeModal);
 
@@ -67,7 +67,7 @@ export default function AddTask({
     }
   };
 
-  const createTaskMutation = useMutation({
+  const taskMutation = useMutation({
     mutationFn: ({
       editTaskForm,
       addTaskForm,
@@ -109,7 +109,7 @@ export default function AddTask({
         }),
       };
 
-      createTaskMutation.mutate(
+      taskMutation.mutate(
         {
           addTaskForm: dataToSubmit,
           editTaskForm: {
@@ -208,7 +208,7 @@ export default function AddTask({
             variant="solid"
             size="large"
             onClick={handleFormSubmit}
-            disabled={!isFormValid || createTaskMutation.isPending}
+            disabled={!isFormValid || taskMutation.isPending}
           >
             {taskToEdit ? "수정하기" : "만들기"}
           </Button>

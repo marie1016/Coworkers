@@ -7,12 +7,12 @@ import EditDropdown from "./EditDropdown";
 
 interface TaskCardProps {
   taskItem: Task;
-  openAddTask: (taskItem: Task) => void;
+  openTaskFormModal: (taskItem: Task) => void;
 }
 
 export default function TaskCard({
   taskItem: initialTask,
-  openAddTask,
+  openTaskFormModal,
 }: TaskCardProps) {
   const [task, setTask] = useState<Task>(initialTask);
   const { name, commentCount, frequency } = task;
@@ -41,7 +41,7 @@ export default function TaskCard({
           {commentCount}
         </div>
         <div>
-          <EditDropdown onEdit={() => openAddTask(task)} />
+          <EditDropdown onEdit={() => openTaskFormModal(task)} />
         </div>
       </div>
       <div className="mt-2.5 flex items-center">

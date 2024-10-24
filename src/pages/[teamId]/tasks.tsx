@@ -11,7 +11,7 @@ import TaskDetail from "@/components/PageComponents/tasks/TaskDetail";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
 import TaskDate from "@/components/PageComponents/tasks/TaskDate";
 import useModalStore from "@/store/modalStore";
-import AddTask from "@/components/PageComponents/tasks/AddTask";
+import TaskFormModal from "@/components/PageComponents/tasks/TaskFormModal";
 
 export default function Tasks() {
   const router = useRouter();
@@ -69,9 +69,9 @@ export default function Tasks() {
 
   const openModal = useModalStore((state) => state.openModal);
 
-  const openAddTask = (taskItem: Task | null) => {
+  const openTaskFormModal = (taskItem: Task | null) => {
     setSelectedTaskItem(taskItem);
-    openModal("addTaskModal");
+    openModal("taskFormModal");
   };
 
   if (loadingTaskLists || loadingTasks) return <div>Loading...</div>;
@@ -95,7 +95,7 @@ export default function Tasks() {
             className="md: md: absolute -right-8 right-0 top-[55.25rem] top-[62.06rem] sm:top-[41.06rem]"
             variant="solid"
             size="large"
-            onClick={() => openAddTask(null)}
+            onClick={() => openTaskFormModal(null)}
           >
             + 할 일 추가
           </FloatingButton>
@@ -118,7 +118,7 @@ export default function Tasks() {
               {taskItems.map((taskItem) => (
                 <li key={taskItem.id} onClick={() => openTaskDetail(taskItem)}>
                   <TaskCard
-                    openAddTask={() => openAddTask(taskItem)}
+                    openTaskFormModal={() => openTaskFormModal(taskItem)}
                     taskItem={taskItem}
                   />
                 </li>
@@ -137,10 +137,10 @@ export default function Tasks() {
           selectedTaskItem={selectedTaskItem}
           isTaskDetailOpen={isTaskDetailOpen}
           onCloseTaskDetail={closeTaskDetail}
-          openAddTask={() => openAddTask(selectedTaskItem)}
+          openTaskFormModal={() => openTaskFormModal(selectedTaskItem)}
         />
       )}
-      <AddTask
+      <TaskFormModal
         groupId={groupId}
         selectedTaskListId={selectedTaskListId}
         taskToEdit={selectedTaskItem}
