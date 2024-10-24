@@ -1,8 +1,8 @@
 import getTaskComments from "@/core/api/tasks/getTaskComments";
 import { Task, TaskComment } from "@/core/dtos/tasks/tasks";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { formattedShortDate } from "@/lib/utils/date";
 import Image from "next/image";
-import moment from "moment";
 import EditDropdown from "./EditDropdown";
 
 interface TaskCommentsProps {
@@ -17,8 +17,6 @@ export default function TaskComments({ selectedTaskItem }: TaskCommentsProps) {
   });
 
   const taskComments = commentsData ?? [];
-
-  const formattedDate = (date: string) => moment(date).format("YY.MM.DD");
 
   return (
     <ul>
@@ -40,7 +38,7 @@ export default function TaskComments({ selectedTaskItem }: TaskCommentsProps) {
               {taskComment.user.nickname}
             </span>
             <span className="text-text-secondary">
-              {formattedDate(taskComment.updatedAt)}
+              {formattedShortDate(taskComment.updatedAt)}
             </span>
           </div>
           <hr className="border-t border-border-primary" />

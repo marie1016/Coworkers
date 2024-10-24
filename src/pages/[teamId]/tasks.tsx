@@ -4,7 +4,6 @@ import { Task, TaskList, TaskListsResponse } from "@/core/dtos/tasks/tasks";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import moment from "moment";
 import TaskCard from "@/components/PageComponents/tasks/TaskCard";
 import "moment/locale/ko";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
@@ -54,8 +53,6 @@ export default function Tasks() {
   });
 
   const taskItems = tasksData ?? [];
-
-  moment.locale("ko");
 
   const handleTaskListClick = (taskListId: number) => {
     setSelectedTaskListId(taskListId);

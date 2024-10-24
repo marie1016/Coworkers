@@ -3,13 +3,13 @@ import InputLabel from "@/components/@shared/UI/InputLabel";
 import React, { useEffect, useState } from "react";
 import useModalStore from "@/store/modalStore";
 import Modal from "@/components/@shared/UI/Modal/Modal";
-import moment from "moment";
 import Button from "@/components/@shared/UI/Button";
 import DatePicker from "react-datepicker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import addTask from "@/core/api/tasks/addTask";
 import editTask from "@/core/api/tasks/editTask";
 import { AddTaskForm, EditTaskForm, Task } from "@/core/dtos/tasks/tasks";
+import { formattedDate } from "@/lib/utils/date";
 import FrequencyWeekly from "./FrequencyWeekly";
 import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
@@ -66,9 +66,6 @@ export default function AddTask({
       setTaskData({ ...taskData, startDate: selectedDate.toISOString() });
     }
   };
-
-  const formattedDate = (date: Date | string) =>
-    moment(date).format("yyyy년 MM월 DD일");
 
   const createTaskMutation = useMutation({
     mutationFn: ({
