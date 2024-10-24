@@ -56,3 +56,7 @@ export interface EditTaskForm {
   name: string;
   description: string;
 }
+
+export interface AddTaskListForm {
+  name: string;
+}
