@@ -10,10 +10,12 @@ interface Option {
 
 interface FrequencyDropdownProps {
   onChange: (value: string) => void;
+  editModeFrequency?: string;
 }
 
 export default function FrequencyDropdown({
   onChange,
+  editModeFrequency,
 }: FrequencyDropdownProps) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -39,7 +41,9 @@ export default function FrequencyDropdown({
               selectedOption ? "text-text-primary" : "text-text-default"
             }
           >
-            {selectedOption ? selectedOption.label : "반복 안함"}
+            {selectedOption
+              ? selectedOption.label
+              : (editModeFrequency ?? "반복 안함")}
           </span>
           <Image
             src="/icons/icon-toggle.svg"
@@ -49,6 +53,7 @@ export default function FrequencyDropdown({
           />
         </div>
       }
+      disabled={!!editModeFrequency}
     >
       {options.map((option) => (
         <DropdownItem

@@ -24,6 +24,10 @@ export interface Task {
     nickname: string;
     image: string;
   };
+  recurring: {
+    weekDays: [];
+    monthDay: number;
+  };
 }
 
 export interface TaskComment {
@@ -46,4 +50,9 @@ export interface AddTaskForm {
   startDate: string;
   monthDay?: number;
   weekDays?: number[];
+}
+
+export interface EditTaskForm {
+  name: string;
+  description: string;
 }

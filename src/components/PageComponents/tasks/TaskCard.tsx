@@ -8,7 +8,7 @@ import EditDropdown from "./EditDropdown";
 
 interface TaskCardProps {
   taskItem: Task;
-  openAddTask: () => void;
+  openAddTask: (taskItem: Task) => void;
 }
 
 export default function TaskCard({
@@ -24,7 +24,7 @@ export default function TaskCard({
   };
 
   const formattedDate = moment(task.date).format("yy년 MM월 DD일");
-
+  console.log(task);
   return (
     <div className="w-1200 mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
       <div className="flex items-center justify-between">
@@ -44,7 +44,7 @@ export default function TaskCard({
           {commentCount}
         </div>
         <div>
-          <EditDropdown onEdit={openAddTask} />
+          <EditDropdown onEdit={() => openAddTask(task)} />
         </div>
       </div>
       <div className="mt-2.5 flex items-center">

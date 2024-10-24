@@ -1,6 +1,6 @@
 import Input from "@/components/@shared/UI/Input";
 import InputLabel from "@/components/@shared/UI/InputLabel";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useModalStore from "@/store/modalStore";
 import Modal from "@/components/@shared/UI/Modal/Modal";
 import moment from "moment";
@@ -8,7 +8,8 @@ import Button from "@/components/@shared/UI/Button";
 import DatePicker from "react-datepicker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import addTask from "@/core/api/tasks/addTask";
-import { AddTaskForm } from "@/core/dtos/tasks/tasks";
+import editTask from "@/core/api/tasks/editTask";
+import { AddTaskForm, EditTaskForm, Task } from "@/core/dtos/tasks/tasks";
 import FrequencyWeekly from "./FrequencyWeekly";
 import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
@@ -16,18 +17,28 @@ import FrequencyDropdown from "./FrequencyDropdown";
 interface AddTaskProps {
   groupId: string;
   selectedTaskListId: number;
+  taskToEdit: Task | null;
 }
 
-export default function AddTask({ groupId, selectedTaskListId }: AddTaskProps) {
-  const [taskData, setTaskData] = useState({
-    name: "",
-    description: "",
-    startDate: new Date().toISOString(),
-    frequencyType: "ONCE",
+export default function AddTask({
+  taskToEdit,
+  groupId,
+  selectedTaskListId,
+}: AddTaskProps) {
+  const defaultTaskData = (task: Task | null) => ({
+    name: task?.name ?? "",
+    description: task?.description ?? "",
+    startDate: task?.date ?? new Date().toISOString(),
+    frequencyType: task?.frequency ?? "ONCE",
   });
+  const [taskData, setTaskData] = useState(() => defaultTaskData(taskToEdit));
   const [selectedMonthDay, setSelectedMonthDay] = useState<number>(0);
   const [selectedWeekDays, setSelectedWeekDays] = useState<number[]>([]);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    setTaskData(defaultTaskData(taskToEdit));
+  }, [taskToEdit]);
 
   const modalName = "addTaskModal";
   const isOpen = useModalStore((state) => state.modals[modalName] || false);
@@ -56,27 +67,37 @@ export default function AddTask({ groupId, selectedTaskListId }: AddTaskProps) {
     }
   };
 
-  const formattedNewDate = moment(new Date()).format("yyyy년 MM월 DD일");
+  const formattedDate = (date: Date | string) =>
+    moment(date).format("yyyy년 MM월 DD일");
 
-  const addTaskMutation = useMutation({
-    mutationFn: (addTaskForm: AddTaskForm) =>
-      addTask({ groupId, selectedTaskListId }, addTaskForm),
+  const createTaskMutation = useMutation({
+    mutationFn: ({
+      editTaskForm,
+      addTaskForm,
+    }: {
+      editTaskForm: EditTaskForm;
+      addTaskForm: AddTaskForm;
+    }) =>
+      taskToEdit
+        ? editTask({ taskId: taskToEdit.id }, editTaskForm)
+        : addTask({ groupId, selectedTaskListId }, addTaskForm),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error) => {
-      console.error("Error adding task:", error);
+      console.error("Error creating task:", error);
     },
   });
 
-  const isFormValid =
-    taskData.name.trim() &&
-    taskData.frequencyType &&
-    taskData.startDate !== null &&
-    taskData.description.trim() &&
-    (taskData.frequencyType !== "MONTHLY" ||
-      (selectedMonthDay >= 1 && selectedMonthDay <= 31)) &&
-    (taskData.frequencyType !== "WEEKLY" || selectedWeekDays.length > 0);
+  const isFormValid = taskToEdit
+    ? taskData.name.trim() && taskData.description.trim()
+    : taskData.name.trim() &&
+      taskData.frequencyType &&
+      taskData.startDate !== null &&
+      taskData.description.trim() &&
+      (taskData.frequencyType !== "MONTHLY" ||
+        (selectedMonthDay >= 1 && selectedMonthDay <= 31)) &&
+      (taskData.frequencyType !== "WEEKLY" || selectedWeekDays.length > 0);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,11 +111,21 @@ export default function AddTask({ groupId, selectedTaskListId }: AddTaskProps) {
           weekDays: selectedWeekDays,
         }),
       };
-      addTaskMutation.mutate(dataToSubmit, {
-        onSuccess: () => {
-          closeModal(modalName);
+
+      createTaskMutation.mutate(
+        {
+          addTaskForm: dataToSubmit,
+          editTaskForm: {
+            name: taskData.name,
+            description: taskData.description,
+          },
         },
-      });
+        {
+          onSuccess: () => {
+            closeModal(modalName);
+          },
+        },
+      );
     }
   };
 
@@ -129,26 +160,38 @@ export default function AddTask({ groupId, selectedTaskListId }: AddTaskProps) {
             <DatePicker
               className="h-12 w-[21rem] rounded-xl border-border-primary bg-background-secondary text-text-primary placeholder:text-text-default hover:border-interaction-hover focus:border-interaction-hover focus:outline-none focus:ring-0"
               onChange={handleDateChange}
-              selected={new Date(taskData.startDate)}
+              selected={taskToEdit ? null : new Date(taskData.startDate)}
               showTimeSelect
-              placeholderText={`${formattedNewDate} 00:00`}
+              placeholderText={
+                taskToEdit
+                  ? formattedDate(taskData.startDate)
+                  : `${formattedDate(new Date())} 00:00`
+              }
               dateFormat="yyyy년 MM월 dd일 HH:mm aa"
               timeFormat="HH:mm aa"
               timeIntervals={30}
               popperPlacement="bottom"
               shouldCloseOnSelect
+              disabled={!!taskToEdit}
             />
           </InputLabel>
           <InputLabel className="text-md text-text-primary" label="반복 설정">
-            <FrequencyDropdown onChange={handleFrequencyChange} />
+            {taskToEdit ? (
+              <FrequencyDropdown
+                onChange={handleFrequencyChange}
+                editModeFrequency={taskToEdit.frequency}
+              />
+            ) : (
+              <FrequencyDropdown onChange={handleFrequencyChange} />
+            )}
           </InputLabel>
-          {taskData.frequencyType === "WEEKLY" && (
+          {!taskToEdit && taskData.frequencyType === "WEEKLY" && (
             <FrequencyWeekly
               selectedWeekDays={selectedWeekDays}
               setSelectedWeekDays={setSelectedWeekDays}
             />
           )}
-          {taskData.frequencyType === "MONTHLY" && (
+          {!taskToEdit && taskData.frequencyType === "MONTHLY" && (
             <FrequencyMonthly
               selectedMonthDay={selectedMonthDay}
               setSelectedMonthDay={setSelectedMonthDay}
@@ -168,9 +211,9 @@ export default function AddTask({ groupId, selectedTaskListId }: AddTaskProps) {
             variant="solid"
             size="large"
             onClick={handleFormSubmit}
-            disabled={!isFormValid || addTaskMutation.isPending}
+            disabled={!isFormValid || createTaskMutation.isPending}
           >
-            만들기
+            {taskToEdit ? "수정하기" : "만들기"}
           </Button>
         </form>
       </div>

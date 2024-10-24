@@ -72,7 +72,8 @@ export default function Tasks() {
 
   const openModal = useModalStore((state) => state.openModal);
 
-  const openAddTask = () => {
+  const openAddTask = (taskItem: Task | null) => {
+    setSelectedTaskItem(taskItem);
     openModal("addTaskModal");
   };
 
@@ -97,7 +98,7 @@ export default function Tasks() {
             className="md: md: absolute -right-8 right-0 top-[55.25rem] top-[62.06rem] sm:top-[41.06rem]"
             variant="solid"
             size="large"
-            onClick={openAddTask}
+            onClick={() => openAddTask(null)}
           >
             + 할 일 추가
           </FloatingButton>
@@ -119,7 +120,10 @@ export default function Tasks() {
             <ul>
               {taskItems.map((taskItem) => (
                 <li key={taskItem.id} onClick={() => openTaskDetail(taskItem)}>
-                  <TaskCard openAddTask={openAddTask} taskItem={taskItem} />
+                  <TaskCard
+                    openAddTask={() => openAddTask(taskItem)}
+                    taskItem={taskItem}
+                  />
                 </li>
               ))}
             </ul>
@@ -138,8 +142,11 @@ export default function Tasks() {
           onCloseTaskDetail={closeTaskDetail}
         />
       )}
-
-      <AddTask groupId={groupId} selectedTaskListId={selectedTaskListId} />
+      <AddTask
+        groupId={groupId}
+        selectedTaskListId={selectedTaskListId}
+        taskToEdit={selectedTaskItem}
+      />
     </>
   );
 }
