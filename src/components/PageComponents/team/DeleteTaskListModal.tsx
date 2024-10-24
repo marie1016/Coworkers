@@ -1,24 +1,29 @@
 import Button from "@/components/@shared/UI/Button";
 import Modal from "@/components/@shared/UI/Modal/Modal";
-import deleteTeam from "@/core/api/group/deleteTeam";
-import { useMutation } from "@tanstack/react-query";
+import deleteTaskList from "@/core/api/taskList/deleteTaskList";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { useRouter } from "next/router";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   teamId: string;
+  taskListId: string;
 }
 
-export default function DeleteTeamModal({ isOpen, onClose, teamId }: Props) {
-  const router = useRouter();
+export default function DeleteTaskListModal({
+  isOpen,
+  onClose,
+  teamId,
+  taskListId,
+}: Props) {
+  const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
-    mutationFn: () => deleteTeam(teamId),
+    mutationFn: () => deleteTaskList(teamId, taskListId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["group", teamId] });
       onClose();
-      router.push("/");
     },
     onError: (error) => {
       alert("삭제중 에러 발생: 에러 정보는 콘솔 확인");
@@ -36,7 +41,7 @@ export default function DeleteTeamModal({ isOpen, onClose, teamId }: Props) {
         <div className="relative h-8 w-8">
           <Image fill src="/icons/icon-alert.svg" alt="주의" />
         </div>
-        <p className="font-medium">정말 팀을 삭제하시겠습니까?</p>
+        <p className="font-medium">삭제하시겠습니까?</p>
         <div className="flex w-full gap-2">
           <Button
             variant="solid"
