@@ -10,11 +10,13 @@ interface TaskDetailProps {
   selectedTaskItem: Task;
   isTaskDetailOpen: boolean;
   onCloseTaskDetail: () => void;
+  openAddTask: (selectedTaskItem: Task) => void;
 }
 export default function TaskDetail({
   selectedTaskItem,
   isTaskDetailOpen,
   onCloseTaskDetail,
+  openAddTask,
 }: TaskDetailProps) {
   if (!isTaskDetailOpen) {
     return null;
@@ -29,7 +31,10 @@ export default function TaskDetail({
         alt="닫기 아이콘"
         onClick={onCloseTaskDetail}
       />
-      <TaskInfo selectedTaskItem={selectedTaskItem} />
+      <TaskInfo
+        selectedTaskItem={selectedTaskItem}
+        openAddTask={() => openAddTask(selectedTaskItem)}
+      />
       <div className="mt-4 text-text-md text-text-primary">
         <CommentTextarea />
         <ErrorBoundary fallback={<div>error</div>}>

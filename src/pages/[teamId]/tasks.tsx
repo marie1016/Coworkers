@@ -137,6 +137,7 @@ export default function Tasks() {
           selectedTaskItem={selectedTaskItem}
           isTaskDetailOpen={isTaskDetailOpen}
           onCloseTaskDetail={closeTaskDetail}
+          openAddTask={() => openAddTask(selectedTaskItem)}
         />
       )}
       <AddTask

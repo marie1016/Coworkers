@@ -18,13 +18,17 @@ export default function TaskComments({ selectedTaskItem }: TaskCommentsProps) {
 
   const taskComments = commentsData ?? [];
 
+  const editComment = () => {
+    console.log(editComment);
+  };
+
   return (
     <ul>
       {taskComments.map((taskComment) => (
         <li key={taskComment.id} className="mt-4">
           <div className="flex items-center justify-between">
             <span>{taskComment.content}</span>
-            <EditDropdown />
+            <EditDropdown onEdit={editComment} />
           </div>
           <div className="my-4 flex items-center">
             <Image

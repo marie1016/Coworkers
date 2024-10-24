@@ -11,9 +11,13 @@ import EditDropdown from "./EditDropdown";
 
 interface TaskInfoProps {
   selectedTaskItem: Task;
+  openAddTask: (selectedTaskItem: Task) => void;
 }
 
-export default function TaskInfo({ selectedTaskItem }: TaskInfoProps) {
+export default function TaskInfo({
+  selectedTaskItem,
+  openAddTask,
+}: TaskInfoProps) {
   const { name, writer, updatedAt, date, frequency, description } =
     selectedTaskItem;
 
@@ -25,7 +29,7 @@ export default function TaskInfo({ selectedTaskItem }: TaskInfoProps) {
     <>
       <div className="my-4 flex items-center justify-between">
         <span className="text-text-xl text-text-primary">{name}</span>
-        <EditDropdown />
+        <EditDropdown onEdit={() => openAddTask(selectedTaskItem)} />
       </div>
       <div className="flex items-center justify-between">
         <span className="flex items-center justify-between gap-2">

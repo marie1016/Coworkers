@@ -130,7 +130,7 @@ export default function AddTask({
     <Modal isOpen={isOpen} onClose={() => closeModal(modalName)} isCloseButton>
       <div className="h-auto w-[24rem] px-6 py-8">
         <h2 className="text-center text-text-lg text-text-primary">
-          할 일 만들기
+          {taskToEdit ? "할 일 수정하기" : "할 일 만들기"}
         </h2>
         <p className="mb-6 mt-4 text-center text-text-md text-text-default">
           할 일은 실제로 행동 가능한 작업 중심으로 <br />
