@@ -22,7 +22,7 @@ export default function EditDropdown({ onEdit }: EditDropdownProps) {
 
   return (
     <Dropdown
-      menuClassName="w-32 -right-3.5 border border-border-primary bg-background-secondary"
+      menuClassName="w-32  right-0 top-6 border border-border-primary bg-background-secondary"
       trigger={
         <Image
           src="/icons/icon-kebab.svg"
