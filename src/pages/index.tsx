@@ -77,6 +77,10 @@ export default function Home() {
       <br />
       <Link href="/addboard">게시물 등록 페이지</Link>
       <br />
+      <Link href={`/participate${userInfo ? `?email=${userInfo.email}` : ""}`}>
+        팀 참여 페이지
+      </Link>
+      <br />
       <Link href="/landing">랜딩 페이지</Link>
       <br />
       <br />
