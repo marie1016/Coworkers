@@ -7,13 +7,13 @@ import TaskInfo from "./TaskInfo";
 import CommentTextarea from "./CommentTextarea";
 
 interface TaskDetailProps {
-  selectedTaskItem: Task;
+  taskItem: Task;
   isTaskDetailOpen: boolean;
   onCloseTaskDetail: () => void;
-  openTaskFormModal: (selectedTaskItem: Task) => void;
+  openTaskFormModal: (taskItem: Task) => void;
 }
 export default function TaskDetail({
-  selectedTaskItem,
+  taskItem,
   isTaskDetailOpen,
   onCloseTaskDetail,
   openTaskFormModal,
@@ -32,14 +32,14 @@ export default function TaskDetail({
         onClick={onCloseTaskDetail}
       />
       <TaskInfo
-        selectedTaskItem={selectedTaskItem}
-        openTaskFormModal={() => openTaskFormModal(selectedTaskItem)}
+        taskItem={taskItem}
+        openTaskFormModal={() => openTaskFormModal(taskItem)}
       />
       <div className="mt-4 text-text-md text-text-primary">
         <CommentTextarea />
         <ErrorBoundary fallback={<div>error</div>}>
           <Suspense fallback={<div>loading...</div>}>
-            <TaskComments selectedTaskItem={selectedTaskItem} />
+            <TaskComments taskItem={taskItem} />
           </Suspense>
         </ErrorBoundary>
       </div>

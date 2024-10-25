@@ -10,16 +10,15 @@ import "moment/locale/ko";
 import EditDropdown from "./EditDropdown";
 
 interface TaskInfoProps {
-  selectedTaskItem: Task;
+  taskItem: Task;
   openTaskFormModal: (selectedTaskItem: Task) => void;
 }
 
 export default function TaskInfo({
-  selectedTaskItem,
+  taskItem,
   openTaskFormModal,
 }: TaskInfoProps) {
-  const { name, writer, updatedAt, date, frequency, description } =
-    selectedTaskItem;
+  const { name, writer, updatedAt, date, frequency, description } = taskItem;
 
   const timeString = formattedTime(new Date(date));
 
@@ -29,7 +28,7 @@ export default function TaskInfo({
     <>
       <div className="my-4 flex items-center justify-between">
         <span className="text-text-xl text-text-primary">{name}</span>
-        <EditDropdown onEdit={() => openTaskFormModal(selectedTaskItem)} />
+        <EditDropdown onEdit={() => openTaskFormModal(taskItem)} />
       </div>
       <div className="flex items-center justify-between">
         <span className="flex items-center justify-between gap-2">

@@ -6,11 +6,11 @@ import Image from "next/image";
 import EditDropdown from "./EditDropdown";
 
 interface TaskCommentsProps {
-  selectedTaskItem: Task;
+  taskItem: Task;
 }
 
-export default function TaskComments({ selectedTaskItem }: TaskCommentsProps) {
-  const { id } = selectedTaskItem;
+export default function TaskComments({ taskItem }: TaskCommentsProps) {
+  const { id } = taskItem;
   const { data: commentsData } = useSuspenseQuery<TaskComment[]>({
     queryKey: ["taskComments", id],
     queryFn: () => getTaskComments(id),

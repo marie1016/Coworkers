@@ -11,8 +11,7 @@ interface Option {
 }
 
 export default function EditDropdown({ onEdit }: EditDropdownProps) {
-  const handleSelect = (option: Option, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleSelect = (option: Option) => {
     if (option.label === "수정하기") {
       onEdit();
     }
@@ -35,7 +34,7 @@ export default function EditDropdown({ onEdit }: EditDropdownProps) {
       {options.map((option) => (
         <DropdownItem
           key={option.label}
-          onClick={(e: React.MouseEvent) => handleSelect(option, e)}
+          onClick={() => handleSelect(option)}
           itemClassName="py-3 px-8 text-center"
         >
           {option.label}
