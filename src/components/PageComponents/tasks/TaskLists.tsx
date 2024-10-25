@@ -5,13 +5,13 @@ import getTaskLists from "@/core/api/tasks/getTaskLists";
 interface TaskListsProps {
   groupId: string;
   selectedTaskListId: number | null;
-  onHandleTaskListClick: (taskListId: number) => void;
+  onTaskListClick: (taskListId: number) => void;
 }
 
 export default function TaskLists({
   groupId,
   selectedTaskListId,
-  onHandleTaskListClick,
+  onTaskListClick,
 }: TaskListsProps) {
   const { data: taskListsData } = useQuery<TaskListsResponse>({
     queryKey: ["taskLists", groupId],
@@ -27,7 +27,7 @@ export default function TaskLists({
       {taskLists.map((taskList) => (
         <li
           key={taskList.id}
-          onClick={() => onHandleTaskListClick(taskList.id)}
+          onClick={() => onTaskListClick(taskList.id)}
           className={`text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
         >
           {taskList.name}

@@ -1,7 +1,7 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Checkbox from "@/components/@shared/UI/Checkbox";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formattedDate } from "@/lib/utils/date";
 import useModalStore from "@/store/modalStore";
 import EditDropdown from "./EditDropdown";
@@ -19,6 +19,10 @@ export default function TaskCard({
   const [task, setTask] = useState<Task>(taskItem);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   const { name, commentCount, frequency } = task;
+
+  useEffect(() => {
+    setTask(taskItem);
+  }, [taskItem]);
 
   const handleCheckboxChange = (checked: boolean) => {
     const updateTask = { ...task, checked };

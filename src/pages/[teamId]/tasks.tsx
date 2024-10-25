@@ -53,7 +53,7 @@ export default function Tasks() {
         <TaskLists
           groupId={groupId}
           selectedTaskListId={selectedTaskListId}
-          onHandleTaskListClick={handleTaskListClick}
+          onTaskListClick={handleTaskListClick}
         />
         <ErrorBoundary fallback={<div>error</div>}>
           <Suspense fallback={<div>loading...</div>}>
