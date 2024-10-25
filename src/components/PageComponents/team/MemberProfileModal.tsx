@@ -1,7 +1,8 @@
 import Button from "@/components/@shared/UI/Button";
 import Modal from "@/components/@shared/UI/Modal/Modal";
+import useTimeout from "@/lib/hooks/useTimeout";
 import Image from "next/image";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -20,23 +21,14 @@ export default function MemberProfileModal({
 }: Props) {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
 
-  const copyNoticeTimerRef: MutableRefObject<NodeJS.Timeout | null> =
-    useRef(null);
+  const clickNoticeTimeout = useTimeout(() => setIsButtonClicked(false), 700);
+
   const handleEmailCopy = () => {
+    if (isButtonClicked) return;
     navigator.clipboard.writeText(email);
     setIsButtonClicked(true);
-    copyNoticeTimerRef.current = setTimeout(
-      () => setIsButtonClicked(false),
-      700,
-    );
+    clickNoticeTimeout();
   };
-
-  useEffect(
-    () => () => {
-      if (copyNoticeTimerRef.current) clearTimeout(copyNoticeTimerRef.current);
-    },
-    [],
-  );
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCloseButton>
