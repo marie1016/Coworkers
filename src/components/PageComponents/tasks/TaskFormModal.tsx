@@ -10,6 +10,7 @@ import addTask from "@/core/api/tasks/addTask";
 import editTask from "@/core/api/tasks/editTask";
 import { AddTaskForm, EditTaskForm, Task } from "@/core/dtos/tasks/tasks";
 import { formattedDate } from "@/lib/utils/date";
+import FrequencyType from "@/lib/constants/frequencyType";
 import FrequencyWeekly from "./FrequencyWeekly";
 import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
@@ -29,7 +30,7 @@ export default function TaskFormModal({
     name: task?.name ?? "",
     description: task?.description ?? "",
     startDate: task?.date ?? new Date().toISOString(),
-    frequencyType: task?.frequency ?? "ONCE",
+    frequencyType: task?.frequency ?? FrequencyType.ONCE,
   });
   const [taskData, setTaskData] = useState(() => defaultTaskData(taskToEdit));
   const [selectedMonthDay, setSelectedMonthDay] = useState<number>(0);
@@ -52,7 +53,7 @@ export default function TaskFormModal({
     setTaskData({ ...taskData, [name]: value });
   };
 
-  const handleFrequencyChange = (value: string) => {
+  const handleFrequencyChange = (value: FrequencyType) => {
     setTaskData({ ...taskData, frequencyType: value });
   };
 
@@ -86,25 +87,36 @@ export default function TaskFormModal({
     },
   });
 
+  const isNameValid = taskData.name.trim();
+  const isDescriptionValid = taskData.description.trim();
+  const isStartDateValid = taskData.startDate !== null;
+  const isFrequencyTypeValid = !!taskData.frequencyType;
+
+  const isMonthlyValid =
+    taskData.frequencyType !== FrequencyType.MONTHLY ||
+    (selectedMonthDay >= 1 && selectedMonthDay <= 31);
+  const isWeeklyValid =
+    taskData.frequencyType !== FrequencyType.WEEKLY ||
+    selectedWeekDays.length > 0;
+
   const isFormValid = taskToEdit
-    ? taskData.name.trim() && taskData.description.trim()
-    : taskData.name.trim() &&
-      taskData.frequencyType &&
-      taskData.startDate !== null &&
-      taskData.description.trim() &&
-      (taskData.frequencyType !== "MONTHLY" ||
-        (selectedMonthDay >= 1 && selectedMonthDay <= 31)) &&
-      (taskData.frequencyType !== "WEEKLY" || selectedWeekDays.length > 0);
+    ? isNameValid && isDescriptionValid
+    : isNameValid &&
+      isDescriptionValid &&
+      isStartDateValid &&
+      isFrequencyTypeValid &&
+      isMonthlyValid &&
+      isWeeklyValid;
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isFormValid) {
       const dataToSubmit = {
         ...taskData,
-        ...(taskData.frequencyType === "MONTHLY" && {
+        ...(taskData.frequencyType === FrequencyType.MONTHLY && {
           monthDay: selectedMonthDay,
         }),
-        ...(taskData.frequencyType === "WEEKLY" && {
+        ...(taskData.frequencyType === FrequencyType.WEEKLY && {
           weekDays: selectedWeekDays,
         }),
       };
@@ -182,13 +194,13 @@ export default function TaskFormModal({
               <FrequencyDropdown onChange={handleFrequencyChange} />
             )}
           </InputLabel>
-          {!taskToEdit && taskData.frequencyType === "WEEKLY" && (
+          {!taskToEdit && taskData.frequencyType === FrequencyType.WEEKLY && (
             <FrequencyWeekly
               selectedWeekDays={selectedWeekDays}
               setSelectedWeekDays={setSelectedWeekDays}
             />
           )}
-          {!taskToEdit && taskData.frequencyType === "MONTHLY" && (
+          {!taskToEdit && taskData.frequencyType === FrequencyType.MONTHLY && (
             <FrequencyMonthly
               selectedMonthDay={selectedMonthDay}
               setSelectedMonthDay={setSelectedMonthDay}
