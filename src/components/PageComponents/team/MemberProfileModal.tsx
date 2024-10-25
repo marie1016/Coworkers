@@ -1,8 +1,7 @@
 import Button from "@/components/@shared/UI/Button";
 import Modal from "@/components/@shared/UI/Modal/Modal";
-import useTimeout from "@/lib/hooks/useTimeout";
+import useTimeoutToggle from "@/lib/hooks/useTimeoutToggle";
 import Image from "next/image";
-import { useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -19,15 +18,12 @@ export default function MemberProfileModal({
   name,
   email,
 }: Props) {
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
-
-  const clickNoticeTimeout = useTimeout(() => setIsButtonClicked(false), 700);
+  const { isOn: isButtonClicked, timeoutToggle } = useTimeoutToggle();
 
   const handleEmailCopy = () => {
     if (isButtonClicked) return;
     navigator.clipboard.writeText(email);
-    setIsButtonClicked(true);
-    clickNoticeTimeout();
+    timeoutToggle();
   };
 
   return (
