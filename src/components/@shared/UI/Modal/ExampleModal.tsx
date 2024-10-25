@@ -1,7 +1,7 @@
 // /src/components/@shared/UI/Modal/ExampleModal.tsx
 
 import React from "react";
-import useModalStore from "@/store/modalStore";
+import useModalStore from "@/lib/hooks/stores/modalStore";
 import Modal from "./Modal";
 
 export default function ExampleModal() {
