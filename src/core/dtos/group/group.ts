@@ -38,3 +38,12 @@ export interface SubmitTeamResponse {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface AcceptInvitationForm {
+  userEmail: string;
+  token: string;
+}
+
+export interface AcceptInvitationResponse {
+  groupId: number;
+}
