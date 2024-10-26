@@ -6,7 +6,7 @@ interface EditTaskParams {
   taskId: number;
 }
 
-export default async function addTask(
+export default async function editTask(
   { taskId }: EditTaskParams,
   editTaskForm: EditTaskForm,
 ) {

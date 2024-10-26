@@ -45,6 +45,10 @@ export interface TaskComment {
   };
 }
 
+export interface AddTaskCommentForm {
+  content: string;
+}
+
 export interface AddTaskForm {
   name: string;
   frequencyType: FrequencyType;

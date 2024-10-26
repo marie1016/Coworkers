@@ -12,8 +12,8 @@ import { ErrorBoundary } from "react-error-boundary";
 export default function Tasks() {
   const router = useRouter();
   const groupId = router.query.teamId as string;
-  const { task } = router.query;
-  const numericTaskId = parseInt(task as string, 10);
+  const { tasklist } = router.query;
+  const numericTaskId = parseInt(tasklist as string, 10);
 
   const [selectedTaskListId, setSelectedTaskListId] =
     useState<number>(numericTaskId);

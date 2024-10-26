@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { formattedDate } from "@/lib/utils/date";
 import useModalStore from "@/store/modalStore";
+import { useRouter } from "next/router";
 import EditDropdown from "./EditDropdown";
 import TaskDetail from "./TaskDetail";
 
@@ -19,6 +20,10 @@ export default function TaskCard({
   const [task, setTask] = useState<Task>(taskItem);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   const { name, commentCount, frequency } = task;
+  const router = useRouter();
+  const groupId = router.query.teamId as string;
+  const { tasklist } = router.query;
+  const numericTaskId = parseInt(tasklist as string, 10);
 
   useEffect(() => {
     setTask(taskItem);
@@ -31,6 +36,9 @@ export default function TaskCard({
 
   const openTaskDetail = () => {
     setIsTaskDetailOpen(true);
+    router.push(
+      `/${groupId}/tasks?tasklist=${numericTaskId}&taskItem=${task.id}`,
+    );
   };
 
   const closeTaskDetail = () => {
