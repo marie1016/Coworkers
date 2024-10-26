@@ -58,7 +58,7 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
         }
         onKeyDown={handleKeyDown}
         onInput={handleInput}
-        className="h-auto w-full resize-none overflow-hidden rounded-none border-b border-l-0 border-r-0 border-border-primary bg-background-secondary py-4 pl-0 pr-8 text-text-md outline-none placeholder:text-text-md placeholder:text-text-primary"
+        className="h-auto w-full resize-none overflow-hidden rounded-none border-b border-l-0 border-r-0 border-border-primary bg-background-secondary py-4 pl-0 pr-8 text-text-md outline-none placeholder:text-text-md placeholder:text-text-default"
         placeholder="댓글을 입력하세요."
       />
       <button type="submit" disabled={commentMutation.isPending || !comment}>
