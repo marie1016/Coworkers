@@ -2,20 +2,26 @@ import Dropdown from "@/components/@shared/UI/Dropdown";
 import DropdownItem from "@/components/@shared/UI/Item";
 import Image from "next/image";
 
+interface EditDropdownProps {
+  onEdit: () => void;
+}
+
 interface Option {
   label: string;
 }
 
-export default function EditDropdown() {
+export default function EditDropdown({ onEdit }: EditDropdownProps) {
   const handleSelect = (option: Option) => {
-    console.log(option.label);
+    if (option.label === "수정하기") {
+      onEdit();
+    }
   };
 
   const options: Option[] = [{ label: "수정하기" }, { label: "삭제하기" }];
 
   return (
     <Dropdown
-      menuClassName="w-32 -right-3.5 border border-border-primary bg-background-secondary"
+      menuClassName="w-32  right-0 top-6 border border-border-primary bg-background-secondary"
       trigger={
         <Image
           src="/icons/icon-kebab.svg"
