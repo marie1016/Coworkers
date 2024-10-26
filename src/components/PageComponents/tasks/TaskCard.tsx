@@ -3,7 +3,8 @@ import Checkbox from "@/components/@shared/UI/Checkbox";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { formattedDate } from "@/lib/utils/date";
-import useModalStore from "@/store/modalStore";
+import { useRouter } from "next/router";
+import useModalStore from "@/lib/hooks/stores/modalStore";
 import EditDropdown from "./EditDropdown";
 import TaskDetail from "./TaskDetail";
 
@@ -19,6 +20,9 @@ export default function TaskCard({
   const [task, setTask] = useState<Task>(taskItem);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   const { name, commentCount, frequency } = task;
+  const router = useRouter();
+  const groupId = router.query.teamId as string;
+  const tasklist = router.query.tasklist as string;
 
   useEffect(() => {
     setTask(taskItem);
@@ -31,6 +35,7 @@ export default function TaskCard({
 
   const openTaskDetail = () => {
     setIsTaskDetailOpen(true);
+    router.push(`/${groupId}/tasks?tasklist=${tasklist}&taskItem=${task.id}`);
   };
 
   const closeTaskDetail = () => {

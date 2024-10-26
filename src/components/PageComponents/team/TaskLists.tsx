@@ -27,7 +27,7 @@ export default function TaskLists({ tasks, teamId }: Props) {
         key={task.id}
       >
         <div className={indexClassName} />
-        <Link href={`${teamId}/tasks?task=${task.id}`}>{task.name}</Link>
+        <Link href={`${teamId}/tasks?tasklist=${task.id}`}>{task.name}</Link>
         <TaskListMenu
           teamId={teamId}
           taskListId={`${task.id}`}
