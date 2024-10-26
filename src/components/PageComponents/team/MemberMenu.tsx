@@ -3,15 +3,25 @@ import DropdownItem from "@/components/@shared/UI/Item";
 import Image from "next/image";
 import { useState } from "react";
 import MemberProfileModal from "./MemberProfileModal";
+import DeleteMemberModal from "./DeleteMemberModal";
 
 interface Props {
+  teamId: string;
+  memberId: string;
   image: string;
   name: string;
   email: string;
 }
 
-export default function MemberMenu({ image, name, email }: Props) {
+export default function MemberMenu({
+  teamId,
+  memberId,
+  image,
+  name,
+  email,
+}: Props) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMemberDeleteModalOpen, setIsMemberDeleteModalOpen] = useState(false);
 
   return (
     <>
@@ -29,12 +39,6 @@ export default function MemberMenu({ image, name, email }: Props) {
         >
           프로필 보기
         </DropdownItem>
-        <DropdownItem
-          onClick={() => {}}
-          itemClassName="h-10 flex justify-center items-center"
-        >
-          강퇴
-        </DropdownItem>
       </Dropdown>
       <MemberProfileModal
         isOpen={isProfileOpen}
@@ -42,6 +46,12 @@ export default function MemberMenu({ image, name, email }: Props) {
         image={image}
         name={name}
         email={email}
+      />
+      <DeleteMemberModal
+        isOpen={isMemberDeleteModalOpen}
+        onClose={() => setIsMemberDeleteModalOpen(false)}
+        teamId={teamId}
+        memberId={memberId}
       />
     </>
   );

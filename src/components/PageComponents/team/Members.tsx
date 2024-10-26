@@ -37,6 +37,8 @@ export default function Members({ members }: Props) {
               </div>
             </div>
             <MemberMenu
+              teamId={`${member.groupId}`}
+              memberId={`${member.userId}`}
               image={member.userImage}
               name={member.userName}
               email={member.userEmail}
