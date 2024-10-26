@@ -1,5 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import addTaskList from "@/core/api/taskList/addTaskList";
+import { useMutation } from "@tanstack/react-query";
+import patchTaskList from "@/core/api/taskList/patchTaskList";
 import Button from "./UI/Button";
 import Input from "./UI/Input";
 import Modal from "./UI/Modal/Modal";
@@ -9,6 +11,10 @@ interface Props {
   onClose: () => void;
   teamId: string;
   submitCallback?: () => void;
+  defaultPatchForm?: {
+    taskListId: string;
+    name: string;
+  };
 }
 
 export default function AddTaskListModal({
@@ -16,23 +22,37 @@ export default function AddTaskListModal({
   onClose,
   teamId,
   submitCallback = () => {},
+  defaultPatchForm,
 }: Props) {
-  const [taskListName, setTaskListName] = useState("");
+  const [taskListName, setTaskListName] = useState(
+    defaultPatchForm?.name ?? "",
+  );
+
+  const mutationFn = defaultPatchForm
+    ? () =>
+        patchTaskList(teamId, defaultPatchForm.taskListId, {
+          name: taskListName,
+        })
+    : () => addTaskList(teamId, { name: taskListName });
+
+  const taskListMutation = useMutation({
+    mutationFn,
+    onSuccess: () => {
+      submitCallback();
+      onClose();
+    },
+    onError: (error) => {
+      alert("AddTaskListModal 컴포넌트에서 오류 발생: 콘솔 확인");
+      console.error(error);
+    },
+  });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) =>
     setTaskListName(e.target.value);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    try {
-      await addTaskList(teamId, { name: taskListName });
-    } catch (error) {
-      alert("목록 등록 중 오류 발생: 오류 정보는 콘솔에서 확인");
-      console.error(error);
-      return;
-    }
-    submitCallback();
-    onClose();
+    taskListMutation.mutate();
   };
 
   return (
@@ -53,7 +73,7 @@ export default function AddTaskListModal({
           />
         </div>
         <Button type="submit" variant="solid" size="large">
-          만들기
+          {defaultPatchForm ? "수정하기" : "만들기"}
         </Button>
       </form>
     </Modal>

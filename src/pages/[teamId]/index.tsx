@@ -3,6 +3,7 @@ import Members from "@/components/PageComponents/team/Members";
 import SectionHeader from "@/components/PageComponents/team/SectionHeader";
 import TaskLists from "@/components/PageComponents/team/TaskLists";
 import TeamGear from "@/components/PageComponents/team/TeamGear";
+import TeamLinkModal from "@/components/PageComponents/team/TeamLinkModal";
 import getTeamData from "@/core/api/group/getTeamData";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
@@ -10,6 +11,7 @@ import { useState } from "react";
 
 export default function Team() {
   const [isAddTaskListModalOpen, setIsAddTaskListModalOpen] = useState(false);
+  const [isTeamLinkModalOpen, setIsTeamLinkModalOpen] = useState(false);
 
   const router = useRouter();
   const teamId = router.query.teamId as string;
@@ -19,15 +21,12 @@ export default function Team() {
     queryKey: ["group", teamId],
     queryFn: () => getTeamData(teamId),
     staleTime: 1000 * 60,
+    enabled: !!teamId,
   });
 
   const group = groupResponse.data?.data;
   const refreshGroup = () => {
     queryClient.invalidateQueries({ queryKey: ["group", teamId] });
-  };
-
-  const handleAddTaskClick = () => {
-    setIsAddTaskListModalOpen(!isAddTaskListModalOpen);
   };
 
   if (!group) return null;
@@ -49,7 +48,9 @@ export default function Team() {
             title="할 일 목록"
             length={`${group.taskLists.length}개`}
             addText="+ 새로운 목록 추가하기"
-            onAddClick={handleAddTaskClick}
+            onAddClick={() =>
+              setIsAddTaskListModalOpen(!isAddTaskListModalOpen)
+            }
           />
           {group.taskLists.length ? (
             <TaskLists tasks={group.taskLists} teamId={teamId} />
@@ -64,6 +65,7 @@ export default function Team() {
             title="멤버"
             length={`${group.members.length}명`}
             addText="+ 새로운 멤버 초대하기"
+            onAddClick={() => setIsTeamLinkModalOpen(!isTeamLinkModalOpen)}
           />
           <Members members={group.members} />
         </section>
@@ -73,6 +75,11 @@ export default function Team() {
         onClose={() => setIsAddTaskListModalOpen(false)}
         teamId={teamId}
         submitCallback={refreshGroup}
+      />
+      <TeamLinkModal
+        isOpen={isTeamLinkModalOpen}
+        onClose={() => setIsTeamLinkModalOpen(false)}
+        teamId={teamId}
       />
     </>
   );
