@@ -50,6 +50,10 @@ export default function TaskCard({
     closeTaskDetail();
   };
 
+  const deleteTask = (taskData: Task) => {
+    console.log(taskData);
+  };
+
   return (
     <>
       <div className="w-1200 mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
@@ -70,7 +74,10 @@ export default function TaskCard({
             />
             {commentCount}
           </div>
-          <EditDropdown onEdit={() => openTaskFormModal(task)} />
+          <EditDropdown
+            onEdit={() => openTaskFormModal(task)}
+            onDelete={() => deleteTask(task)}
+          />
         </div>
         <div className="mt-2.5 flex items-center">
           <Image
@@ -98,6 +105,7 @@ export default function TaskCard({
           isTaskDetailOpen={isTaskDetailOpen}
           onCloseTaskDetail={closeTaskDetail}
           openTaskFormModal={() => openTaskFormModal(task)}
+          deleteTask={() => deleteTask(task)}
         />
       )}
     </>

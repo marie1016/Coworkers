@@ -11,12 +11,14 @@ import EditDropdown from "./EditDropdown";
 
 interface TaskInfoProps {
   taskItem: Task;
-  openTaskFormModal: (selectedTaskItem: Task) => void;
+  openTaskFormModal: () => void;
+  deleteTask: () => void;
 }
 
 export default function TaskInfo({
   taskItem,
   openTaskFormModal,
+  deleteTask,
 }: TaskInfoProps) {
   const { name, writer, updatedAt, date, frequency, description } = taskItem;
 
@@ -28,7 +30,7 @@ export default function TaskInfo({
     <>
       <div className="my-4 flex items-center justify-between">
         <span className="text-text-xl text-text-primary">{name}</span>
-        <EditDropdown onEdit={() => openTaskFormModal(taskItem)} />
+        <EditDropdown onEdit={openTaskFormModal} onDelete={deleteTask} />
       </div>
       <div className="flex items-center justify-between">
         <span className="flex items-center justify-between gap-2">

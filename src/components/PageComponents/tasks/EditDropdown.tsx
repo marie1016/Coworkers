@@ -4,17 +4,20 @@ import Image from "next/image";
 
 interface EditDropdownProps {
   onEdit: () => void;
+  onDelete: () => void;
 }
 
 interface Option {
   label: string;
 }
 
-export default function EditDropdown({ onEdit }: EditDropdownProps) {
+export default function EditDropdown({ onEdit, onDelete }: EditDropdownProps) {
   const handleSelect = (option: Option) => {
     if (option.label === "수정하기") {
       onEdit();
+      return;
     }
+    onDelete();
   };
 
   const options: Option[] = [{ label: "수정하기" }, { label: "삭제하기" }];

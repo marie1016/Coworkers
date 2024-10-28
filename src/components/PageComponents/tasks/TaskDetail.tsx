@@ -10,13 +10,15 @@ interface TaskDetailProps {
   taskItem: Task;
   isTaskDetailOpen: boolean;
   onCloseTaskDetail: () => void;
-  openTaskFormModal: (taskItem: Task) => void;
+  openTaskFormModal: () => void;
+  deleteTask: () => void;
 }
 export default function TaskDetail({
   taskItem,
   isTaskDetailOpen,
   onCloseTaskDetail,
   openTaskFormModal,
+  deleteTask,
 }: TaskDetailProps) {
   if (!isTaskDetailOpen) {
     return null;
@@ -33,7 +35,8 @@ export default function TaskDetail({
       />
       <TaskInfo
         taskItem={taskItem}
-        openTaskFormModal={() => openTaskFormModal(taskItem)}
+        openTaskFormModal={openTaskFormModal}
+        deleteTask={deleteTask}
       />
       <div className="mt-4 text-text-md text-text-primary">
         <CommentTextarea taskItem={taskItem} />

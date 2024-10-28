@@ -45,7 +45,7 @@ export interface TaskComment {
   };
 }
 
-export interface AddTaskCommentForm {
+export interface TaskCommentForm {
   content: string;
 }
 

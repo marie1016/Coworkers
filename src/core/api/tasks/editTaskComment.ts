@@ -2,16 +2,17 @@ import { TaskCommentForm } from "@/core/dtos/tasks/tasks";
 import { AxiosError, AxiosResponse } from "axios";
 import axiosInstance from "../axiosInstance";
 
-interface AddTaskCommentParams {
-  taskId: number;
+export interface EditTaskCommentParams {
+  commentId: number;
+  editTaskCommentForm: TaskCommentForm;
 }
 
-export default async function addTaskComment(
-  { taskId }: AddTaskCommentParams,
-  addTaskCommentForm: TaskCommentForm,
-) {
+export default async function editTaskComment({
+  commentId,
+  editTaskCommentForm,
+}: EditTaskCommentParams) {
   const res: AxiosResponse<TaskCommentForm, AxiosError> = await axiosInstance
-    .post(`/tasks/${taskId}/comments`, addTaskCommentForm)
+    .patch(`/tasks/{taskId}/comments/${commentId}`, editTaskCommentForm)
     .catch((e: AxiosError) => Promise.reject(e));
   return res.data;
 }
