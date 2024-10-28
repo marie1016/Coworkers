@@ -148,7 +148,7 @@ export default function Login() {
               />
             </div>
             <Link
-              href="/"
+              href="/resetPassword"
               className="flex items-center justify-end text-lg text-brand-primary underline"
             >
               비밀번호를 잊으셨나요?

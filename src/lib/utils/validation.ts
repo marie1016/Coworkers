@@ -1,15 +1,23 @@
 // 비밀번호 유효성 검사 함수
 export function validatePassword(password: string): string | undefined {
   const minLength = 8;
-  const regex =
-    /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?`~]).{8,}$/;
+  const maxLength = 12;
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]/.test(password);
 
-  if (password.length < minLength) {
-    return `비밀번호는 최소 ${minLength}자 이상이어야 합니다.`;
+  if (!password) {
+    return "비밀번호를 입력해주세요";
   }
 
-  if (!regex.test(password)) {
-    return "비밀번호는 영문, 숫자, 특수 문자를 모두 포함해야 합니다.";
+  if (password.length < minLength || password.length > maxLength) {
+    if (!hasLetter || !hasNumber || !hasSpecialChar) {
+      return "영문, 숫자, 특수 문자를 모두 포함해야 하며 8자 이상 12자 이내로 작성해주세요.";
+    }
+    return "8자 이상 12자 이내로 작성해주세요.";
+  }
+  if (!hasLetter || !hasNumber || !hasSpecialChar) {
+    return "영문, 숫자, 특수 문자를 모두 포함하여 작성해주세요.";
   }
   return undefined;
 }
