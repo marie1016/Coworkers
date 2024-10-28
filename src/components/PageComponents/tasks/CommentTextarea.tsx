@@ -1,5 +1,5 @@
 import addTaskComment from "@/core/api/tasks/addTaskComment";
-import { AddTaskCommentForm, Task } from "@/core/dtos/tasks/tasks";
+import { TaskCommentForm, Task } from "@/core/dtos/tasks/tasks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
@@ -20,7 +20,7 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
   };
 
   const commentMutation = useMutation({
-    mutationFn: (addTaskCommentForm: AddTaskCommentForm) =>
+    mutationFn: (addTaskCommentForm: TaskCommentForm) =>
       addTaskComment({ taskId: id }, addTaskCommentForm),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["taskComments", id] });
