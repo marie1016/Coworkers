@@ -34,7 +34,7 @@ export default function Team() {
     enabled: !!teamId,
   });
 
-  const group = groupResponse.data?.data;
+  const group = groupResponse.data;
   const refreshGroup = () => {
     queryClient.invalidateQueries({ queryKey: ["group", teamId] });
   };
@@ -53,7 +53,7 @@ export default function Team() {
             refreshGroup={refreshGroup}
           />
         </div>
-        <section className="mb-16 flex flex-col gap-4">
+        <section className="mb-12 flex flex-col gap-4">
           <SectionHeader
             title="할 일 목록"
             length={`${group.taskLists.length}개`}

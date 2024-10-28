@@ -13,8 +13,8 @@ interface Props {
 }
 
 export default function TaskListMenu({ teamId, taskListId, name }: Props) {
-  const patchModalName = "patchModal";
-  const deleteModalName = "deleteModal";
+  const patchModalName = `${taskListId}taskListPatchModal`;
+  const deleteModalName = `${taskListId}taskListDeleteModal`;
 
   const isPatchModalOpen = useModalStore(
     (state) => state.modals[patchModalName],
