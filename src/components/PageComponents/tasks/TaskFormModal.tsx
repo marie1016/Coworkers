@@ -1,7 +1,7 @@
 import Input from "@/components/@shared/UI/Input";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import React, { useEffect, useState } from "react";
-import useModalStore from "@/store/modalStore";
+import useModalStore from "@/lib/hooks/stores/modalStore";
 import Modal from "@/components/@shared/UI/Modal/Modal";
 import Button from "@/components/@shared/UI/Button";
 import DatePicker from "react-datepicker";

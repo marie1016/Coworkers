@@ -5,18 +5,18 @@ import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
 import TaskCardList from "@/components/PageComponents/tasks/TaskCardList";
 import TaskDate from "@/components/PageComponents/tasks/TaskDate";
-import useModalStore from "@/store/modalStore";
+import useModalStore from "@/lib/hooks/stores/modalStore";
 import TaskFormModal from "@/components/PageComponents/tasks/TaskFormModal";
 import { ErrorBoundary } from "react-error-boundary";
 
 export default function Tasks() {
   const router = useRouter();
   const groupId = router.query.teamId as string;
-  const { task } = router.query;
-  const numericTaskId = parseInt(task as string, 10);
+  const { tasklist } = router.query;
+  const numericTaskListId = parseInt(tasklist as string, 10);
 
   const [selectedTaskListId, setSelectedTaskListId] =
-    useState<number>(numericTaskId);
+    useState<number>(numericTaskListId);
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
