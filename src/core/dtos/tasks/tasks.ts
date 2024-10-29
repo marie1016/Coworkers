@@ -26,6 +26,8 @@ export interface Task {
   recurring: {
     weekDays: [];
     monthDay: number;
+    taskListId: number;
+    groupId: number;
   };
 }
 

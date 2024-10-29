@@ -8,6 +8,7 @@ import useModalStore from "@/lib/hooks/stores/modalStore";
 import TaskFormModal from "@/components/PageComponents/tasks/TaskFormModal";
 import { ErrorBoundary } from "react-error-boundary";
 import SectionHeader from "@/components/PageComponents/tasks/SectionHeader";
+import DeleteTaskModal from "@/components/PageComponents/tasks/DeleteTaskModal";
 
 export default function Tasks() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function Tasks() {
   const handleTaskItemChange = (taskItem: Task) => {
     setSelectedTaskItem(taskItem);
   };
+  console.log(selectedTaskItem);
 
   return (
     <div className="relative mx-auto mt-10 w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
@@ -74,6 +76,7 @@ export default function Tasks() {
         selectedTaskListId={selectedTaskListId}
         taskToEdit={selectedTaskItem}
       />
+      <DeleteTaskModal taskItem={selectedTaskItem} />
     </div>
   );
 }

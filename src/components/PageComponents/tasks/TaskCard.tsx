@@ -46,8 +46,9 @@ export default function TaskCard({
     closeTaskDetail();
   };
 
-  const deleteTask = (taskData: Task) => {
-    console.log(taskData);
+  const openDeleteTaskModal = (taskData: Task) => {
+    onTaskItemChange(taskData);
+    openModal("deleteTaskModal");
   };
 
   return (
@@ -72,7 +73,7 @@ export default function TaskCard({
           </div>
           <EditDropdown
             onEdit={() => openTaskFormModal(taskItem)}
-            onDelete={() => deleteTask(taskItem)}
+            onDelete={() => openDeleteTaskModal(taskItem)}
           />
         </div>
         <div className="mt-2.5 flex items-center">
@@ -101,7 +102,7 @@ export default function TaskCard({
           isTaskDetailOpen={isTaskDetailOpen}
           closeTaskDetail={closeTaskDetail}
           openTaskFormModal={() => openTaskFormModal(taskItem)}
-          deleteTask={() => deleteTask(taskItem)}
+          deleteTask={() => openDeleteTaskModal(taskItem)}
         />
       )}
     </>
