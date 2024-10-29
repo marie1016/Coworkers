@@ -40,9 +40,9 @@ export default function TaskCard({
 
   const openModal = useModalStore((state) => state.openModal);
 
-  const openTaskFormModal = (taskData: Task) => {
+  const openEditTaskModal = (taskData: Task) => {
     onTaskItemChange(taskData);
-    openModal("taskFormModal");
+    openModal("editTaskModal");
     closeTaskDetail();
   };
 
@@ -72,7 +72,7 @@ export default function TaskCard({
             {commentCount}
           </div>
           <EditDropdown
-            onEdit={() => openTaskFormModal(taskItem)}
+            onEdit={() => openEditTaskModal(taskItem)}
             onDelete={() => openDeleteTaskModal(taskItem)}
           />
         </div>
@@ -101,8 +101,8 @@ export default function TaskCard({
           taskItem={taskItem}
           isTaskDetailOpen={isTaskDetailOpen}
           closeTaskDetail={closeTaskDetail}
-          openTaskFormModal={() => openTaskFormModal(taskItem)}
-          deleteTask={() => openDeleteTaskModal(taskItem)}
+          openEditTaskModal={() => openEditTaskModal(taskItem)}
+          openDeleteTaskModal={() => openDeleteTaskModal(taskItem)}
         />
       )}
     </>

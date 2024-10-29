@@ -74,6 +74,7 @@ export default function DeleteTaskModal({
             size="large"
             className="bg-status-danger"
             onClick={handleDeleteTask}
+            disabled={deleteMutation.isPending}
           >
             삭제하기
           </Button>

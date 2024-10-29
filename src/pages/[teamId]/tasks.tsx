@@ -5,7 +5,8 @@ import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
 import TaskCardList from "@/components/PageComponents/tasks/TaskCardList";
 import useModalStore from "@/lib/hooks/stores/modalStore";
-import TaskFormModal from "@/components/PageComponents/tasks/TaskFormModal";
+import AddTaskModal from "@/components/PageComponents/tasks/AddTaskModal";
+import EditTaskModal from "@/components/PageComponents/tasks/EditTaskModal";
 import { ErrorBoundary } from "react-error-boundary";
 import SectionHeader from "@/components/PageComponents/tasks/SectionHeader";
 import DeleteTaskModal from "@/components/PageComponents/tasks/DeleteTaskModal";
@@ -27,9 +28,8 @@ export default function Tasks() {
 
   const openModal = useModalStore((state) => state.openModal);
 
-  const openTaskFormModal = (taskItem: Task | null) => {
-    setSelectedTaskItem(taskItem);
-    openModal("taskFormModal");
+  const openTaskFormModal = () => {
+    openModal("addTaskModal");
   };
 
   const handleTaskItemChange = (taskItem: Task) => {
@@ -67,15 +67,12 @@ export default function Tasks() {
         className="md: md: absolute -right-8 right-0 top-[55.25rem] top-[62.06rem] sm:top-[41.06rem]"
         variant="solid"
         size="large"
-        onClick={() => openTaskFormModal(null)}
+        onClick={openTaskFormModal}
       >
         + 할 일 추가
       </FloatingButton>
-      <TaskFormModal
-        teamId={teamId}
-        selectedTaskListId={selectedTaskListId}
-        taskToEdit={selectedTaskItem}
-      />
+      <AddTaskModal teamId={teamId} selectedTaskListId={selectedTaskListId} />
+      {selectedTaskItem && <EditTaskModal taskToEdit={selectedTaskItem} />}
       <DeleteTaskModal taskItem={selectedTaskItem} />
     </div>
   );

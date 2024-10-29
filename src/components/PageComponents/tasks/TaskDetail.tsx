@@ -12,15 +12,15 @@ interface TaskDetailProps {
   taskItem: Task;
   isTaskDetailOpen: boolean;
   closeTaskDetail: () => void;
-  openTaskFormModal: () => void;
-  deleteTask: () => void;
+  openEditTaskModal: () => void;
+  openDeleteTaskModal: () => void;
 }
 export default function TaskDetail({
   taskItem,
   isTaskDetailOpen,
   closeTaskDetail,
-  openTaskFormModal,
-  deleteTask,
+  openEditTaskModal,
+  openDeleteTaskModal,
 }: TaskDetailProps) {
   const { doneAt, id } = taskItem;
   const { handleClick } = usePatchTaskDone(id);
@@ -47,8 +47,8 @@ export default function TaskDetail({
         />
         <TaskInfo
           taskItem={taskItem}
-          openTaskFormModal={openTaskFormModal}
-          deleteTask={deleteTask}
+          openTaskFormModal={openEditTaskModal}
+          deleteTask={openDeleteTaskModal}
         />
         <div className="mt-4 text-text-md text-text-primary">
           <CommentTextarea taskItem={taskItem} />
