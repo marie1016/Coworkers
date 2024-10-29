@@ -1,10 +1,6 @@
 import getTaskComments from "@/core/api/tasks/getTaskComments";
 import { Task, TaskComment, TaskCommentForm } from "@/core/dtos/tasks/tasks";
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { formattedShortDate } from "@/lib/utils/date";
 import Image from "next/image";
 import editTaskComment from "@/core/api/tasks/editTaskComment";
@@ -29,7 +25,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
-  const { data: commentsData } = useSuspenseQuery<TaskComment[]>({
+  const { data: commentsData } = useQuery<TaskComment[]>({
     queryKey: ["taskComments", id],
     queryFn: () => getTaskComments(id),
   });
@@ -132,6 +128,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
                   size="x-small"
                   type="submit"
                   onClick={(e) => submitCommentForm(e, taskComment.id)}
+                  disabled={editMutation.isPending || !comment}
                 >
                   수정하기
                 </Button>

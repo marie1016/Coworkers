@@ -138,6 +138,8 @@ export default function TaskFormModal({
     }
   };
 
+  if (!isOpen) return null;
+
   return (
     <Modal isOpen={isOpen} onClose={() => closeModal(modalName)} isCloseButton>
       <div className="h-auto w-[24rem] px-6 py-8">

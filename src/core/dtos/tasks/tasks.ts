@@ -22,6 +22,7 @@ export interface Task {
   checked: boolean;
   date: string;
   updatedAt: string;
+  doneAt: string;
   writer: {
     nickname: string;
     image: string;
@@ -59,8 +60,9 @@ export interface AddTaskForm {
 }
 
 export interface EditTaskForm {
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
+  done?: boolean;
 }
 
 export interface AddTaskListForm {
