@@ -4,10 +4,10 @@ import { useRouter } from "next/router";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
 import TaskCardList from "@/components/PageComponents/tasks/TaskCardList";
-import TaskDate from "@/components/PageComponents/tasks/TaskDate";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import TaskFormModal from "@/components/PageComponents/tasks/TaskFormModal";
 import { ErrorBoundary } from "react-error-boundary";
+import SectionHeader from "@/components/PageComponents/tasks/SectionHeader";
 
 export default function Tasks() {
   const router = useRouter();
@@ -38,16 +38,10 @@ export default function Tasks() {
   return (
     <div className="relative mx-auto mt-10 w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
       <section>
-        <h1 className="text-text-xl font-bold text-text-primary">할 일</h1>
-        <div className="my-6 flex items-center justify-between">
-          <TaskDate
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-          />
-          <p className="text-text-md font-regular text-brand-primary">
-            +새로운 목록 추가하기
-          </p>
-        </div>
+        <SectionHeader
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
       </section>
       <section>
         <TaskLists
