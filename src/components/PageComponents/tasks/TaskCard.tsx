@@ -21,7 +21,7 @@ export default function TaskCard({
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   const { id, name, commentCount, frequency, doneAt, date } = taskItem;
   const router = useRouter();
-  const groupId = router.query.teamId as string;
+  const teamId = router.query.teamId as string;
   const tasklist = router.query.tasklist as string;
   const { handleClick } = usePatchTaskDone(id);
 
@@ -29,10 +29,9 @@ export default function TaskCard({
     handleClick(checked);
   };
 
-  console.log(taskItem);
   const openTaskDetail = () => {
     setIsTaskDetailOpen(true);
-    router.push(`/${groupId}/tasks?tasklist=${tasklist}&taskItem=${id}`);
+    router.push(`/${teamId}/tasks?tasklist=${tasklist}&taskItem=${id}`);
   };
 
   const closeTaskDetail = () => {

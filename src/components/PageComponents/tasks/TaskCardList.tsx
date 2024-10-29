@@ -4,14 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import TaskCard from "@/components/PageComponents/tasks/TaskCard";
 
 interface TaskCardListProps {
-  groupId: string;
+  teamId: string;
   selectedTaskListId: number;
   selectedDate: Date | null;
   onTaskItemChange: (task: Task) => void;
 }
 
 export default function TaskCardList({
-  groupId,
+  teamId,
   selectedTaskListId,
   selectedDate,
   onTaskItemChange,
@@ -20,7 +20,7 @@ export default function TaskCardList({
     queryKey: ["tasks", selectedTaskListId, selectedDate],
     queryFn: () =>
       getTasks({
-        groupId,
+        teamId,
         id: selectedTaskListId,
         date: selectedDate,
       }),

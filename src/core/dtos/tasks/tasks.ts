@@ -9,10 +9,6 @@ export interface TaskList {
   displayIndex: number;
 }
 
-export interface TaskListsResponse {
-  taskLists: TaskList[];
-}
-
 export interface Task {
   id: number;
   name: string;

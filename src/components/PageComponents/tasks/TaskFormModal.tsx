@@ -16,14 +16,14 @@ import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
 
 interface AddEditTaskProps {
-  groupId: string;
+  teamId: string;
   selectedTaskListId: number;
   taskToEdit: Task | null;
 }
 
 export default function TaskFormModal({
   taskToEdit,
-  groupId,
+  teamId,
   selectedTaskListId,
 }: AddEditTaskProps) {
   const defaultTaskData = (task: Task | null) => ({
@@ -78,7 +78,7 @@ export default function TaskFormModal({
     }) =>
       taskToEdit
         ? editTask({ taskId: taskToEdit.id }, editTaskForm)
-        : addTask({ groupId, selectedTaskListId }, addTaskForm),
+        : addTask({ teamId, selectedTaskListId }, addTaskForm),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },

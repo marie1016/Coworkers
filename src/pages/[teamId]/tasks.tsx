@@ -11,7 +11,7 @@ import SectionHeader from "@/components/PageComponents/tasks/SectionHeader";
 
 export default function Tasks() {
   const router = useRouter();
-  const groupId = router.query.teamId as string;
+  const teamId = router.query.teamId as string;
   const { tasklist } = router.query;
   const numericTaskListId = parseInt(tasklist as string, 10);
 
@@ -39,20 +39,21 @@ export default function Tasks() {
     <div className="relative mx-auto mt-10 w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
       <section>
         <SectionHeader
+          teamId={teamId}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
         />
       </section>
       <section>
         <TaskLists
-          groupId={groupId}
+          teamId={teamId}
           selectedTaskListId={selectedTaskListId}
           onTaskListClick={handleTaskListClick}
         />
         <ErrorBoundary fallback={<div>error</div>}>
           <Suspense fallback={<div>loading...</div>}>
             <TaskCardList
-              groupId={groupId}
+              teamId={teamId}
               selectedTaskListId={selectedTaskListId}
               selectedDate={selectedDate}
               onTaskItemChange={handleTaskItemChange}
@@ -69,7 +70,7 @@ export default function Tasks() {
         + 할 일 추가
       </FloatingButton>
       <TaskFormModal
-        groupId={groupId}
+        teamId={teamId}
         selectedTaskListId={selectedTaskListId}
         taskToEdit={selectedTaskItem}
       />

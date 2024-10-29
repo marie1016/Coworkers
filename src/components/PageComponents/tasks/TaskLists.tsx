@@ -1,26 +1,26 @@
-import { TaskList, TaskListsResponse } from "@/core/dtos/tasks/tasks";
 import { useQuery } from "@tanstack/react-query";
-import getTaskLists from "@/core/api/tasks/getTaskLists";
+import getTeamData from "@/core/api/group/getTeamData";
 
 interface TaskListsProps {
-  groupId: string;
+  teamId: string;
   selectedTaskListId: number | null;
   onTaskListClick: (taskListId: number) => void;
 }
 
 export default function TaskLists({
-  groupId,
+  teamId,
   selectedTaskListId,
   onTaskListClick,
 }: TaskListsProps) {
-  const { data: taskListsData } = useQuery<TaskListsResponse>({
-    queryKey: ["taskLists", groupId],
-    queryFn: () => getTaskLists(groupId),
-    enabled: !!groupId,
-    retry: 0,
+  const groupResponse = useQuery({
+    queryKey: ["group", teamId],
+    queryFn: () => getTeamData(teamId),
+    staleTime: 1000 * 60,
+    enabled: !!teamId,
   });
 
-  const taskLists: TaskList[] = taskListsData?.taskLists ?? [];
+  const group = groupResponse.data?.data;
+  const taskLists = group?.taskLists ?? [];
 
   return taskLists.length > 0 ? (
     <ul className="flex items-center gap-3">
