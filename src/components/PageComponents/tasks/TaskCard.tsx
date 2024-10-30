@@ -1,7 +1,7 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Checkbox from "@/components/@shared/UI/Checkbox";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { formattedDate } from "@/lib/utils/date";
 import { useRouter } from "next/router";
 import useModalStore from "@/lib/hooks/stores/modalStore";
@@ -24,6 +24,7 @@ export default function TaskCard({
   const teamId = router.query.teamId as string;
   const tasklist = router.query.tasklist as string;
   const { handleClick } = usePatchTaskDone(id);
+  const taskDetailRef = useRef<HTMLDivElement>(null);
 
   const handleCheckboxChange = (checked: boolean) => {
     handleClick(checked);
@@ -36,6 +37,12 @@ export default function TaskCard({
 
   const closeTaskDetail = () => {
     setIsTaskDetailOpen(false);
+  };
+
+  const outSideClick = (e: React.MouseEvent) => {
+    if (taskDetailRef.current === e.target) {
+      setIsTaskDetailOpen(false);
+    }
   };
 
   const openModal = useModalStore((state) => state.openModal);
@@ -104,6 +111,8 @@ export default function TaskCard({
           closeTaskDetail={closeTaskDetail}
           openEditTaskModal={() => openEditTaskModal(taskItem)}
           openDeleteTaskModal={() => openDeleteTaskModal(taskItem)}
+          taskDetailRef={taskDetailRef}
+          outSideClick={outSideClick}
         />
       )}
     </>
