@@ -5,6 +5,7 @@ interface CheckboxProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   onTitleClick?: () => void;
+  className: string;
 }
 
 export default function Checkbox({
@@ -12,9 +13,10 @@ export default function Checkbox({
   checked,
   onChange,
   onTitleClick,
+  className,
 }: CheckboxProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div className={`flex items-center gap-2 ${className}`}>
       <Image
         src={checked ? "/icons/icon-faCheck.svg" : "/icons/icon-faSquare.svg"}
         width={24}

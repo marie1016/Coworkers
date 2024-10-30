@@ -35,7 +35,6 @@ export default function Tasks() {
   const handleTaskItemChange = (taskItem: Task) => {
     setSelectedTaskItem(taskItem);
   };
-  console.log(selectedTaskItem);
 
   return (
     <div className="relative mx-auto mt-10 w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
@@ -73,7 +72,7 @@ export default function Tasks() {
       </FloatingButton>
       <AddTaskModal teamId={teamId} selectedTaskListId={selectedTaskListId} />
       {selectedTaskItem && <EditTaskModal taskToEdit={selectedTaskItem} />}
-      <DeleteTaskModal taskItem={selectedTaskItem} />
+      {selectedTaskItem && <DeleteTaskModal taskItem={selectedTaskItem} />}
     </div>
   );
 }

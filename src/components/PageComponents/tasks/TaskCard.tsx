@@ -57,6 +57,7 @@ export default function TaskCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Checkbox
+              className="max-w-[62.5rem] sm:w-[13rem] md:max-w-[37.5rem]"
               title={name}
               checked={!!doneAt}
               onChange={handleCheckboxChange}

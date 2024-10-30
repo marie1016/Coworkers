@@ -19,6 +19,7 @@ export interface Task {
   date: string;
   updatedAt: string;
   doneAt: string;
+  recurringId: number;
   writer: {
     nickname: string;
     image: string;

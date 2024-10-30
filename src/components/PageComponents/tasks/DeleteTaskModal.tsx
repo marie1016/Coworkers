@@ -5,24 +5,28 @@ import { Task } from "@/core/dtos/tasks/tasks";
 import Button from "@/components/@shared/UI/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import deleteTask from "@/core/api/tasks/deleteTask";
+import { useState } from "react";
+import deleteRecurring from "@/core/api/tasks/deleteRecurring";
 
-export default function DeleteTaskModal({
-  taskItem,
-}: {
-  taskItem: Task | null;
-}) {
+export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
+  const [buttonId, setButtonId] = useState(0);
+
   const modalName = "deleteTaskModal";
   const isOpen = useModalStore((state) => state.modals[modalName] || false);
   const closeModal = useModalStore((state) => state.closeModal);
   const queryClient = useQueryClient();
 
+  const handleButtonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setButtonId(Number(e.target.value));
+  };
+
+  const mutationFn =
+    buttonId === 1
+      ? () => deleteTask(taskItem.id)
+      : () => deleteRecurring(taskItem.recurringId);
+
   const deleteMutation = useMutation({
-    mutationFn: () => {
-      if (!taskItem) {
-        return Promise.reject(new Error("taskItem is null"));
-      }
-      return deleteTask(taskItem.id);
-    },
+    mutationFn,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["tasks"],
@@ -37,8 +41,6 @@ export default function DeleteTaskModal({
   const handleDeleteTask = () => {
     deleteMutation.mutate();
   };
-
-  console.log(taskItem);
 
   if (!taskItem) {
     return null;
@@ -60,6 +62,26 @@ export default function DeleteTaskModal({
         <p className="mt-2 text-text-md text-text-secondary">
           삭제 후에는 되돌릴 수 없습니다.
         </p>
+        <div className="mt-6 flex flex-col items-center gap-2 text-text-md">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              value={1}
+              onChange={handleButtonChange}
+              checked={buttonId === 1}
+            />
+            선택한 할 일만 삭제
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              value={2}
+              onChange={handleButtonChange}
+              checked={buttonId === 2}
+            />
+            선택한 할 일 반복설정 삭제
+          </label>
+        </div>
         <div className="mt-6 flex w-full gap-2">
           <Button
             variant="outlined"

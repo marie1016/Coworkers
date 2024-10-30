@@ -23,12 +23,13 @@ export default function AddTaskModal({
   teamId,
   selectedTaskListId,
 }: AddEditTaskProps) {
-  const [taskData, setTaskData] = useState({
+  const initialTaskData = {
     name: "",
     description: "",
     startDate: new Date().toISOString(),
     frequencyType: FrequencyType.ONCE,
-  });
+  };
+  const [taskData, setTaskData] = useState(initialTaskData);
   const [selectedMonthDay, setSelectedMonthDay] = useState<number>(0);
   const [selectedWeekDays, setSelectedWeekDays] = useState<number[]>([]);
   const queryClient = useQueryClient();
@@ -66,6 +67,7 @@ export default function AddTaskModal({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       closeModal(modalName);
+      setTaskData(initialTaskData);
     },
     onError: (error) => {
       console.error("Error adding task:", error);
