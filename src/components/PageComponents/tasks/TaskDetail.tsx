@@ -2,6 +2,7 @@ import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
 import { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { motion } from "framer-motion";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
 import TaskComments from "./TaskComments";
@@ -55,12 +56,22 @@ export default function TaskDetail({
   }
 
   return (
-    <div
+    <motion.div
       className="fixed inset-0 z-50 bg-black bg-opacity-50"
       ref={taskDetailRef}
       onClick={(e) => outSideClick(e)}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
     >
-      <div className="z-100 fixed right-0 top-0 h-full w-[48.69rem] border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]">
+      <motion.div
+        className="z-100 fixed right-0 top-0 h-full w-[48.69rem] border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
         <div className="relative h-full">
           <Image
             className="mb-4 cursor-pointer"
@@ -106,7 +117,7 @@ export default function TaskDetail({
             </span>
           </FloatingButton>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

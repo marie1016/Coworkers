@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { formattedDate } from "@/lib/utils/date";
 import { useRouter } from "next/router";
+import { AnimatePresence } from "framer-motion";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
 import EditDropdown from "./EditDropdown";
@@ -104,17 +105,19 @@ export default function TaskCard({
           {frequency}
         </div>
       </div>
-      {isTaskDetailOpen && (
-        <TaskDetail
-          taskItem={taskItem}
-          isTaskDetailOpen={isTaskDetailOpen}
-          closeTaskDetail={closeTaskDetail}
-          openEditTaskModal={() => openEditTaskModal(taskItem)}
-          openDeleteTaskModal={() => openDeleteTaskModal(taskItem)}
-          taskDetailRef={taskDetailRef}
-          outSideClick={outSideClick}
-        />
-      )}
+      <AnimatePresence>
+        {isTaskDetailOpen && (
+          <TaskDetail
+            taskItem={taskItem}
+            isTaskDetailOpen={isTaskDetailOpen}
+            closeTaskDetail={closeTaskDetail}
+            openEditTaskModal={() => openEditTaskModal(taskItem)}
+            openDeleteTaskModal={() => openDeleteTaskModal(taskItem)}
+            taskDetailRef={taskDetailRef}
+            outSideClick={outSideClick}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }
