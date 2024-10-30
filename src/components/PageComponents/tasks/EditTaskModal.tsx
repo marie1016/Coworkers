@@ -1,6 +1,6 @@
 import Input from "@/components/@shared/UI/Input";
 import InputLabel from "@/components/@shared/UI/InputLabel";
-import React, { useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import Modal from "@/components/@shared/UI/Modal/Modal";
 import Button from "@/components/@shared/UI/Button";
@@ -13,10 +13,18 @@ interface EditTaskModalProps {
 }
 
 export default function EditTaskModal({ taskToEdit }: EditTaskModalProps) {
-  const [taskData, setTaskData] = useState<EditTaskForm>({
-    name: taskToEdit.name || "",
-    description: taskToEdit.description || "",
-  });
+  const initialTaskData = useMemo(
+    () => ({
+      name: taskToEdit.name || "",
+      description: taskToEdit.description || "",
+    }),
+    [taskToEdit],
+  );
+  const [taskData, setTaskData] = useState<EditTaskForm>(initialTaskData);
+
+  useEffect(() => {
+    setTaskData(initialTaskData);
+  }, [initialTaskData]);
 
   const queryClient = useQueryClient();
 
