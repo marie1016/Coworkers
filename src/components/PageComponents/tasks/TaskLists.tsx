@@ -19,7 +19,7 @@ export default function TaskLists({
     enabled: !!teamId,
   });
 
-  const group = groupResponse.data?.data;
+  const group = groupResponse.data;
   const taskLists = group?.taskLists ?? [];
 
   return taskLists.length > 0 ? (

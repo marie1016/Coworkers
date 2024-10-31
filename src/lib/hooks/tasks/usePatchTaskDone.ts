@@ -6,13 +6,17 @@ const usePatchTaskDone = (id: number) => {
   const queryClient = useQueryClient();
 
   const taskDoneMutation = useMutation({
-    mutationFn: (editTaskForm: EditTaskForm) =>
-      editTask({ taskId: id }, editTaskForm),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    mutationFn: async (editTaskForm: EditTaskForm) => {
+      await editTask({ taskId: id }, editTaskForm);
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ["tasks"] });
     },
     onError: (error) => {
       console.error("Error editing task:", error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 
