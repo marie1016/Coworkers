@@ -37,7 +37,7 @@ export default function Tasks() {
   };
 
   return (
-    <div className="relative mx-auto mt-10 w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
+    <div className="mx-auto my-10 h-auto w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
       <section>
         <SectionHeader
           teamId={teamId}
@@ -63,7 +63,7 @@ export default function Tasks() {
         </ErrorBoundary>
       </section>
       <FloatingButton
-        className="md: md: absolute -right-8 right-0 top-[55.25rem] top-[62.06rem] sm:top-[41.06rem]"
+        className="fixed bottom-8 right-8"
         variant="solid"
         size="large"
         onClick={openTaskFormModal}

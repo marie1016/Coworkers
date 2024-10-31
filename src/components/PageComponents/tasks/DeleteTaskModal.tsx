@@ -7,9 +7,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import deleteTask from "@/core/api/tasks/deleteTask";
 import { useState } from "react";
 import deleteRecurring from "@/core/api/tasks/deleteRecurring";
+import FrequencyType from "@/lib/constants/frequencyType";
 
 export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
   const [buttonId, setButtonId] = useState(0);
+  const { frequency } = taskItem;
 
   const modalName = "deleteTaskModal";
   const isOpen = useModalStore((state) => state.modals[modalName] || false);
@@ -70,9 +72,11 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
               onChange={handleButtonChange}
               checked={buttonId === 1}
             />
-            선택한 할 일만 삭제
+            선택한 할 일 삭제
           </label>
-          <label className="flex items-center gap-2">
+          <label
+            className={`flex items-center gap-2 ${frequency === FrequencyType.ONCE ? "hidden" : ""}`}
+          >
             <input
               type="radio"
               value={2}
