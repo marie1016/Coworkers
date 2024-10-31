@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import addTaskList from "@/core/api/taskList/addTaskList";
 import { useMutation } from "@tanstack/react-query";
 import patchTaskList from "@/core/api/taskList/patchTaskList";
@@ -54,6 +54,10 @@ export default function AddTaskListModal({
     e.preventDefault();
     taskListMutation.mutate();
   };
+
+  useEffect(() => {
+    if (isOpen) setTaskListName(defaultPatchForm?.name ?? "");
+  }, [isOpen]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCloseButton>

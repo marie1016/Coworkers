@@ -1,17 +1,29 @@
 import AddTaskListModal from "@/components/@shared/AddTaskListModal";
+import Chat from "@/components/PageComponents/team/Chat";
 import Members from "@/components/PageComponents/team/Members";
 import SectionHeader from "@/components/PageComponents/team/SectionHeader";
 import TaskLists from "@/components/PageComponents/team/TaskLists";
 import TeamGear from "@/components/PageComponents/team/TeamGear";
 import TeamLinkModal from "@/components/PageComponents/team/TeamLinkModal";
+import getTasks from "@/core/api/group/getTasks";
 import getTeamData from "@/core/api/group/getTeamData";
+import useModalStore from "@/lib/hooks/stores/modalStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 export default function Team() {
-  const [isAddTaskListModalOpen, setIsAddTaskListModalOpen] = useState(false);
-  const [isTeamLinkModalOpen, setIsTeamLinkModalOpen] = useState(false);
+  const addTaskListModalName = "addTaskListModal";
+  const teamLinkModalName = "teamLinkModal";
+
+  const isAddTaskListModalOpen = useModalStore(
+    (state) => state.modals[addTaskListModalName],
+  );
+  const isTeamLinkModalOpen = useModalStore(
+    (state) => state.modals[teamLinkModalName],
+  );
+
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const router = useRouter();
   const teamId = router.query.teamId as string;
@@ -24,10 +36,17 @@ export default function Team() {
     enabled: !!teamId,
   });
 
-  const group = groupResponse.data?.data;
+  const group = groupResponse.data;
   const refreshGroup = () => {
     queryClient.invalidateQueries({ queryKey: ["group", teamId] });
   };
+
+  const tasksResponse = useQuery({
+    queryKey: ["tasks", teamId],
+    queryFn: () => getTasks(teamId),
+    staleTime: 1000 * 60,
+    enabled: !!group,
+  });
 
   if (!group) return null;
 
@@ -43,14 +62,12 @@ export default function Team() {
             refreshGroup={refreshGroup}
           />
         </div>
-        <section className="mb-16 flex flex-col gap-4">
+        <section className="mb-12 flex flex-col gap-4">
           <SectionHeader
             title="할 일 목록"
             length={`${group.taskLists.length}개`}
             addText="+ 새로운 목록 추가하기"
-            onAddClick={() =>
-              setIsAddTaskListModalOpen(!isAddTaskListModalOpen)
-            }
+            onAddClick={() => openModal(addTaskListModalName)}
           />
           {group.taskLists.length ? (
             <TaskLists tasks={group.taskLists} teamId={teamId} />
@@ -60,25 +77,29 @@ export default function Team() {
             </div>
           )}
         </section>
-        <section className="flex flex-col gap-4">
+        <section className="mb-16 flex flex-col gap-4">
+          <SectionHeader title="어시스턴트" />
+          <Chat tasks={tasksResponse.data} />
+        </section>
+        <section className="mb-16 flex flex-col gap-4">
           <SectionHeader
             title="멤버"
             length={`${group.members.length}명`}
             addText="+ 새로운 멤버 초대하기"
-            onAddClick={() => setIsTeamLinkModalOpen(!isTeamLinkModalOpen)}
+            onAddClick={() => openModal(teamLinkModalName)}
           />
           <Members members={group.members} />
         </section>
       </main>
       <AddTaskListModal
         isOpen={isAddTaskListModalOpen}
-        onClose={() => setIsAddTaskListModalOpen(false)}
+        onClose={() => closeModal(addTaskListModalName)}
         teamId={teamId}
         submitCallback={refreshGroup}
       />
       <TeamLinkModal
         isOpen={isTeamLinkModalOpen}
-        onClose={() => setIsTeamLinkModalOpen(false)}
+        onClose={() => closeModal(teamLinkModalName)}
         teamId={teamId}
       />
     </>

@@ -1,7 +1,7 @@
 interface Props {
   title: string;
-  length: string;
-  addText: string;
+  length?: string;
+  addText?: string;
   onAddClick?: () => void;
 }
 
@@ -9,7 +9,7 @@ export default function SectionHeader({
   title,
   length,
   addText,
-  onAddClick,
+  onAddClick = () => {},
 }: Props) {
   return (
     <div className="flex cursor-default items-center justify-between">
@@ -17,14 +17,18 @@ export default function SectionHeader({
         <span className="text-text-lg font-medium text-text-primary">
           {title}
         </span>
-        <span className="text-text-lg font-regular text-text-default">{`(${length})`}</span>
+        {length ? (
+          <span className="text-text-lg font-regular text-text-default">{`(${length})`}</span>
+        ) : null}
       </div>
-      <p
-        className="cursor-pointer text-text-md font-regular text-brand-primary"
-        onClick={onAddClick}
-      >
-        {addText}
-      </p>
+      {addText ? (
+        <p
+          className="cursor-pointer text-text-md font-regular text-brand-primary"
+          onClick={onAddClick}
+        >
+          {addText}
+        </p>
+      ) : null}
     </div>
   );
 }

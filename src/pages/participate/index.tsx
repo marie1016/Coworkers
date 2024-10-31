@@ -16,6 +16,10 @@ export default function Participate() {
     onSuccess: (response) => {
       router.push(`/${response.groupId}`);
     },
+    onError: (e) => {
+      alert("팀 참여중 에러 발생: 에러 정보는 콘솔에서 확인");
+      console.error(e);
+    },
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -1,9 +1,7 @@
-import Button from "@/components/@shared/UI/Button";
-import Modal from "@/components/@shared/UI/Modal/Modal";
 import deleteTeam from "@/core/api/group/deleteTeam";
 import { useMutation } from "@tanstack/react-query";
-import Image from "next/image";
 import { useRouter } from "next/router";
+import WarningModal from "./WarningModal";
 
 interface Props {
   isOpen: boolean;
@@ -14,7 +12,7 @@ interface Props {
 export default function DeleteTeamModal({ isOpen, onClose, teamId }: Props) {
   const router = useRouter();
 
-  const deleteMutation = useMutation({
+  const { mutate } = useMutation({
     mutationFn: () => deleteTeam(teamId),
     onSuccess: () => {
       onClose();
@@ -27,30 +25,15 @@ export default function DeleteTeamModal({ isOpen, onClose, teamId }: Props) {
   });
 
   const handleDelete = () => {
-    deleteMutation.mutate();
+    mutate();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex w-80 flex-col items-center gap-6">
-        <div className="relative h-8 w-8">
-          <Image fill src="/icons/icon-alert.svg" alt="주의" />
-        </div>
-        <p className="font-medium">정말 팀을 삭제하시겠습니까?</p>
-        <div className="flex w-full gap-2">
-          <Button
-            variant="solid"
-            size="large"
-            className="bg-status-danger hover:bg-[#b91e1e] active:bg-[#aa1111]"
-            onClick={handleDelete}
-          >
-            삭제
-          </Button>
-          <Button variant="outlined" size="large" onClick={onClose}>
-            취소
-          </Button>
-        </div>
-      </div>
-    </Modal>
+    <WarningModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onClick={handleDelete}
+      message="정말 이 팀을 삭제하시겠습니까?"
+    />
   );
 }
