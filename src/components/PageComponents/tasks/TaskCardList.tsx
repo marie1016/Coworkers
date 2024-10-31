@@ -1,29 +1,30 @@
 import getTasks from "@/core/api/tasks/getTasks";
 import { Task } from "@/core/dtos/tasks/tasks";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import TaskCard from "@/components/PageComponents/tasks/TaskCard";
 
 interface TaskCardListProps {
-  groupId: string;
+  teamId: string;
   selectedTaskListId: number;
   selectedDate: Date | null;
   onTaskItemChange: (task: Task) => void;
 }
 
 export default function TaskCardList({
-  groupId,
+  teamId,
   selectedTaskListId,
   selectedDate,
   onTaskItemChange,
 }: TaskCardListProps) {
-  const { data: tasksData } = useSuspenseQuery<Task[]>({
+  const { data: tasksData } = useQuery<Task[]>({
     queryKey: ["tasks", selectedTaskListId, selectedDate],
     queryFn: () =>
       getTasks({
-        groupId,
+        teamId,
         id: selectedTaskListId,
         date: selectedDate,
       }),
+    enabled: !!selectedTaskListId,
   });
 
   const taskItems = tasksData ?? [];

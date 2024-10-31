@@ -1,10 +1,11 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Checkbox from "@/components/@shared/UI/Checkbox";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { formattedDate } from "@/lib/utils/date";
 import { useRouter } from "next/router";
 import useModalStore from "@/lib/hooks/stores/modalStore";
+import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
 import EditDropdown from "./EditDropdown";
 import TaskDetail from "./TaskDetail";
 
@@ -17,41 +18,44 @@ export default function TaskCard({
   taskItem,
   onTaskItemChange,
 }: TaskCardProps) {
-  const [task, setTask] = useState<Task>(taskItem);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
-  const { name, commentCount, frequency } = task;
+  const { id, name, commentCount, frequency, doneAt, date } = taskItem;
   const router = useRouter();
-  const groupId = router.query.teamId as string;
+  const teamId = router.query.teamId as string;
   const tasklist = router.query.tasklist as string;
-
-  useEffect(() => {
-    setTask(taskItem);
-  }, [taskItem]);
+  const { handleClick } = usePatchTaskDone(id);
+  const taskDetailRef = useRef<HTMLDivElement>(null);
 
   const handleCheckboxChange = (checked: boolean) => {
-    const updateTask = { ...task, checked };
-    setTask(updateTask);
+    handleClick(checked);
   };
 
   const openTaskDetail = () => {
     setIsTaskDetailOpen(true);
-    router.push(`/${groupId}/tasks?tasklist=${tasklist}&taskItem=${task.id}`);
+    router.push(`/${teamId}/tasks?tasklist=${tasklist}&taskItem=${id}`);
   };
 
   const closeTaskDetail = () => {
     setIsTaskDetailOpen(false);
   };
 
+  const outSideClick = (e: React.MouseEvent) => {
+    if (taskDetailRef.current === e.target) {
+      setIsTaskDetailOpen(false);
+    }
+  };
+
   const openModal = useModalStore((state) => state.openModal);
 
-  const openTaskFormModal = (taskData: Task) => {
+  const openEditTaskModal = (taskData: Task) => {
     onTaskItemChange(taskData);
-    openModal("taskFormModal");
+    openModal("editTaskModal");
     closeTaskDetail();
   };
 
-  const deleteTask = (taskData: Task) => {
-    console.log(taskData);
+  const openDeleteTaskModal = (taskData: Task) => {
+    onTaskItemChange(taskData);
+    openModal("deleteTaskModal");
   };
 
   return (
@@ -60,10 +64,11 @@ export default function TaskCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Checkbox
+              className="max-w-[62.5rem] sm:w-[13rem] md:max-w-[37.5rem]"
               title={name}
-              checked={task.checked}
+              checked={!!doneAt}
               onChange={handleCheckboxChange}
-              titleOnClick={openTaskDetail}
+              onTitleClick={openTaskDetail}
             />
             <Image
               className="ml-3 mr-0.5 sm:ml-12"
@@ -75,8 +80,8 @@ export default function TaskCard({
             {commentCount}
           </div>
           <EditDropdown
-            onEdit={() => openTaskFormModal(task)}
-            onDelete={() => deleteTask(task)}
+            onEdit={() => openEditTaskModal(taskItem)}
+            onDelete={() => openDeleteTaskModal(taskItem)}
           />
         </div>
         <div className="mt-2.5 flex items-center">
@@ -87,7 +92,7 @@ export default function TaskCard({
             height={16}
             alt="카드캘린더 아이콘"
           />
-          {formattedDate(task.date)}
+          {formattedDate(date)}
           <span className="mx-2.5 h-2 border-l border-background-tertiary" />
           <Image
             className="mr-1.5"
@@ -101,11 +106,13 @@ export default function TaskCard({
       </div>
       {isTaskDetailOpen && (
         <TaskDetail
-          taskItem={task}
+          taskItem={taskItem}
           isTaskDetailOpen={isTaskDetailOpen}
-          onCloseTaskDetail={closeTaskDetail}
-          openTaskFormModal={() => openTaskFormModal(task)}
-          deleteTask={() => deleteTask(task)}
+          closeTaskDetail={closeTaskDetail}
+          openEditTaskModal={() => openEditTaskModal(taskItem)}
+          openDeleteTaskModal={() => openDeleteTaskModal(taskItem)}
+          taskDetailRef={taskDetailRef}
+          outSideClick={outSideClick}
         />
       )}
     </>

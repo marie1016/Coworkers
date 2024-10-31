@@ -9,10 +9,6 @@ export interface TaskList {
   displayIndex: number;
 }
 
-export interface TaskListsResponse {
-  taskLists: TaskList[];
-}
-
 export interface Task {
   id: number;
   name: string;
@@ -22,6 +18,8 @@ export interface Task {
   checked: boolean;
   date: string;
   updatedAt: string;
+  doneAt: string;
+  recurringId: number;
   writer: {
     nickname: string;
     image: string;
@@ -29,6 +27,8 @@ export interface Task {
   recurring: {
     weekDays: [];
     monthDay: number;
+    taskListId: number;
+    groupId: number;
   };
 }
 
@@ -59,8 +59,9 @@ export interface AddTaskForm {
 }
 
 export interface EditTaskForm {
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
+  done?: boolean;
 }
 
 export interface AddTaskListForm {
