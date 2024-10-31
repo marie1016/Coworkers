@@ -5,6 +5,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { motion } from "framer-motion";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
+import useClickOutside from "@/lib/hooks/useClickOutSide";
 import TaskComments from "./TaskComments";
 import TaskInfo from "./TaskInfo";
 import CommentTextarea from "./CommentTextarea";
@@ -15,8 +16,6 @@ interface TaskDetailProps {
   closeTaskDetail: () => void;
   openEditTaskModal: () => void;
   openDeleteTaskModal: () => void;
-  taskDetailRef: React.ForwardedRef<HTMLDivElement>;
-  outSideClick: (e: React.MouseEvent) => void;
 }
 export default function TaskDetail({
   taskItem,
@@ -24,11 +23,10 @@ export default function TaskDetail({
   closeTaskDetail,
   openEditTaskModal,
   openDeleteTaskModal,
-  taskDetailRef,
-  outSideClick,
 }: TaskDetailProps) {
   const { doneAt, id } = taskItem;
   const { handleClick } = usePatchTaskDone(id);
+  const ref = useClickOutside(closeTaskDetail);
 
   const handleButtonClick = () => {
     const checked = doneAt ? null : new Date().toISOString();
@@ -60,8 +58,6 @@ export default function TaskDetail({
   return (
     <motion.div
       className="fixed inset-0 z-50 bg-black bg-opacity-50"
-      ref={taskDetailRef}
-      onClick={(e) => outSideClick(e)}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -73,6 +69,7 @@ export default function TaskDetail({
         animate={{ opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
+        ref={ref}
       >
         <Image
           className="mb-4 cursor-pointer"
