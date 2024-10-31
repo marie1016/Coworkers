@@ -1,9 +1,11 @@
 import AddTaskListModal from "@/components/@shared/AddTaskListModal";
+import Chat from "@/components/PageComponents/team/Chat";
 import Members from "@/components/PageComponents/team/Members";
 import SectionHeader from "@/components/PageComponents/team/SectionHeader";
 import TaskLists from "@/components/PageComponents/team/TaskLists";
 import TeamGear from "@/components/PageComponents/team/TeamGear";
 import TeamLinkModal from "@/components/PageComponents/team/TeamLinkModal";
+import getTasks from "@/core/api/group/getTasks";
 import getTeamData from "@/core/api/group/getTeamData";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -39,6 +41,13 @@ export default function Team() {
     queryClient.invalidateQueries({ queryKey: ["group", teamId] });
   };
 
+  const tasksResponse = useQuery({
+    queryKey: ["tasks", teamId],
+    queryFn: () => getTasks(teamId),
+    staleTime: 1000 * 60,
+    enabled: !!group,
+  });
+
   if (!group) return null;
 
   return (
@@ -68,7 +77,11 @@ export default function Team() {
             </div>
           )}
         </section>
-        <section className="flex flex-col gap-4">
+        <section className="mb-16 flex flex-col gap-4">
+          <SectionHeader title="어시스턴트" />
+          <Chat tasks={tasksResponse.data} />
+        </section>
+        <section className="mb-16 flex flex-col gap-4">
           <SectionHeader
             title="멤버"
             length={`${group.members.length}명`}

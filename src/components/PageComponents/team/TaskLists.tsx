@@ -91,7 +91,7 @@ export default function TaskLists({ tasks, teamId }: Props) {
                 >
                   {(draggableProvided) => (
                     <div
-                      className="relative mb-4 flex h-10 items-center justify-between rounded-xl bg-background-secondary pl-6 pr-2 text-text-md font-medium text-text-primary"
+                      className="relative mb-4 flex h-10 cursor-grab items-center justify-between rounded-xl bg-background-secondary pl-6 pr-2 text-text-md font-medium text-text-primary"
                       ref={draggableProvided.innerRef}
                       {...draggableProvided.draggableProps}
                       {...draggableProvided.dragHandleProps}
