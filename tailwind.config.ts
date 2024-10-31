@@ -135,7 +135,13 @@ const config: Config = {
       lg: { min: "1200px" }, // PC: 1200px 이상
     },
   },
-  plugins: [forms, typography, aspectRatio, lineClamp],
+  plugins: [
+    forms,
+    typography,
+    aspectRatio,
+    lineClamp,
+    require("tailwind-scrollbar-hide"),
+  ],
 };
 
 export default config;
