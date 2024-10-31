@@ -67,3 +67,7 @@ export interface EditTaskForm {
 export interface AddTaskListForm {
   name: string;
 }
+
+export interface TaskOrderForm {
+  displayIndex: number;
+}
