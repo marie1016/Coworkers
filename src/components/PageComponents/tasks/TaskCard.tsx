@@ -31,7 +31,8 @@ export default function TaskCard({
     handleClick(checked);
   };
 
-  const openTaskDetail = () => {
+  const openTaskDetail = (taskData: Task) => {
+    onTaskItemChange(taskData);
     setIsTaskDetailOpen(true);
     router.push(`/${teamId}/tasks?tasklist=${tasklist}&taskItem=${id}`);
   };
@@ -69,7 +70,7 @@ export default function TaskCard({
               title={name}
               checked={!!doneAt}
               onChange={handleCheckboxChange}
-              onTitleClick={openTaskDetail}
+              onTitleClick={() => openTaskDetail(taskItem)}
             />
             <Image
               className="ml-3 mr-0.5 sm:ml-12"
