@@ -65,7 +65,9 @@ export default function AddTaskModal({
     mutationFn: (addTaskForm: AddTaskForm) =>
       addTask({ teamId, selectedTaskListId }, addTaskForm),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({
+        queryKey: ["tasks", selectedTaskListId],
+      });
       closeModal(modalName);
       setTaskData(initialTaskData);
     },

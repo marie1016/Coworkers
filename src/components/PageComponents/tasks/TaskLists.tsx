@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import getTeamData from "@/core/api/group/getTeamData";
+import Link from "next/link";
 
 interface TaskListsProps {
   teamId: string;
-  selectedTaskListId: number | null;
+  selectedTaskListId: number;
   onTaskListClick: (taskListId: number) => void;
 }
 
@@ -30,12 +31,14 @@ export default function TaskLists({
           onClick={() => onTaskListClick(taskList.id)}
           className={`text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
         >
-          {taskList.name}
+          <Link href={`/${teamId}/tasks?tasklist=${taskList.id}`}>
+            {taskList.name}
+          </Link>
         </li>
       ))}
     </ul>
   ) : (
-    <div className="mt-text-center mt-96 text-text-md text-text-default sm:mt-56">
+    <div className="mx-auto mt-96 text-center text-text-md text-text-default sm:mt-56">
       <p>아직 할 일 목록이 없습니다.</p>
       <p>새로운 목록을 추가해보세요.</p>
     </div>

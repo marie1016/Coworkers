@@ -34,7 +34,6 @@ export default function TaskCardList({
         id: selectedTaskListId,
         date: selectedDate,
       }),
-    enabled: !!selectedTaskListId,
   });
 
   const initialTask = useMemo(() => tasksData ?? [], [tasksData]);

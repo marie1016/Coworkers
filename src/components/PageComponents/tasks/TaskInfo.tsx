@@ -1,10 +1,6 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import {
-  formattedDate,
-  formattedShortDate,
-  formattedTime,
-} from "@/lib/utils/date";
+import { formattedDate, formattedShortDate } from "@/lib/utils/date";
 
 import "moment/locale/ko";
 import EditDropdown from "./EditDropdown";
@@ -22,8 +18,6 @@ export default function TaskInfo({
 }: TaskInfoProps) {
   const { name, writer, updatedAt, date, frequency, description, doneAt } =
     taskItem;
-
-  const timeString = formattedTime(new Date(date));
 
   const writerImage = writer.image ?? "/images/image-defaultProfile.png";
 
@@ -74,15 +68,6 @@ export default function TaskInfo({
             alt="카드캘린더 아이콘"
           />
           {formattedDate(date)}
-          <span className="mx-2.5 h-2 border-l border-background-tertiary" />
-          <Image
-            className="mr-1.5"
-            src="/icons/icon-time.svg"
-            width={16}
-            height={16}
-            alt="시계 아이콘"
-          />
-          {timeString}
           <span className="mx-2.5 h-2 border-l border-background-tertiary" />
           <Image
             className="mr-1.5"

@@ -1,5 +1,5 @@
 import { Task } from "@/core/dtos/tasks/tasks";
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter } from "next/router";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
@@ -21,6 +21,12 @@ export default function Tasks() {
     useState<number>(numericTaskListId);
   const [selectedTaskItem, setSelectedTaskItem] = useState<Task | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+
+  useEffect(() => {
+    if (tasklist) {
+      setSelectedTaskListId(numericTaskListId);
+    }
+  }, [tasklist]);
 
   const handleTaskListClick = (taskListId: number) => {
     setSelectedTaskListId(taskListId);
@@ -71,7 +77,12 @@ export default function Tasks() {
         + 할 일 추가
       </FloatingButton>
       <AddTaskModal teamId={teamId} selectedTaskListId={selectedTaskListId} />
-      {selectedTaskItem && <EditTaskModal taskToEdit={selectedTaskItem} />}
+      {selectedTaskItem && (
+        <EditTaskModal
+          taskToEdit={selectedTaskItem}
+          selectedTaskListId={selectedTaskListId}
+        />
+      )}
       {selectedTaskItem && <DeleteTaskModal taskItem={selectedTaskItem} />}
     </div>
   );
