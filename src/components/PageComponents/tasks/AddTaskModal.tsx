@@ -8,8 +8,8 @@ import DatePicker from "react-datepicker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import addTask from "@/core/api/tasks/addTask";
 import { AddTaskForm } from "@/core/dtos/tasks/tasks";
-import { formattedDate } from "@/lib/utils/date";
-import FrequencyType from "@/lib/constants/frequencyType";
+import { formatDate } from "@/lib/utils/date";
+import { FrequencyType } from "@/lib/constants/frequencyType";
 import FrequencyWeekly from "./FrequencyWeekly";
 import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
@@ -146,7 +146,7 @@ export default function AddTaskModal({
               onChange={handleDateChange}
               selected={new Date(taskData.startDate)}
               showTimeSelect
-              placeholderText={`${formattedDate(new Date())} 00:00`}
+              placeholderText={`${formatDate(new Date())} 00:00`}
               dateFormat="yyyy년 MM월 dd일 HH:mm aa"
               timeFormat="HH:mm aa"
               timeIntervals={30}

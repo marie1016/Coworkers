@@ -1,7 +1,7 @@
 import getTaskComments from "@/core/api/tasks/getTaskComments";
 import { Task, TaskComment, TaskCommentForm } from "@/core/dtos/tasks/tasks";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { formattedShortDate } from "@/lib/utils/date";
+import { timeForToday } from "@/lib/utils/date";
 import Image from "next/image";
 import editTaskComment from "@/core/api/tasks/editTaskComment";
 import { useState } from "react";
@@ -101,7 +101,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
                   {taskComment.user.nickname}
                 </span>
                 <span className="text-text-secondary">
-                  {formattedShortDate(taskComment.updatedAt)}
+                  {timeForToday(taskComment.updatedAt)}
                 </span>
               </div>
             </div>

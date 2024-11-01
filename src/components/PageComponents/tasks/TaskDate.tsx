@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { forwardRef } from "react";
 import DatePicker from "react-datepicker";
-import moment from "moment";
+import { formatDate } from "@/lib/utils/date";
 
 export interface DateProps {
   selectedDate: Date | null;
@@ -25,10 +25,6 @@ const CustomInput = forwardRef<
 CustomInput.displayName = "CustomInput";
 
 export default function TaskDate({ selectedDate, setSelectedDate }: DateProps) {
-  const formattedDate =
-    selectedDate instanceof Date &&
-    moment(selectedDate).format("MM월 DD일 (ddd)");
-
   const handlePreviousDayClick = () => {
     if (selectedDate) {
       const previousDay = new Date(selectedDate);
@@ -48,7 +44,7 @@ export default function TaskDate({ selectedDate, setSelectedDate }: DateProps) {
   return (
     <div className="flex items-center">
       <h2 className="mr-3 text-text-lg font-medium text-text-primary">
-        {formattedDate}
+        {selectedDate && formatDate(selectedDate, "MM월 DD일 (ddd)")}
       </h2>
       <Image
         src="/icons/icon-leftArrow.svg"

@@ -2,9 +2,10 @@ import { Task } from "@/core/dtos/tasks/tasks";
 import Checkbox from "@/components/@shared/UI/Checkbox";
 import Image from "next/image";
 import { useState } from "react";
-import { formattedDate } from "@/lib/utils/date";
+import { formatDate } from "@/lib/utils/date";
 import { useRouter } from "next/router";
 import { AnimatePresence } from "framer-motion";
+import { getFrequencyLabel } from "@/lib/constants/frequencyType";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
 import EditDropdown from "./EditDropdown";
@@ -88,7 +89,7 @@ export default function TaskCard({
             height={16}
             alt="카드캘린더 아이콘"
           />
-          {formattedDate(date)}
+          {formatDate(date)}
           <span className="mx-2.5 h-2 border-l border-background-tertiary" />
           <Image
             className="mr-1.5"
@@ -97,7 +98,7 @@ export default function TaskCard({
             height={16}
             alt="반복 아이콘"
           />
-          {frequency}
+          {getFrequencyLabel(frequency)}
         </div>
       </div>
       <AnimatePresence>

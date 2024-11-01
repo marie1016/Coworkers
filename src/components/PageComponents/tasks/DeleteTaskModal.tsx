@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import deleteTask from "@/core/api/tasks/deleteTask";
 import { useState } from "react";
 import deleteRecurring from "@/core/api/tasks/deleteRecurring";
-import FrequencyType from "@/lib/constants/frequencyType";
+import { FrequencyType } from "@/lib/constants/frequencyType";
 
 export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
   const [buttonId, setButtonId] = useState(0);
