@@ -1,5 +1,6 @@
 import { Member } from "@/core/types/member";
 import Image from "next/image";
+import MemberMenu from "./MemberMenu";
 
 interface Props {
   members: Member[];
@@ -10,7 +11,7 @@ export default function Members({ members }: Props) {
     <div className="grid grid-cols-3 gap-6">
       {members.map((member) => (
         <div
-          className="h-[4.625rem] rounded-2xl bg-background-secondary px-6 py-5"
+          className="h-[4.625rem] cursor-default rounded-2xl bg-background-secondary px-6 py-5"
           key={member.userId}
         >
           <div className="flex h-full w-full items-center justify-between">
@@ -35,6 +36,7 @@ export default function Members({ members }: Props) {
                 </p>
               </div>
             </div>
+            <MemberMenu />
           </div>
         </div>
       ))}

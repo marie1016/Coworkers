@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface DropdownItemProps {
   children: ReactNode;
@@ -11,9 +12,11 @@ export default function DropdownItem({
   onClick,
   itemClassName,
 }: DropdownItemProps) {
+  const classCombined = twMerge("cursor-pointer", itemClassName);
+
   return (
-    <li className={`cursor-pointer ${itemClassName}`}>
-      <button onClick={onClick}>{children}</button>
+    <li className={classCombined} onClick={onClick}>
+      {children}
     </li>
   );
 }
