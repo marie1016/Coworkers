@@ -10,7 +10,7 @@ import axiosInstance from "../axiosInstance";
 export const signup = async (
   data: SignupRequestDto,
 ): Promise<AxiosResponse<SignupResponseDto>> =>
-  axiosInstance.post<SignupResponseDto>("auth/signup", data);
+  axiosInstance.post<SignupResponseDto>("auth/signUp", data);
 
 export const login = async (
   data: LoginRequestDto,

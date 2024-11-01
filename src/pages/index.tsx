@@ -10,7 +10,7 @@ interface UserBase {
   id: number;
   teamId: string;
   email: string;
-  name: string;
+  nickname: string;
   image: string | null;
   createdAt: string;
   updatedAt: string;
@@ -41,7 +41,7 @@ const INITIAL_USER_INFO: UserResponse = {
   id: 0,
   teamId: "",
   email: "",
-  name: "",
+  nickname: "",
   image: null,
   createdAt: "",
   updatedAt: "",
@@ -55,9 +55,8 @@ export default function Home() {
     try {
       const response = await axiosInstance.get("/user");
       if (response && response.data) {
-        // 데이터가 정상적으로 존재하는 경우에만 접근
-        const { name, email } = response.data;
-        console.log("User Info:", { name, email });
+        const { nickname, email } = response.data;
+        console.log("User Info:", { nickname, email });
       } else {
         console.error("User data is not available");
       }

@@ -29,7 +29,7 @@ function HeaderWrapper({ headerType }: { headerType?: string }) {
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps<{ session: any }>) {
+}: AppProps) {
   const [queryClient] = useState(
     () =>
       new QueryClient({

@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const extendedSession = session as unknown as ExtendedSession;
   const { user, accessToken } = extendedSession || {};
+  const { nickname, email, image } = user || {};
 
   useEffect(() => {
     if (status === "authenticated" && user && !hasNavigated.current) {
@@ -73,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const result = await signIn(provider, { redirect: false });
       if (result?.ok) {
         const updatedUser = {
-          nickname: session?.user?.name || "닉네임 없음",
+          nickname: session?.user?.name || "닉네임 없음", // 간편 로그인 시 name을 nickname으로 설정
           email: session?.user?.email,
           image: session?.user?.image,
         };
@@ -103,16 +104,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         axiosInstance.defaults.headers.common["Authorization"] =
           `Bearer ${accessToken}`;
 
-        await update({
-          user: {
-            nickname: user.nickname || "이름 없음",
-            email: user.email,
-            image: user.imageUrl || null,
-          },
-          accessToken,
-        });
+        const updatedUser = {
+          nickname: user.nickname || "이름 없음",
+          email: user.email,
+          image: user.imageUrl || null,
+        };
 
-        console.log("로그인 성공:", user);
+        setUser(updatedUser); // Update the user state directly
+        setAccessToken(accessToken);
+
+        console.log("로그인 성공:", updatedUser);
         alert("로그인 성공");
         router.push("/");
       }

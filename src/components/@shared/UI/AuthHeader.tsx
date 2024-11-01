@@ -156,7 +156,7 @@ export default function AuthHeader() {
             <div className="flex items-center justify-center gap-2">
               <Profile />
               <span className="text-lg leading-tight sm:hidden md:hidden lg:block">
-                {user?.name || "사용자 이름"}
+                {user?.nickname || "guest"}
               </span>
               {user?.image && (
                 <Image
