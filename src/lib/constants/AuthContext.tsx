@@ -1,125 +1,93 @@
 import {
   createContext,
   useContext,
-  useState,
-  useEffect,
   ReactNode,
   useMemo,
+  useEffect,
+  useRef,
 } from "react";
 import { useRouter } from "next/router";
-import { login, signup, OauthLogin } from "@/core/api/auth/authApi";
-import {
-  LoginRequestDto,
-  SignupResponseDto,
-  SignupRequestDto,
-} from "@/core/dtos/auth/authDto";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { SignupRequestDto } from "@/core/dtos/auth/authDto";
+import { signup as signupAPI } from "@/core/api/auth/authApi";
 
 interface AuthContextType {
-  user: SignupResponseDto["user"] | null;
+  user: any;
   accessToken: string | null;
-  login: (data: LoginRequestDto) => Promise<void>;
-  signup: (data: SignupRequestDto) => Promise<void>;
-  logout: () => void;
-  handleOAuthLogin: (
-    provider: "google" | "kakao",
-    token: string,
-  ) => Promise<void>;
+  handleLogin: (provider: "google" | "kakao") => void;
+  handleSignup: (data: SignupRequestDto) => Promise<void>;
+  handleLogout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = function AuthProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  const [user, setUser] = useState<SignupResponseDto["user"] | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const hasNavigated = useRef(false); // 페이지 이동 플래그
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    const userInfo = localStorage.getItem("user");
+    if (status === "authenticated" && session?.user && !hasNavigated.current) {
+      // 로그인된 사용자 정보 콘솔 로그 출력
+      console.log("로그인 상태입니다:");
+      console.log("이름:", session.user.name);
+      console.log("이메일:", session.user.email);
 
-    if (token && userInfo) {
-      setAccessToken(token);
-      try {
-        const parsedUserInfo: SignupResponseDto["user"] = JSON.parse(userInfo);
-        setUser(parsedUserInfo);
-      } catch (error) {
-        console.error("User info parsing error:", error);
-        setUser(null);
-      }
+      alert("로그인 성공");
+      hasNavigated.current = true;
+      router.push("/");
     }
-  }, []);
+  }, [status, session, router]);
 
-  const handleLogin = async (data: LoginRequestDto): Promise<void> => {
-    const response = await login(data);
-    const userData: SignupResponseDto["user"] = response.data.user;
-    setAccessToken(response.data.accessToken);
-    setUser(userData);
-    localStorage.setItem("accessToken", response.data.accessToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-    router.push("/");
+  const handleLogin = (provider: "google" | "kakao") => {
+    signIn(provider);
   };
 
-  const handleSignup = async (data: SignupRequestDto): Promise<void> => {
-    const response = await signup(data);
-    const userData: SignupResponseDto["user"] = response.data.user;
-    setAccessToken(response.data.accessToken);
-    setUser(userData);
-    localStorage.setItem("accessToken", response.data.accessToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-    router.push("/");
-  };
-
-  const handleLogout = (): void => {
-    setAccessToken(null);
-    setUser(null);
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
-    router.push("/auth/login");
-  };
-
-  const handleOAuthLogin = async (
-    provider: "google" | "kakao",
-    token: string,
-  ): Promise<void> => {
+  const handleSignup = async (data: SignupRequestDto) => {
     try {
-      const response = await OauthLogin(provider, token);
-      console.log("login response :", response);
-      if (response.status === 403) {
-        router.push("/auth/signup");
-      } else {
-        console.error(
-          "OAuth Login Error:",
-          error.response?.data || error.message,
-        );
+      const response = await signupAPI(data);
+      if (response.data) {
+        alert("회원가입 성공");
+        router.push("/login");
       }
-    } catch (error) {
-      console.error("OAuth 로그인 에러:", error);
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        alert("이미 존재하는 계정입니다.");
+        router.push("/login");
+      } else if (error.response) {
+        console.error("회원가입 실패 :", error.response.data);
+        alert(
+          "회원가입 실패: " + (error.response.data?.message || "오류 발생"),
+        );
+      } else {
+        console.error("회원가입 실패 :", error);
+        alert("회원가입 실패: " + error.message);
+      }
     }
   };
 
-  const value = useMemo<AuthContextType>(
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
+  const value = useMemo(
     () => ({
-      user,
-      accessToken,
-      login: handleLogin,
-      signup: handleSignup,
-      logout: handleLogout,
-      handleOAuthLogin,
+      user: session?.user || null,
+      accessToken: session?.accessToken || null,
+      handleLogin,
+      handleSignup,
+      handleLogout,
     }),
-    [user, accessToken],
+    [session],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("AuthContext가 없습니다.");
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

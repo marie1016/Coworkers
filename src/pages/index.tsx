@@ -49,14 +49,18 @@ export default function Home() {
   const [userInfo, setUserInfo] = useState(INITIAL_USER_INFO);
 
   const getUserInfo = async () => {
-    let res: AxiosResponse<UserResponse>;
     try {
-      res = await axiosInstance.get("user");
+      const response = await axiosInstance.get("/user");
+      if (response && response.data) {
+        // 데이터가 정상적으로 존재하는 경우에만 접근
+        const { name, email } = response.data;
+        console.log("User Info:", { name, email });
+      } else {
+        console.error("User data is not available");
+      }
     } catch (error) {
-      console.error(error);
-      return;
+      console.error("Error fetching user info:", error);
     }
-    setUserInfo(res.data);
   };
 
   useEffect(() => {

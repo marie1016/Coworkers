@@ -3,24 +3,28 @@ import InputLabel from "@/components/@shared/UI/InputLabel";
 import Input from "@/components/@shared/UI/Input";
 import Button from "@/components/@shared/UI/Button";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { validatePassword, validateEmail } from "@/lib/utils/validation";
 import { useAuth } from "@/lib/constants/AuthContext";
 import { SignupRequestDto } from "@/core/dtos/auth/authDto";
-import initializeGoogleLogin from "@/lib/oauth/google";
-import handleKakaoLogin from "@/lib/oauth/kakao";
 
 export default function Signup() {
-  const { signup, handleOAuthLogin } = useAuth();
+  const { handleSignup, handleLogin } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -56,7 +60,7 @@ export default function Signup() {
   };
 
   const validateForm = () => {
-    const newErrors: FormErrors = {
+    const newErrors = {
       name: !formData.name ? "이름을 입력해주세요." : undefined,
       email: !formData.email
         ? "이메일을 입력해주세요."
@@ -82,21 +86,16 @@ export default function Signup() {
       };
 
       try {
-        await signup(signupData);
-        alert("회원가입 성공");
-      } catch (error) {
-        if (error.response && error.response.status === 400) {
-          alert("이미 존재하는 계정입니다.");
-        } else {
-          alert("회원가입 실패: " + error.message);
-        }
+        setIsSubmitting(signupData);
+        await handleSignup(signupData);
+      } catch (error: any) {
+        console.error("에러 :", error);
+        alert("회원가입 실패: " + error.message);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
-
-  useEffect(() => {
-    initializeGoogleLogin(); // Google SDK 초기화
-  }, []);
 
   return (
     <div>
@@ -182,8 +181,14 @@ export default function Signup() {
             />
           </InputLabel>
 
-          <Button type="submit" variant="solid" size="large" className="mt-4">
-            회원가입
+          <Button
+            type="submit"
+            variant="solid"
+            size="large"
+            className="mt-4"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "처리 중..." : "회원가입"}
           </Button>
 
           <div className="mt-2 flex w-full items-center justify-center">
@@ -197,10 +202,7 @@ export default function Signup() {
           <div className="flex w-full items-center justify-between">
             <span className="text-lg text-text-inverse">간편 회원가입하기</span>
             <div className="flex flex-row items-center justify-center gap-4">
-              <button
-                type="button"
-                onClick={() => window.google.accounts.id.prompt()}
-              >
+              <button type="button" onClick={() => handleLogin("google")}>
                 <Image
                   src="/icons/icon-google.png"
                   alt="구글 간편 회원가입"
@@ -208,7 +210,7 @@ export default function Signup() {
                   height={42}
                 />
               </button>
-              <button onClick={handleKakaoLogin}>
+              <button type="button" onClick={() => handleLogin("kakao")}>
                 <Image
                   src="/icons/icon-kakaotalk.png"
                   alt="카카오 간편 회원가입"

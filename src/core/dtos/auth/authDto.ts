@@ -10,12 +10,6 @@ export interface LoginRequestDto {
   password: string;
 }
 
-export interface oauthSignupRequestDto {
-  state: string;
-  redirectUtl: string;
-  token: string;
-}
-
 export interface AuthResponseDto {
   accessToken: string;
   refreshToken: string;
@@ -32,4 +26,3 @@ export interface AuthResponseDto {
 
 export type SignupResponseDto = AuthResponseDto;
 export type LoginResponseDto = AuthResponseDto;
-export type OauthSignupResponseDto = AuthResponseDto;
