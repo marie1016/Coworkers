@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
+import { useAuth } from "@/lib/constants/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
 import Profile from "./Profile";
 
 export default function AuthHeader() {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState<string>("1");
@@ -35,8 +39,6 @@ export default function AuthHeader() {
     (team) => team.id === selectedTeamId,
   )?.name;
 
-  const username = "김팀이";
-
   return (
     <div>
       <header className="z-99 fixed left-0 right-0 top-0 flex h-[60px] items-center justify-between gap-2.5 border-b border-border-primary border-opacity-10 bg-background-secondary px-4">
@@ -58,7 +60,6 @@ export default function AuthHeader() {
                 width={102}
                 height={20}
                 alt="홈 바로가기"
-                className="sm:w-[102px] md:w-[102px]"
               />
             </Link>
 
@@ -155,8 +156,17 @@ export default function AuthHeader() {
             <div className="flex items-center justify-center gap-2">
               <Profile />
               <span className="text-lg leading-tight sm:hidden md:hidden lg:block">
-                {username}
+                {user?.name || "사용자 이름"}
               </span>
+              {user?.image && (
+                <Image
+                  src={user.image}
+                  width={32}
+                  height={32}
+                  alt="프로필 이미지"
+                  className="rounded-full"
+                />
+              )}
             </div>
           </div>
         </div>
