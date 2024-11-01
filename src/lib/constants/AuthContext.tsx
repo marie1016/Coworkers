@@ -35,7 +35,17 @@ interface AuthContextType {
   loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const defaultAuthContext: AuthContextType = {
+  user: null,
+  accessToken: null,
+  handleLogin: () => {},
+  handleEmailLogin: async () => {},
+  handleSignup: async () => {},
+  handleLogout: () => {},
+  loading: false,
+};
+
+const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { data: session, status, update } = useSession();
@@ -44,30 +54,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
 
   const extendedSession = session as unknown as ExtendedSession;
+  const { user, accessToken } = extendedSession || {};
 
   useEffect(() => {
-    if (
-      status === "authenticated" &&
-      extendedSession?.user &&
-      !hasNavigated.current
-    ) {
+    if (status === "authenticated" && user && !hasNavigated.current) {
       console.log("로그인 상태입니다:");
-      console.log("닉네임:", extendedSession.user.nickname);
-      console.log("이메일:", extendedSession.user.email);
+      console.log("닉네임:", nickname);
+      console.log("이메일:", email);
 
       hasNavigated.current = true;
       alert("로그인 성공");
       router.push("/");
     }
-  }, [status, extendedSession, router]);
+  }, [status, user, router]);
 
   const handleLogin = async (provider: "google" | "kakao") => {
     try {
       const result = await signIn(provider, { redirect: false });
       if (result?.ok) {
-        // 간편 로그인 결과에 따라 nickname 설정
         const updatedUser = {
-          nickname: session?.user?.name || "닉네임 없음", // 간편 로그인 시 name을 nickname으로 설정
+          nickname: session?.user?.name || "닉네임 없음",
           email: session?.user?.email,
           image: session?.user?.image,
         };
@@ -156,15 +162,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const value = useMemo(
     () => ({
-      user: extendedSession?.user || null,
-      accessToken: extendedSession?.accessToken ?? null,
+      user,
+      accessToken,
       handleLogin,
       handleEmailLogin,
       handleSignup,
       handleLogout,
       loading,
     }),
-    [extendedSession, loading],
+    [user, accessToken, loading],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
