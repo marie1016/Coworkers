@@ -1,3 +1,6 @@
+/* eslint-disable prefer-template */
+/* eslint-disable no-alert */
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 import SetupHeader from "@/components/@shared/UI/SetupHeader";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import Input from "@/components/@shared/UI/Input";
@@ -34,45 +37,54 @@ export default function Signup() {
     setShowConfirmPassword((prev) => !prev);
   };
 
-  const handleChange = ({
-    target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    handleBlur({ target: { name, value } }); // Validate on change
+  const handleBlur = (target: HTMLInputElement) => {
+    let error = "";
+    switch (target.name) {
+      case "name":
+        error = target.value ? "" : "이름을 입력해주세요.";
+        break;
+      case "email":
+        error = target.value
+          ? validateEmail(target.value) || ""
+          : "이메일을 입력해주세요.";
+        break;
+      case "password":
+        error = target.value
+          ? validatePassword(target.value) || ""
+          : "비밀번호를 입력해주세요.";
+        break;
+      case "confirmPassword":
+        if (!target.value) {
+          error = "비밀번호를 다시 한 번 입력해주세요.";
+        } else if (target.value !== formData.password) {
+          error = "비밀번호가 일치하지 않습니다.";
+        }
+        break;
+      default:
+        break;
+    }
+    setFormErrors((prevErrors) => ({ ...prevErrors, [target.name]: error }));
   };
 
-  const handleBlur = ({
-    target: { name, value },
-  }: React.FocusEvent<HTMLInputElement>) => {
-    let error: string | undefined;
-    if (name === "name") error = !value ? "이름을 입력해주세요." : undefined;
-    if (name === "email")
-      error = !value ? "이메일을 입력해주세요." : validateEmail(value);
-    if (name === "password")
-      error = !value ? "비밀번호를 입력해주세요." : validatePassword(value);
-    if (name === "confirmPassword")
-      error = !value
-        ? "비밀번호를 다시 한 번 입력해주세요."
-        : value !== formData.password
-          ? "비밀번호가 일치하지 않습니다."
-          : undefined;
-    setFormErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [target.name]: target.value || "" }));
+    handleBlur(target);
   };
 
   const validateForm = () => {
     const newErrors = {
-      name: !formData.name ? "이름을 입력해주세요." : undefined,
-      email: !formData.email
-        ? "이메일을 입력해주세요."
-        : validateEmail(formData.email),
-      password: validatePassword(formData.password),
+      name: formData.name ? "" : "이름을 입력해주세요.",
+      email: formData.email
+        ? validateEmail(formData.email) || ""
+        : "이메일을 입력해주세요.",
+      password: validatePassword(formData.password) || "",
       confirmPassword:
         formData.password !== formData.confirmPassword
           ? "비밀번호가 일치하지 않습니다."
-          : undefined,
+          : "",
     };
     setFormErrors(newErrors);
-    return !Object.values(newErrors).some((error) => error);
+    return !Object.values(newErrors).some((error) => error !== "");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,11 +98,13 @@ export default function Signup() {
       };
 
       try {
-        setIsSubmitting(signupData);
+        setIsSubmitting(true);
         await handleSignup(signupData);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("에러 :", error);
-        alert("회원가입 실패: " + error.message);
+        if (error instanceof Error) {
+          alert("회원가입 실패: " + error.message);
+        }
       } finally {
         setIsSubmitting(false);
       }
@@ -114,7 +128,7 @@ export default function Signup() {
               onChange={handleChange}
               isValid={!formErrors.name}
               errorMessage={formErrors.name}
-              onBlur={handleBlur}
+              onBlur={(e) => handleBlur(e.target)}
             />
           </InputLabel>
           <InputLabel label="이메일">
@@ -126,7 +140,7 @@ export default function Signup() {
               onChange={handleChange}
               isValid={!formErrors.email}
               errorMessage={formErrors.email}
-              onBlur={handleBlur}
+              onBlur={(e) => handleBlur(e.target)}
             />
           </InputLabel>
           <InputLabel label="비밀번호">
@@ -138,7 +152,7 @@ export default function Signup() {
               onChange={handleChange}
               isValid={!formErrors.password}
               errorMessage={formErrors.password}
-              onBlur={handleBlur}
+              onBlur={(e) => handleBlur(e.target)}
               buttonContent={
                 <Image
                   src={
@@ -164,6 +178,7 @@ export default function Signup() {
               onChange={handleChange}
               isValid={!formErrors.confirmPassword}
               errorMessage={formErrors.confirmPassword}
+              onBlur={(e) => handleBlur(e.target)}
               buttonContent={
                 <Image
                   src={

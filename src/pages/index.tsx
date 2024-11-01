@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axiosInstance from "@/core/api/axiosInstance";
 import { AxiosResponse } from "axios";
 import Link from "next/link";

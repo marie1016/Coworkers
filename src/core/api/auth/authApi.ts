@@ -9,12 +9,10 @@ import axiosInstance from "../axiosInstance";
 
 export const signup = async (
   data: SignupRequestDto,
-): Promise<AxiosResponse<SignupResponseDto>> => {
-  return axiosInstance.post<SignupResponseDto>("auth/signup", data);
-};
+): Promise<AxiosResponse<SignupResponseDto>> =>
+  axiosInstance.post<SignupResponseDto>("auth/signup", data);
 
 export const login = async (
   data: LoginRequestDto,
-): Promise<AxiosResponse<LoginResponseDto>> => {
-  return axiosInstance.post<LoginResponseDto>("auth/signIn", data);
-};
+): Promise<AxiosResponse<LoginResponseDto>> =>
+  axiosInstance.post<LoginResponseDto>("auth/signIn", data);

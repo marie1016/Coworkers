@@ -1,20 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable import/no-extraneous-dependencies */
 import "@/styles/globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState } from "react";
 import { AuthProvider } from "@/lib/constants/AuthContext";
 import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
-}) {
+}: AppProps<{ session: any }>) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 1000, // 데이터가 1초 동안 신선하게 유지됨
+            staleTime: 1000,
           },
         },
       }),
