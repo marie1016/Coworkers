@@ -3,142 +3,100 @@ import InputLabel from "@/components/@shared/UI/InputLabel";
 import Input from "@/components/@shared/UI/Input";
 import Button from "@/components/@shared/UI/Button";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { validatePassword, validateEmail } from "@/lib/utils/validation";
-
-interface FormData {
-  name: string | undefined;
-  email: string | undefined;
-  password: string | undefined;
-  confirmPassword: string | undefined;
-}
-
-interface FormErrors {
-  name: string | undefined;
-  email: string | undefined;
-  password: string | undefined;
-  confirmPassword: string | undefined;
-}
+import { useAuth } from "@/lib/constants/AuthContext";
+import { SignupRequestDto } from "@/core/dtos/auth/authDto";
+import initializeGoogleLogin from "@/lib/oauth/google";
+import handleKakaoLogin from "@/lib/oauth/kakao";
 
 export default function Signup() {
+  const { signup, handleOAuthLogin } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-
-  const [formErrors, setFormErrors] = useState<FormErrors>({
-    name: undefined,
-    email: undefined,
-    password: undefined,
-    confirmPassword: undefined,
-  });
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    setShowPassword((prev) => !prev);
   };
 
   const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
+    setShowConfirmPassword((prev) => !prev);
   };
 
   const handleChange = ({
     target: { name, value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    handleBlur({ target: { name, value } }); // Validate on change
   };
 
   const handleBlur = ({
     target: { name, value },
   }: React.FocusEvent<HTMLInputElement>) => {
-    if (name === "name") {
-      setFormErrors((prevErrors) => ({
-        ...prevErrors,
-        name: !value ? "이름을 입력해주세요." : undefined,
-      }));
-    }
-
-    if (name === "email") {
-      if (!value) {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          email: "이메일을 입력해주세요.",
-        }));
-      } else {
-        const emailError = validateEmail(value);
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          email: emailError ?? undefined, // 이메일 형식 검사 결과 처리
-        }));
-      }
-    }
-
-    if (name === "password") {
-      if (!value) {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          password: "비밀번호를 입력해주세요.",
-        }));
-      } else if (validatePassword(value)) {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          password: validatePassword(value),
-        }));
-      } else {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          password: undefined,
-        }));
-      }
-    }
-
-    if (name === "confirmPassword") {
-      if (!value) {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          confirmPassword: "비밀번호를 다시 한 번 입력해주세요.",
-        }));
-      } else if (value !== formData.password) {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          confirmPassword: "비밀번호가 일치하지 않습니다.",
-        }));
-      } else {
-        setFormErrors((prevErrors) => ({
-          ...prevErrors,
-          confirmPassword: undefined,
-        }));
-      }
-    }
+    let error: string | undefined;
+    if (name === "name") error = !value ? "이름을 입력해주세요." : undefined;
+    if (name === "email")
+      error = !value ? "이메일을 입력해주세요." : validateEmail(value);
+    if (name === "password")
+      error = !value ? "비밀번호를 입력해주세요." : validatePassword(value);
+    if (name === "confirmPassword")
+      error = !value
+        ? "비밀번호를 다시 한 번 입력해주세요."
+        : value !== formData.password
+          ? "비밀번호가 일치하지 않습니다."
+          : undefined;
+    setFormErrors((prevErrors) => ({ ...prevErrors, [name]: error }));
   };
 
   const validateForm = () => {
-    const newErrors = {
+    const newErrors: FormErrors = {
       name: !formData.name ? "이름을 입력해주세요." : undefined,
       email: !formData.email
         ? "이메일을 입력해주세요."
-        : validateEmail(formData.email ?? ""),
-      password: validatePassword(formData.password ?? ""),
+        : validateEmail(formData.email),
+      password: validatePassword(formData.password),
       confirmPassword:
         formData.password !== formData.confirmPassword
           ? "비밀번호가 일치하지 않습니다."
           : undefined,
     };
     setFormErrors(newErrors);
-
-    return !Object.values(newErrors).some((error) => error !== undefined);
+    return !Object.values(newErrors).some((error) => error);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      alert("폼 성공적으로 제출 완료");
+      const signupData: SignupRequestDto = {
+        nickname: formData.name,
+        email: formData.email,
+        password: formData.password,
+        passwordConfirmation: formData.confirmPassword,
+      };
+
+      try {
+        await signup(signupData);
+        alert("회원가입 성공");
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          alert("이미 존재하는 계정입니다.");
+        } else {
+          alert("회원가입 실패: " + error.message);
+        }
+      }
     }
   };
+
+  useEffect(() => {
+    initializeGoogleLogin(); // Google SDK 초기화
+  }, []);
 
   return (
     <div>
@@ -152,7 +110,6 @@ export default function Signup() {
           <InputLabel label="이름">
             <Input
               name="name"
-              className="h-[48px] gap-2.5 px-4 py-2.5 sm:h-[44px] sm:w-[343px]"
               placeholder="이름을 입력해주세요."
               value={formData.name}
               onChange={handleChange}
@@ -165,7 +122,6 @@ export default function Signup() {
             <Input
               name="email"
               type="email"
-              className="h-[48px] gap-2.5 px-4 py-2.5 sm:h-[44px] sm:w-[343px]"
               placeholder="이메일을 입력해주세요."
               value={formData.email}
               onChange={handleChange}
@@ -175,67 +131,58 @@ export default function Signup() {
             />
           </InputLabel>
           <InputLabel label="비밀번호">
-            <div className="relative w-full items-center">
-              <Input
-                name="password"
-                className="h-[48px] gap-2.5 px-4 py-2.5 sm:h-[44px] sm:w-[343px]"
-                type={showPassword ? "text" : "password"}
-                placeholder="비밀번호를 입력해주세요."
-                value={formData.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                isValid={!formErrors.password}
-                errorMessage={formErrors.password}
-                buttonContent={
-                  <Image
-                    src={
-                      showPassword
-                        ? "/icons/icon-visibility.png"
-                        : "/icons/icon-visibility_off.png"
-                    }
-                    width={24}
-                    height={24}
-                    alt={showPassword ? "비밀번호 숨김" : "비밀번호 보기"}
-                  />
-                }
-                buttonClassName="absolute top-1/2 transform -translate-y-1/2 right-3"
-                onButtonClick={togglePasswordVisibility}
-              />
-            </div>
+            <Input
+              name="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="비밀번호를 입력해주세요."
+              value={formData.password}
+              onChange={handleChange}
+              isValid={!formErrors.password}
+              errorMessage={formErrors.password}
+              onBlur={handleBlur}
+              buttonContent={
+                <Image
+                  src={
+                    showPassword
+                      ? "/icons/icon-visibility.png"
+                      : "/icons/icon-visibility_off.png"
+                  }
+                  width={24}
+                  height={24}
+                  alt="비밀번호 보기"
+                />
+              }
+              buttonClassName="absolute top-1/2 transform -translate-y-1/2 right-3"
+              onButtonClick={togglePasswordVisibility}
+            />
           </InputLabel>
           <InputLabel label="비밀번호 확인">
-            <div className="relative w-full">
-              <Input
-                name="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
-                className="h-[48px] gap-2.5 px-4 py-2.5 sm:h-[44px] sm:w-[343px]"
-                placeholder="비밀번호를 다시 한 번 입력해주세요."
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                isValid={!formErrors.confirmPassword}
-                errorMessage={formErrors.confirmPassword}
-                buttonContent={
-                  <Image
-                    src={
-                      showConfirmPassword
-                        ? "/icons/icon-visibility.png"
-                        : "/icons/icon-visibility_off.png"
-                    }
-                    width={24}
-                    height={24}
-                    alt={
-                      showConfirmPassword ? "비밀번호 숨김" : "비밀번호 보기"
-                    }
-                  />
-                }
-                buttonClassName="absolute right-3 top-1/2 transform -translate-y-1/2"
-                onButtonClick={toggleConfirmPasswordVisibility}
-              />
-            </div>
+            <Input
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="비밀번호를 다시 한 번 입력해주세요."
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              isValid={!formErrors.confirmPassword}
+              errorMessage={formErrors.confirmPassword}
+              buttonContent={
+                <Image
+                  src={
+                    showConfirmPassword
+                      ? "/icons/icon-visibility.png"
+                      : "/icons/icon-visibility_off.png"
+                  }
+                  width={24}
+                  height={24}
+                  alt="비밀번호 보기"
+                />
+              }
+              buttonClassName="absolute right-3 top-1/2 transform -translate-y-1/2"
+              onButtonClick={toggleConfirmPasswordVisibility}
+            />
           </InputLabel>
 
-          <Button variant="solid" size="large" className="mt-4">
+          <Button type="submit" variant="solid" size="large" className="mt-4">
             회원가입
           </Button>
 
@@ -250,7 +197,10 @@ export default function Signup() {
           <div className="flex w-full items-center justify-between">
             <span className="text-lg text-text-inverse">간편 회원가입하기</span>
             <div className="flex flex-row items-center justify-center gap-4">
-              <button>
+              <button
+                type="button"
+                onClick={() => window.google.accounts.id.prompt()}
+              >
                 <Image
                   src="/icons/icon-google.png"
                   alt="구글 간편 회원가입"
@@ -258,7 +208,7 @@ export default function Signup() {
                   height={42}
                 />
               </button>
-              <button>
+              <button onClick={handleKakaoLogin}>
                 <Image
                   src="/icons/icon-kakaotalk.png"
                   alt="카카오 간편 회원가입"
