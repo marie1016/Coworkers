@@ -91,7 +91,7 @@ export default function Signup() {
     e.preventDefault();
     if (validateForm()) {
       const signupData: SignupRequestDto = {
-        nickname: formData.name,
+        name: formData.name,
         email: formData.email,
         password: formData.password,
         passwordConfirmation: formData.confirmPassword,

@@ -5,6 +5,7 @@ import Button from "@/components/@shared/UI/Button";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/lib/constants/AuthContext";
 import { validatePassword, validateEmail } from "@/lib/utils/validation";
 
 interface FormData {
@@ -18,6 +19,7 @@ interface FormErrors {
 }
 
 export default function Login() {
+  const { handleLogin, handleEmailLogin } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
@@ -34,10 +36,9 @@ export default function Login() {
     setShowPassword(!showPassword);
   };
 
-  const handleChange = ({
-    target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [name]: value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleBlur = ({
@@ -90,10 +91,13 @@ export default function Login() {
     return !Object.values(newErrors).some((error) => error !== undefined);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) {
-      alert("폼 성공적으로 제출 완료");
+
+    if (formData.email && formData.password) {
+      await handleEmailLogin(formData.email, formData.password);
+    } else {
+      alert("이메일과 비밀번호를 모두 입력해주세요.");
     }
   };
 
@@ -155,7 +159,7 @@ export default function Login() {
             </Link>
           </InputLabel>
 
-          <Button variant="solid" size="large" className="mt-4">
+          <Button type="submit" variant="solid" size="large" className="mt-4">
             로그인
           </Button>
 
@@ -177,7 +181,7 @@ export default function Login() {
           <div className="flex w-full items-center justify-between">
             <span className="text-lg text-text-inverse">간편 로그인하기</span>
             <div className="flex flex-row items-center justify-center gap-4">
-              <button>
+              <button type="button" onClick={() => handleLogin("google")}>
                 <Image
                   src="/icons/icon-google.png"
                   alt="구글 간편 회원가입"
@@ -185,7 +189,7 @@ export default function Login() {
                   height={42}
                 />
               </button>
-              <button>
+              <button type="button" onClick={() => handleLogin("kakao")}>
                 <Image
                   src="/icons/icon-kakaotalk.png"
                   alt="카카오 간편 회원가입"

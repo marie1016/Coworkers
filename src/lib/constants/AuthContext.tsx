@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable react/function-component-definition */
-/* eslint-disable import/no-extraneous-dependencies */
 import {
   createContext,
   useContext,
@@ -9,16 +5,22 @@ import {
   useMemo,
   useEffect,
   useRef,
+  useState,
 } from "react";
 import { useRouter } from "next/router";
 import { signIn, signOut, useSession } from "next-auth/react";
+import axiosInstance from "@/core/api/axiosInstance";
 import { SignupRequestDto } from "@/core/dtos/auth/authDto";
-import { signup as signupAPI } from "@/core/api/auth/authApi";
+import {
+  login as loginAPI,
+  signup as signupAPI,
+} from "@/core/api/auth/authApi";
 
 interface ExtendedSession {
   user: {
-    name: string;
+    nickname: string;
     email: string;
+    image?: string;
   };
   accessToken: string | null;
 }
@@ -27,16 +29,19 @@ interface AuthContextType {
   user: any;
   accessToken: string | null;
   handleLogin: (provider: "google" | "kakao") => void;
+  handleEmailLogin: (email: string, password: string) => Promise<void>;
   handleSignup: (data: SignupRequestDto) => Promise<void>;
   handleLogout: () => void;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const hasNavigated = useRef(false);
+  const [loading, setLoading] = useState(false);
 
   const extendedSession = session as unknown as ExtendedSession;
 
@@ -47,34 +52,81 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       !hasNavigated.current
     ) {
       console.log("로그인 상태입니다:");
-      console.log("이름:", extendedSession.user.name);
+      console.log("닉네임:", extendedSession.user.nickname);
       console.log("이메일:", extendedSession.user.email);
 
-      if (!hasNavigated.current) {
-        hasNavigated.current = true;
-
-        if (typeof window !== "undefined") {
-          if (
-            window.performance &&
-            window.performance.navigation.type ===
-              window.performance.navigation.TYPE_RELOAD
-          ) {
-            router.push("/");
-          } else {
-            alert("로그인 성공");
-            router.push("/");
-          }
-        }
-      }
+      hasNavigated.current = true;
+      alert("로그인 성공");
+      router.push("/");
     }
   }, [status, extendedSession, router]);
 
-  const handleLogin = (provider: "google" | "kakao") => {
-    signIn(provider);
+  const handleLogin = async (provider: "google" | "kakao") => {
+    try {
+      const result = await signIn(provider, { redirect: false });
+      if (result?.ok) {
+        // 간편 로그인 결과에 따라 nickname 설정
+        const updatedUser = {
+          nickname: session?.user?.name || "닉네임 없음", // 간편 로그인 시 name을 nickname으로 설정
+          email: session?.user?.email,
+          image: session?.user?.image,
+        };
+
+        await update({ user: updatedUser, accessToken: session?.accessToken });
+
+        console.log("간편 로그인 성공:", updatedUser);
+        router.push("/");
+      } else {
+        throw new Error("간편 로그인 실패");
+      }
+    } catch (error) {
+      console.error("간편 로그인 실패:", error);
+      alert("간편 로그인 실패");
+    }
+  };
+
+  const handleEmailLogin = async (email: string, password: string) => {
+    try {
+      setLoading(true);
+      const response = await loginAPI({ email, password });
+      if (response.data) {
+        const { accessToken, refreshToken, user } = response.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        axiosInstance.defaults.headers.common["Authorization"] =
+          `Bearer ${accessToken}`;
+
+        await update({
+          user: {
+            nickname: user.nickname || "이름 없음",
+            email: user.email,
+            image: user.imageUrl || null,
+          },
+          accessToken,
+        });
+
+        console.log("로그인 성공:", user);
+        alert("로그인 성공");
+        router.push("/");
+      }
+    } catch (error: any) {
+      console.error("로그인 실패:", error);
+      if (error.response?.status === 401) {
+        alert("인증에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
+      } else if (error.response?.status === 403) {
+        alert("접근 권한이 없습니다. 관리자에게 문의하세요.");
+      } else {
+        alert("로그인 실패");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignup = async (data: SignupRequestDto) => {
     try {
+      setLoading(true);
       const response = await signupAPI(data);
       if (response.data) {
         alert("회원가입 성공");
@@ -91,10 +143,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("회원가입 실패:", error);
         alert(`회원가입 실패: ${error.message}`);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     signOut({ callbackUrl: "/" });
   };
 
@@ -103,10 +159,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       user: extendedSession?.user || null,
       accessToken: extendedSession?.accessToken ?? null,
       handleLogin,
+      handleEmailLogin,
       handleSignup,
       handleLogout,
+      loading,
     }),
-    [extendedSession],
+    [extendedSession, loading],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

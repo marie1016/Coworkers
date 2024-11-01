@@ -10,7 +10,7 @@ interface UserBase {
   id: number;
   teamId: string;
   email: string;
-  nickname: string;
+  name: string;
   image: string | null;
   createdAt: string;
   updatedAt: string;
@@ -41,7 +41,7 @@ const INITIAL_USER_INFO: UserResponse = {
   id: 0,
   teamId: "",
   email: "",
-  nickname: "",
+  name: "",
   image: null,
   createdAt: "",
   updatedAt: "",
