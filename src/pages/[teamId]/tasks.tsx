@@ -1,5 +1,5 @@
 import { Task } from "@/core/dtos/tasks/tasks";
-import { useState, Suspense, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
@@ -7,7 +7,6 @@ import TaskCardList from "@/components/PageComponents/tasks/TaskCardList";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import AddTaskModal from "@/components/PageComponents/tasks/AddTaskModal";
 import EditTaskModal from "@/components/PageComponents/tasks/EditTaskModal";
-import { ErrorBoundary } from "react-error-boundary";
 import SectionHeader from "@/components/PageComponents/tasks/SectionHeader";
 import DeleteTaskModal from "@/components/PageComponents/tasks/DeleteTaskModal";
 
@@ -57,16 +56,12 @@ export default function Tasks() {
           selectedTaskListId={selectedTaskListId}
           onTaskListClick={handleTaskListClick}
         />
-        <ErrorBoundary fallback={<div>error</div>}>
-          <Suspense fallback={<div>loading...</div>}>
-            <TaskCardList
-              teamId={teamId}
-              selectedTaskListId={selectedTaskListId}
-              selectedDate={selectedDate}
-              onTaskItemChange={handleTaskItemChange}
-            />
-          </Suspense>
-        </ErrorBoundary>
+        <TaskCardList
+          teamId={teamId}
+          selectedTaskListId={selectedTaskListId}
+          selectedDate={selectedDate}
+          onTaskItemChange={handleTaskItemChange}
+        />
       </section>
       <FloatingButton
         className="fixed bottom-8 right-8"

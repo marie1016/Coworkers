@@ -1,7 +1,6 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import { Suspense, useEffect } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
@@ -86,11 +85,7 @@ export default function TaskDetail({
         />
         <div className="mt-4 text-text-md text-text-primary">
           <CommentTextarea taskItem={taskItem} />
-          <ErrorBoundary fallback={<div>error</div>}>
-            <Suspense fallback={<div>loading...</div>}>
-              <TaskComments taskItem={taskItem} />
-            </Suspense>
-          </ErrorBoundary>
+          <TaskComments taskItem={taskItem} />
         </div>
         <FloatingButton
           onClick={handleButtonClick}

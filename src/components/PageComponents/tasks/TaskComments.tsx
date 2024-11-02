@@ -8,6 +8,7 @@ import { useState } from "react";
 import Button from "@/components/@shared/UI/Button";
 import deleteTaskComment from "@/core/api/tasks/deleteTaskComment";
 import EditDropdown from "./EditDropdown";
+import CommentSkeleton from "./CommentSkeleton";
 
 interface TaskCommentsProps {
   taskItem: Task;
@@ -25,12 +26,16 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
-  const { data: commentsData } = useQuery<TaskComment[]>({
+  const {
+    data: commentsData,
+    isPending,
+    isError,
+  } = useQuery<TaskComment[]>({
     queryKey: ["taskComments", id],
     queryFn: () => getTaskComments(id),
   });
 
-  const taskComments = commentsData ?? [];
+  const taskComments = commentsData;
 
   const editMutation = useMutation({
     mutationFn: ({
@@ -74,9 +79,31 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
     setIsEditingId(null);
   };
 
+  if (isError) {
+    return (
+      <div className="mt-28 text-center text-text-md text-text-default">
+        <p>댓글을 불러오는데 에러가 발생했습니다.</p>
+        <p>잠시 후 다시 접속해주세요.</p>
+      </div>
+    );
+  }
+
+  if (isPending) {
+    return <CommentSkeleton />;
+  }
+
+  if (!taskComments?.length) {
+    return (
+      <div className="mt-28 text-center text-text-md text-text-default">
+        <p>아직 댓글이 없습니다.</p>
+        <p>댓글을 추가해주세요.</p>
+      </div>
+    );
+  }
+
   return (
     <ul>
-      {taskComments.map((taskComment) => (
+      {taskComments?.map((taskComment) => (
         <li key={taskComment.id} className="mt-4">
           {isEditingId !== taskComment.id ? (
             <div className="flex flex-col gap-4">

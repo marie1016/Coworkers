@@ -57,7 +57,7 @@ export default function TaskCard({
 
   return (
     <>
-      <div className="w-1200 mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
+      <div className="mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Checkbox

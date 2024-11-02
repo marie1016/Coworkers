@@ -22,6 +22,7 @@
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "flowbite": "^2.5.2",
     "focus-trap-react": "^10.3.0",
     "framer-motion": "^11.11.10",
     "next": "14.2.14",
