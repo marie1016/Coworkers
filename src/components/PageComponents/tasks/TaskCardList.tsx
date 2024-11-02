@@ -136,6 +136,7 @@ export default function TaskCardList({
                     <TaskCard
                       taskItem={taskItem}
                       onTaskItemChange={onTaskItemChange}
+                      selectedDate={selectedDate}
                     />
                   </div>
                 )}

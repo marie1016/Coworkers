@@ -14,18 +14,20 @@ import TaskDetail from "./TaskDetail";
 interface TaskCardProps {
   taskItem: Task;
   onTaskItemChange: (task: Task) => void;
+  selectedDate: Date | null;
 }
 
 export default function TaskCard({
   taskItem,
   onTaskItemChange,
+  selectedDate,
 }: TaskCardProps) {
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   const { id, name, commentCount, frequency, doneAt, date } = taskItem;
   const router = useRouter();
   const teamId = router.query.teamId as string;
   const tasklist = router.query.tasklist as string;
-  const { handleClick } = usePatchTaskDone(id);
+  const { handleClick } = usePatchTaskDone(id, doneAt, selectedDate);
 
   const handleCheckboxChange = (checked: boolean) => {
     handleClick(checked);
@@ -104,6 +106,7 @@ export default function TaskCard({
       <AnimatePresence>
         {isTaskDetailOpen && (
           <TaskDetail
+            selectedDate={selectedDate}
             taskItem={taskItem}
             isTaskDetailOpen={isTaskDetailOpen}
             closeTaskDetail={closeTaskDetail}

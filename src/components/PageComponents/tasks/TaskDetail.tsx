@@ -10,6 +10,7 @@ import TaskInfo from "./TaskInfo";
 import CommentTextarea from "./CommentTextarea";
 
 interface TaskDetailProps {
+  selectedDate: Date | null;
   taskItem: Task;
   isTaskDetailOpen: boolean;
   closeTaskDetail: () => void;
@@ -17,6 +18,7 @@ interface TaskDetailProps {
   openDeleteTaskModal: () => void;
 }
 export default function TaskDetail({
+  selectedDate,
   taskItem,
   isTaskDetailOpen,
   closeTaskDetail,
@@ -24,7 +26,7 @@ export default function TaskDetail({
   openDeleteTaskModal,
 }: TaskDetailProps) {
   const { doneAt, id } = taskItem;
-  const { handleClick } = usePatchTaskDone(id);
+  const { handleClick } = usePatchTaskDone(id, doneAt, selectedDate);
   const ref = useClickOutside(closeTaskDetail);
 
   const handleButtonClick = () => {
