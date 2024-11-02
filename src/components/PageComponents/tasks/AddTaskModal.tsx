@@ -30,7 +30,7 @@ export default function AddTaskModal({
     frequencyType: FrequencyType.ONCE,
   };
   const [taskData, setTaskData] = useState(initialTaskData);
-  const [selectedMonthDay, setSelectedMonthDay] = useState<number>(0);
+  const [selectedMonthDay, setSelectedMonthDay] = useState<number>(NaN);
   const [selectedWeekDays, setSelectedWeekDays] = useState<number[]>([]);
   const queryClient = useQueryClient();
 
@@ -61,6 +61,13 @@ export default function AddTaskModal({
     }
   };
 
+  const closeAddTaskModal = () => {
+    closeModal(modalName);
+    setTaskData(initialTaskData);
+    setSelectedMonthDay(NaN);
+    setSelectedWeekDays([]);
+  };
+
   const addMutation = useMutation({
     mutationFn: (addTaskForm: AddTaskForm) =>
       addTask({ teamId, selectedTaskListId }, addTaskForm),
@@ -68,8 +75,7 @@ export default function AddTaskModal({
       queryClient.invalidateQueries({
         queryKey: ["tasks", selectedTaskListId],
       });
-      closeModal(modalName);
-      setTaskData(initialTaskData);
+      closeAddTaskModal();
     },
     onError: (error) => {
       console.error("Error adding task:", error);
@@ -114,7 +120,7 @@ export default function AddTaskModal({
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={() => closeModal(modalName)} isCloseButton>
+    <Modal isOpen={isOpen} onClose={closeAddTaskModal} isCloseButton>
       <div className="h-auto w-[24rem] px-6 py-8">
         <h2 className="text-center text-text-lg text-text-primary">
           할 일 만들기
