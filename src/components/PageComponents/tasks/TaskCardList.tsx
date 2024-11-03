@@ -43,13 +43,11 @@ export default function TaskCardList({
     enabled: !!selectedTaskListId,
   });
 
-  const initialTask = useMemo(() => tasksData, [tasksData]);
-  const [taskItems, setTaskItems] = useState<Task[]>(initialTask ?? []);
+  const initialTask = useMemo(() => tasksData ?? [], [tasksData]);
+  const [taskItems, setTaskItems] = useState<Task[]>(initialTask);
 
   useEffect(() => {
-    if (initialTask) {
-      setTaskItems(initialTask);
-    }
+    setTaskItems(initialTask);
   }, [initialTask]);
 
   const orderMutation = useMutation({
