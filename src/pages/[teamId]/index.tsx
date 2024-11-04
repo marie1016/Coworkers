@@ -8,13 +8,14 @@ import TeamLinkModal from "@/components/PageComponents/team/TeamLinkModal";
 import getTasks from "@/core/api/group/getTasks";
 import getTeamData from "@/core/api/group/getTeamData";
 import { useAuth } from "@/core/context/AuthProvider";
+import { Roles } from "@/core/types/member";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 
 export default function Team() {
-  useAuth(true);
-  
+  const { user } = useAuth(true);
+
   const addTaskListModalName = "addTaskListModal";
   const teamLinkModalName = "teamLinkModal";
 
@@ -51,7 +52,10 @@ export default function Team() {
     enabled: !!group,
   });
 
-  if (!group) return null;
+  if (!group || !user) return null;
+
+  const isAdmin =
+    user.id === group.members.find((e) => e.role === Roles.ADMIN)?.userId;
 
   return (
     <>
@@ -62,6 +66,8 @@ export default function Team() {
             teamId={teamId}
             teamName={group.name}
             teamImage={group.image}
+            memberId={user.id}
+            isAdmin={isAdmin}
             refreshGroup={refreshGroup}
           />
         </div>
