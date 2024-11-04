@@ -7,7 +7,10 @@ import aspectRatio from "@tailwindcss/aspect-ratio";
 import lineClamp from "@tailwindcss/line-clamp";
 
 const config: Config = {
-  content: ["./src/**/*.{html,js,ts,jsx,tsx}"],
+  content: [
+    "./src/**/*.{html,js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js",
+  ],
   theme: {
     extend: {
       colors: {
@@ -141,6 +144,7 @@ const config: Config = {
     aspectRatio,
     lineClamp,
     require("tailwind-scrollbar-hide"),
+    require("flowbite/plugin"),
   ],
 };
 

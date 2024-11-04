@@ -35,7 +35,6 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
     const addTaskCommentForm = { content: comment };
     commentMutation.mutate(addTaskCommentForm, {
       onSuccess: () => {
-        alert("댓글이 성공적으로 업로드 되었습니다.");
         setComment("");
       },
     });

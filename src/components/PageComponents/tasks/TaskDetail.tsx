@@ -1,7 +1,6 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import { Suspense, useEffect } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
@@ -11,6 +10,7 @@ import TaskInfo from "./TaskInfo";
 import CommentTextarea from "./CommentTextarea";
 
 interface TaskDetailProps {
+  selectedDate: Date | null;
   taskItem: Task;
   isTaskDetailOpen: boolean;
   closeTaskDetail: () => void;
@@ -18,6 +18,7 @@ interface TaskDetailProps {
   openDeleteTaskModal: () => void;
 }
 export default function TaskDetail({
+  selectedDate,
   taskItem,
   isTaskDetailOpen,
   closeTaskDetail,
@@ -25,7 +26,7 @@ export default function TaskDetail({
   openDeleteTaskModal,
 }: TaskDetailProps) {
   const { doneAt, id } = taskItem;
-  const { handleClick } = usePatchTaskDone(id);
+  const { handleClick } = usePatchTaskDone(id, doneAt, selectedDate);
   const ref = useClickOutside(closeTaskDetail);
 
   const handleButtonClick = () => {
@@ -86,11 +87,7 @@ export default function TaskDetail({
         />
         <div className="mt-4 text-text-md text-text-primary">
           <CommentTextarea taskItem={taskItem} />
-          <ErrorBoundary fallback={<div>error</div>}>
-            <Suspense fallback={<div>loading...</div>}>
-              <TaskComments taskItem={taskItem} />
-            </Suspense>
-          </ErrorBoundary>
+          <TaskComments taskItem={taskItem} />
         </div>
         <FloatingButton
           onClick={handleButtonClick}

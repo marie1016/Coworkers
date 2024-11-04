@@ -10,6 +10,8 @@ import {
 } from "@hello-pangea/dnd";
 import { useEffect, useState, useMemo } from "react";
 import patchTaskOrder from "@/core/api/tasks/patchTaskOrder";
+import TaskSkeleton from "./TaskSkeleton";
+import TaskError from "./TaskError";
 
 interface TaskCardListProps {
   teamId: string;
@@ -26,7 +28,11 @@ export default function TaskCardList({
 }: TaskCardListProps) {
   const queryClient = useQueryClient();
 
-  const { data: tasksData } = useQuery<Task[]>({
+  const {
+    data: tasksData,
+    isPending,
+    isError,
+  } = useQuery<Task[]>({
     queryKey: ["tasks", selectedTaskListId, selectedDate],
     queryFn: () =>
       getTasks({
@@ -38,7 +44,7 @@ export default function TaskCardList({
   });
 
   const initialTask = useMemo(() => tasksData ?? [], [tasksData]);
-  const [taskItems, setTaskItems] = useState(initialTask);
+  const [taskItems, setTaskItems] = useState<Task[]>(initialTask);
 
   useEffect(() => {
     setTaskItems(initialTask);
@@ -84,7 +90,28 @@ export default function TaskCardList({
     orderMutation.mutate({ taskId: draggableId, newIndex: destination.index });
   };
 
-  return taskItems.length > 0 ? (
+  if (!selectedTaskListId) {
+    return null;
+  }
+
+  if (isError) {
+    return <TaskError />;
+  }
+
+  if (isPending) {
+    return <TaskSkeleton />;
+  }
+
+  if (!taskItems.length) {
+    return (
+      <div className="mt-80 text-center text-text-md text-text-default sm:mt-48">
+        <p>아직 할 일이 없습니다.</p>
+        <p>할 일을 추가해주세요.</p>
+      </div>
+    );
+  }
+
+  return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="tasks">
         {(droppableProvided) => (
@@ -107,6 +134,7 @@ export default function TaskCardList({
                     <TaskCard
                       taskItem={taskItem}
                       onTaskItemChange={onTaskItemChange}
+                      selectedDate={selectedDate}
                     />
                   </div>
                 )}
@@ -116,10 +144,5 @@ export default function TaskCardList({
         )}
       </Droppable>
     </DragDropContext>
-  ) : (
-    <div className="mt-80 text-center text-text-md text-text-default sm:mt-48">
-      <p>아직 할 일이 없습니다.</p>
-      <p>할 일을 추가해주세요.</p>
-    </div>
   );
 }

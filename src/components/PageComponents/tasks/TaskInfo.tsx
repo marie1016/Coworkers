@@ -1,12 +1,7 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import {
-  formattedDate,
-  formattedShortDate,
-  formattedTime,
-} from "@/lib/utils/date";
-
-import "moment/locale/ko";
+import { formatDate } from "@/lib/utils/date";
+import { getFrequencyLabel } from "@/lib/constants/frequencyType";
 import EditDropdown from "./EditDropdown";
 
 interface TaskInfoProps {
@@ -22,8 +17,6 @@ export default function TaskInfo({
 }: TaskInfoProps) {
   const { name, writer, updatedAt, date, frequency, description, doneAt } =
     taskItem;
-
-  const timeString = formattedTime(new Date(date));
 
   const writerImage = writer.image ?? "/images/image-defaultProfile.png";
 
@@ -62,7 +55,7 @@ export default function TaskInfo({
             </span>
           </span>
           <span className="text-text-md text-text-secondary">
-            {formattedShortDate(updatedAt)}
+            {formatDate(updatedAt, "YYYY.MM.DD")}
           </span>
         </div>
         <div className="flex items-center text-text-xs text-text-default">
@@ -73,16 +66,7 @@ export default function TaskInfo({
             height={16}
             alt="카드캘린더 아이콘"
           />
-          {formattedDate(date)}
-          <span className="mx-2.5 h-2 border-l border-background-tertiary" />
-          <Image
-            className="mr-1.5"
-            src="/icons/icon-time.svg"
-            width={16}
-            height={16}
-            alt="시계 아이콘"
-          />
-          {timeString}
+          {formatDate(date)}
           <span className="mx-2.5 h-2 border-l border-background-tertiary" />
           <Image
             className="mr-1.5"
@@ -91,7 +75,7 @@ export default function TaskInfo({
             height={16}
             alt="반복 아이콘"
           />
-          {frequency}
+          {getFrequencyLabel(frequency)}
         </div>
       </section>
       <p className="my-6 h-40 text-text-md text-text-primary">{description}</p>
