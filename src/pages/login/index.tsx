@@ -1,27 +1,14 @@
-import axiosInstance from "@/core/api/axiosInstance";
-import { AxiosResponse } from "axios";
+import { useAuth } from "@/core/context/AuthProvider";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
-
-interface SignInResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: number;
-    teamId: string;
-    email: string;
-    nickname: string;
-    image: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
 
 export default function Login() {
   const [signInForm, setSignInForm] = useState({
     email: "",
     password: "",
   });
+
+  const { login } = useAuth();
 
   const router = useRouter();
 
@@ -34,16 +21,12 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    let res: AxiosResponse<SignInResponse>;
     try {
-      res = await axiosInstance.post("auth/signIn", signInForm);
-    } catch (error) {
+      await login(signInForm);
+    } catch {
       alert("로그인 실패: 에러 정보는 콘솔에서 확인");
-      console.error(error);
       return;
     }
-
-    localStorage.setItem("accessToken", res.data.accessToken);
     router.push("/");
   };
 
