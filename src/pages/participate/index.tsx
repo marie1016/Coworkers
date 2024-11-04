@@ -2,6 +2,7 @@ import Button from "@/components/@shared/UI/Button";
 import Input from "@/components/@shared/UI/Input";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import postInvitationAccept from "@/core/api/group/postInvitationAccept";
+import { useAuth } from "@/core/context/AuthProvider";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
@@ -9,7 +10,8 @@ import { ChangeEvent, useState } from "react";
 export default function Participate() {
   const [link, setLink] = useState("");
   const router = useRouter();
-  const { email } = router.query;
+  const { user } = useAuth(true);
+  const { email } = user ?? { email: "" };
 
   const { mutate } = useMutation({
     mutationFn: postInvitationAccept,
@@ -27,9 +29,11 @@ export default function Participate() {
   };
 
   const handleButtonClick = () => {
-    if (typeof email !== "string" || !link) return;
+    if (!email || !link) return;
     mutate({ userEmail: email, token: link });
   };
+
+  if (!user) return null;
 
   return (
     <div className="mx-auto mt-52 max-w-[30.75rem] px-4">

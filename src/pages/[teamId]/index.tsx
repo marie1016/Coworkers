@@ -7,11 +7,14 @@ import TeamGear from "@/components/PageComponents/team/TeamGear";
 import TeamLinkModal from "@/components/PageComponents/team/TeamLinkModal";
 import getTasks from "@/core/api/group/getTasks";
 import getTeamData from "@/core/api/group/getTeamData";
+import { useAuth } from "@/core/context/AuthProvider";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 
 export default function Team() {
+  useAuth(true);
+  
   const addTaskListModalName = "addTaskListModal";
   const teamLinkModalName = "teamLinkModal";
 
