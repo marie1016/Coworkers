@@ -1,4 +1,4 @@
-import FrequencyType from "@/lib/constants/frequencyType";
+import { FrequencyType } from "@/lib/constants/frequencyType";
 
 export interface TaskList {
   id: number;

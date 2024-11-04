@@ -1,5 +1,5 @@
 import { Member } from "@/core/types/member";
-import FrequencyType from "@/lib/constants/frequencyType";
+import { FrequencyType } from "@/lib/constants/frequencyType";
 
 interface BaseUser {
   id: number;
