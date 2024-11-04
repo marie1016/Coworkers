@@ -1,67 +1,14 @@
-import axiosInstance from "@/core/api/axiosInstance";
-import { AxiosResponse } from "axios";
+import { useAuth } from "@/core/context/AuthProvider";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-interface UserBase {
-  id: number;
-  teamId: string;
-  email: string;
-  nickname: string;
-  image: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface Membership {
-  group: {
-    id: number;
-    teamId: string;
-    name: string;
-    image: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-  userId: number;
-  groupId: number;
-  role: "ADMIN" | "MEMBER";
-  userName: string;
-  userImage: string;
-  userEmail: string;
-}
-
-interface UserResponse extends UserBase {
-  memberships: Membership[];
-}
-
-const INITIAL_USER_INFO: UserResponse = {
-  id: 0,
-  teamId: "",
-  email: "",
-  nickname: "",
-  image: null,
-  createdAt: "",
-  updatedAt: "",
-  memberships: [],
-};
+import { useEffect } from "react";
 
 export default function Home() {
-  const [userInfo, setUserInfo] = useState(INITIAL_USER_INFO);
-
-  const getUserInfo = async () => {
-    let res: AxiosResponse<UserResponse>;
-    try {
-      res = await axiosInstance.get("user");
-    } catch (error) {
-      console.error(error);
-      return;
-    }
-    setUserInfo(res.data);
-  };
+  const { user, isPending } = useAuth();
 
   useEffect(() => {
-    getUserInfo();
-  }, []);
+    if (isPending) return;
+    console.log(user);
+  }, [isPending, user]);
 
   return (
     <div>
@@ -77,7 +24,7 @@ export default function Home() {
       <br />
       <Link href="/addboard">게시물 등록 페이지</Link>
       <br />
-      <Link href={`/participate${userInfo ? `?email=${userInfo.email}` : ""}`}>
+      <Link href={`/participate${user ? `?email=${user.email}` : ""}`}>
         팀 참여 페이지
       </Link>
       <br />
@@ -86,7 +33,7 @@ export default function Home() {
       <br />
       <h2 className="text-text-3xl">내가 속한 팀</h2>
       <br />
-      {userInfo.memberships.map((membership) => (
+      {user?.memberships.map((membership) => (
         <>
           <Link href={`/${membership.groupId}`} key={membership.groupId}>
             {membership.group.name}
