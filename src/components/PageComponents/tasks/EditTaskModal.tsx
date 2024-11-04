@@ -10,9 +10,13 @@ import { EditTaskForm, Task } from "@/core/dtos/tasks/tasks";
 
 interface EditTaskModalProps {
   taskToEdit: Task;
+  selectedTaskListId: number;
 }
 
-export default function EditTaskModal({ taskToEdit }: EditTaskModalProps) {
+export default function EditTaskModal({
+  taskToEdit,
+  selectedTaskListId,
+}: EditTaskModalProps) {
   const initialTaskData = useMemo(
     () => ({
       name: taskToEdit.name || "",
@@ -49,7 +53,9 @@ export default function EditTaskModal({ taskToEdit }: EditTaskModalProps) {
     mutationFn: (editTaskForm: EditTaskForm) =>
       editTask({ taskId: taskToEdit.id }, editTaskForm),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({
+        queryKey: ["tasks", selectedTaskListId],
+      });
       closeModal(modalName);
     },
     onError: (error) => {

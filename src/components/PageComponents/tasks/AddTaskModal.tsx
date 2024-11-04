@@ -8,8 +8,8 @@ import DatePicker from "react-datepicker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import addTask from "@/core/api/tasks/addTask";
 import { AddTaskForm } from "@/core/dtos/tasks/tasks";
-import { formattedDate } from "@/lib/utils/date";
-import FrequencyType from "@/lib/constants/frequencyType";
+import { formatDate } from "@/lib/utils/date";
+import { FrequencyType } from "@/lib/constants/frequencyType";
 import FrequencyWeekly from "./FrequencyWeekly";
 import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
@@ -30,7 +30,7 @@ export default function AddTaskModal({
     frequencyType: FrequencyType.ONCE,
   };
   const [taskData, setTaskData] = useState(initialTaskData);
-  const [selectedMonthDay, setSelectedMonthDay] = useState<number>(0);
+  const [selectedMonthDay, setSelectedMonthDay] = useState<number>(NaN);
   const [selectedWeekDays, setSelectedWeekDays] = useState<number[]>([]);
   const queryClient = useQueryClient();
 
@@ -61,13 +61,21 @@ export default function AddTaskModal({
     }
   };
 
+  const closeAddTaskModal = () => {
+    closeModal(modalName);
+    setTaskData(initialTaskData);
+    setSelectedMonthDay(NaN);
+    setSelectedWeekDays([]);
+  };
+
   const addMutation = useMutation({
     mutationFn: (addTaskForm: AddTaskForm) =>
       addTask({ teamId, selectedTaskListId }, addTaskForm),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      closeModal(modalName);
-      setTaskData(initialTaskData);
+      queryClient.invalidateQueries({
+        queryKey: ["tasks", selectedTaskListId],
+      });
+      closeAddTaskModal();
     },
     onError: (error) => {
       console.error("Error adding task:", error);
@@ -112,7 +120,7 @@ export default function AddTaskModal({
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={() => closeModal(modalName)} isCloseButton>
+    <Modal isOpen={isOpen} onClose={closeAddTaskModal} isCloseButton>
       <div className="h-auto w-[24rem] px-6 py-8">
         <h2 className="text-center text-text-lg text-text-primary">
           할 일 만들기
@@ -144,7 +152,7 @@ export default function AddTaskModal({
               onChange={handleDateChange}
               selected={new Date(taskData.startDate)}
               showTimeSelect
-              placeholderText={`${formattedDate(new Date())} 00:00`}
+              placeholderText={`${formatDate(new Date())} 00:00`}
               dateFormat="yyyy년 MM월 dd일 HH:mm aa"
               timeFormat="HH:mm aa"
               timeIntervals={30}

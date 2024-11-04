@@ -1,22 +1,22 @@
 import Dropdown from "@/components/@shared/UI/Dropdown";
 import DropdownItem from "@/components/@shared/UI/Item";
-import FrequencyType from "@/lib/constants/frequencyType";
 import Image from "next/image";
 import { useState } from "react";
+import {
+  FrequencyType,
+  getFrequencyLabel,
+} from "@/lib/constants/frequencyType";
 
 interface Option {
-  label: string;
   value: FrequencyType;
 }
 
 interface FrequencyDropdownProps {
   onChange: (value: FrequencyType) => void;
-  editModeFrequency?: FrequencyType;
 }
 
 export default function FrequencyDropdown({
   onChange,
-  editModeFrequency,
 }: FrequencyDropdownProps) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -26,10 +26,10 @@ export default function FrequencyDropdown({
   };
 
   const options: Option[] = [
-    { label: "한 번", value: FrequencyType.ONCE },
-    { label: "매일", value: FrequencyType.DAILY },
-    { label: "주 반복", value: FrequencyType.WEEKLY },
-    { label: "월 반복", value: FrequencyType.MONTHLY },
+    { value: FrequencyType.ONCE },
+    { value: FrequencyType.DAILY },
+    { value: FrequencyType.WEEKLY },
+    { value: FrequencyType.MONTHLY },
   ];
 
   return (
@@ -43,8 +43,8 @@ export default function FrequencyDropdown({
             }
           >
             {selectedOption
-              ? selectedOption.label
-              : (editModeFrequency ?? "반복 안함")}
+              ? getFrequencyLabel(selectedOption.value)
+              : "반복 안함"}
           </span>
           <Image
             src="/icons/icon-toggle.svg"
@@ -54,15 +54,14 @@ export default function FrequencyDropdown({
           />
         </div>
       }
-      disabled={!!editModeFrequency}
     >
       {options.map((option) => (
         <DropdownItem
-          key={option.label}
+          key={getFrequencyLabel(option.value)}
           onClick={() => handleSelect(option)}
           itemClassName="py-3 px-4 text-left text-text-md"
         >
-          {option.label}
+          {getFrequencyLabel(option.value)}
         </DropdownItem>
       ))}
     </Dropdown>
