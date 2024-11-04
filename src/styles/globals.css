@@ -30,3 +30,37 @@ textarea:focus {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
 }
+
+.swiper {
+  @apply static w-[95%] sm:w-[85%] md:w-[90%] !important;
+}
+
+.swiper-wrapper {
+  @apply static !important;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  @apply text-[20px] !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  @apply text-brand-primary !important;
+}
+
+.swiper-button-prev {
+  @apply left-0 !important;
+}
+
+.swiper-button-next {
+  @apply right-0 !important;
+}
+
+.swiper-button-lock {
+  @apply flex !important;
+}
+
+.swiper-slide {
+  @apply w-auto !important;
+}

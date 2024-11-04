@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import getTeamData from "@/core/api/group/getTeamData";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import { GroupResponse } from "@/core/dtos/group/group";
 import TaskListSkeleton from "./TaskListSkeleton";
 import TaskError from "./TaskError";
@@ -48,18 +50,36 @@ export default function TaskLists({
   }
 
   return (
-    <ul className="flex items-center gap-3">
-      {taskLists?.map((taskList) => (
-        <li
-          key={taskList.id}
-          onClick={() => onTaskListClick(taskList.id)}
-          className={`text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
-        >
-          <Link href={`/${teamId}/tasks?tasklist=${taskList.id}`}>
-            {taskList.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <div className="relative">
+      <Swiper
+        spaceBetween={18}
+        modules={[Navigation]}
+        breakpoints={{
+          1200: {
+            slidesPerView: 10,
+          },
+          640: {
+            slidesPerView: 6,
+          },
+          0: {
+            slidesPerView: 3,
+          },
+        }}
+        navigation
+      >
+        {taskLists?.map((taskList) => (
+          <SwiperSlide key={taskList.id}>
+            <div
+              onClick={() => onTaskListClick(taskList.id)}
+              className={`max-w-[8rem] truncate text-center text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
+            >
+              <Link href={`/${teamId}/tasks?tasklist=${taskList.id}`}>
+                {taskList.name}
+              </Link>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
   );
 }

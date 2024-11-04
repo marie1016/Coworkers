@@ -39,7 +39,7 @@ export default function EditDropdown({ onEdit, onDelete }: EditDropdownProps) {
         <DropdownItem
           key={option.label}
           onClick={(e) => handleSelect(e, option)}
-          itemClassName="py-3 px-8 text-center"
+          itemClassName="py-3 px-8 text-center text-text-primary"
         >
           {option.label}
         </DropdownItem>
