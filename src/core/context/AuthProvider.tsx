@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useRouter } from "next/router";
 import { removeTokens, saveTokens, TOKENS } from "@/lib/utils/tokenStorage";
 import getUser from "../api/user/getUser";
 import {
@@ -162,9 +163,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
+export function useAuth(required?: boolean) {
   const context = useContext(AuthContext);
   if (!context) throw new Error("Out of provider scope: AuthContext");
+
+  const { user, isPending } = context;
+  const router = useRouter();
+  const { asPath, isReady } = router;
+  useEffect(() => {
+    if (required && !user && !isPending && isReady) {
+      router.replace(`/unauthorized?direction=${asPath}`);
+    }
+  }, [required, user, isPending, isReady]);
 
   return context;
 }

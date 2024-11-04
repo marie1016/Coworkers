@@ -1,14 +1,8 @@
 import { useAuth } from "@/core/context/AuthProvider";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export default function Home() {
-  const { user, isPending } = useAuth();
-
-  useEffect(() => {
-    if (isPending) return;
-    console.log(user);
-  }, [isPending, user]);
+  const { user } = useAuth();
 
   return (
     <div>
