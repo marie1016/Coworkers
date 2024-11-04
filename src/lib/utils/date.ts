@@ -29,3 +29,14 @@ export const timeForToday = (date: Date | string) => {
   }
   return formatDate(dateValue, "YYYY.MM.DD");
 };
+
+export const formatTime = (date: string) => {
+  const newDate = new Date(date);
+  let hours = newDate.getHours();
+  const minutes = newDate.getMinutes();
+
+  const period = hours >= 12 ? "오후" : "오전";
+  hours = hours % 12 || 12;
+
+  return `${period} ${hours}시 ${minutes}분`;
+};

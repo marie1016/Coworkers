@@ -29,7 +29,14 @@ export interface Task {
     monthDay: number;
     taskListId: number;
     groupId: number;
+    startDate: string;
+    updatedAt: string;
   };
+}
+
+export interface TaskRecurring {
+  startDate: string;
+  updatedAt: string;
 }
 
 export interface TaskComment {
