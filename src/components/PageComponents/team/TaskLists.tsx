@@ -81,7 +81,7 @@ export default function TaskLists({ tasks, teamId }: Props) {
             {...droppableProvided.droppableProps}
           >
             {visibleTasks.map((task, index) => {
-              const indexClassName = `h-full w-3 absolute left-0 rounded-l-xl ${indexColors[index % 7]}`;
+              const indexClassName = `h-full w-3 absolute left-0 rounded-l-xl ${indexColors[task.id % 7]}`;
 
               return (
                 <Draggable
