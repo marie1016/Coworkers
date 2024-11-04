@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function MemberMenu({ image, name, email }: Props) {
-  const profileModalName = "profileModal";
+  const profileModalName = `${email}ProfileModal`;
 
   const isProfileOpen = useModalStore(
     (state) => state.modals[profileModalName],
