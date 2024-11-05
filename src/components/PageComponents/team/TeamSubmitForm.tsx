@@ -6,6 +6,7 @@ import addTeam from "@/core/api/group/addTeam";
 import patchTeam from "@/core/api/group/patchTeam";
 import { SubmitTeamResponse } from "@/core/dtos/group/group";
 import useImageUpload from "@/lib/hooks/useImageUpload";
+import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -40,26 +41,30 @@ export default function TeamSubmitForm({
     setTeamName(e.target.value);
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    let imageUrl: string | null = null;
-    let res: AxiosResponse<SubmitTeamResponse>;
-    try {
-      if (file) imageUrl = await getImageUrl(file);
+  const { mutate: submitMutate, isPending: isSubmitPending } = useMutation({
+    mutationFn: async () => {
+      let imageUrl: string | null = null;
+      if (file) imageUrl = (await getImageUrl(file)) ?? null;
       else if (imagePreview) imageUrl = imagePreview;
-      res = teamId
+
+      const res: AxiosResponse<SubmitTeamResponse> = teamId
         ? await patchTeam(teamId, { image: imageUrl, name: teamName })
         : await addTeam({ image: imageUrl ?? undefined, name: teamName });
-    } catch (error) {
-      alert("에러 발생: 에러 정보는 콘솔에서 확인");
-      console.error(error);
-      return;
-    }
-    if (!teamId) {
-      router.push(`/${res.data.id}`);
-      return;
-    }
-    submitCallback();
+
+      return res.data;
+    },
+    onSuccess: (data) => {
+      if (!teamId) {
+        router.push(`/${data.id}`);
+        return;
+      }
+      submitCallback();
+    },
+  });
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    submitMutate();
   };
 
   return (
@@ -98,7 +103,12 @@ export default function TeamSubmitForm({
         </div>
       </div>
       <div className="itmes-center flex w-full flex-col items-center gap-6">
-        <Button type="submit" variant="solid" size="large">
+        <Button
+          type="submit"
+          variant="solid"
+          size="large"
+          disabled={isSubmitPending}
+        >
           {teamId ? "수정하기" : "생성하기"}
         </Button>
         <p className="break-keep text-text-lg font-regular text-text-primary sm:text-text-md">
