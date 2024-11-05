@@ -12,7 +12,7 @@ export default async function handler(
       context && contextLimit
         ? context.slice(context.length - contextLimit)
         : [];
-    const content = `${data ? `할 일 목록: ${JSON.stringify(data)}` : ""} ${limitedContext.length ? `지금까지 나눈 대화: ${JSON.stringify(limitedContext)}` : ""} ${message}`;
+    const content = `${data ? `할 일 목록: ${data}` : ""} ${limitedContext.length ? `지금까지 나눈 대화: ${JSON.stringify(limitedContext)}` : ""} ${message}`;
 
     try {
       const response = await axios.post(

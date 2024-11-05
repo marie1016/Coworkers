@@ -10,6 +10,7 @@ import getTeamData from "@/core/api/group/getTeamData";
 import { useAuth } from "@/core/context/AuthProvider";
 import { Roles } from "@/core/types/member";
 import useModalStore from "@/lib/hooks/stores/modalStore";
+import refineTasks from "@/lib/utils/refineTasks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 
@@ -45,7 +46,7 @@ export default function Team() {
     queryClient.invalidateQueries({ queryKey: ["group", teamId] });
   };
 
-  const tasksResponse = useQuery({
+  const { data: tasks } = useQuery({
     queryKey: ["tasks", teamId],
     queryFn: () => getTasks(teamId),
     staleTime: 1000 * 60,
@@ -54,6 +55,7 @@ export default function Team() {
 
   if (!group || !user) return null;
 
+  const chatData = tasks ? refineTasks(tasks) : "";
   const isAdmin =
     user.id === group.members.find((e) => e.role === Roles.ADMIN)?.userId;
 
@@ -88,7 +90,7 @@ export default function Team() {
         </section>
         <section className="mb-16 flex flex-col gap-4">
           <SectionHeader title="어시스턴트" />
-          <Chat tasks={tasksResponse.data} />
+          <Chat dataContext={chatData} />
         </section>
         <section className="mb-16 flex flex-col gap-4">
           <SectionHeader
