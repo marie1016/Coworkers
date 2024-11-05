@@ -7,11 +7,16 @@ import TeamGear from "@/components/PageComponents/team/TeamGear";
 import TeamLinkModal from "@/components/PageComponents/team/TeamLinkModal";
 import getTasks from "@/core/api/group/getTasks";
 import getTeamData from "@/core/api/group/getTeamData";
+import { useAuth } from "@/core/context/AuthProvider";
+import { Roles } from "@/core/types/member";
 import useModalStore from "@/lib/hooks/stores/modalStore";
+import refineTasks from "@/lib/utils/refineTasks";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 
 export default function Team() {
+  const { user } = useAuth(true);
+
   const addTaskListModalName = "addTaskListModal";
   const teamLinkModalName = "teamLinkModal";
 
@@ -41,14 +46,18 @@ export default function Team() {
     queryClient.invalidateQueries({ queryKey: ["group", teamId] });
   };
 
-  const tasksResponse = useQuery({
+  const { data: tasks } = useQuery({
     queryKey: ["tasks", teamId],
     queryFn: () => getTasks(teamId),
     staleTime: 1000 * 60,
     enabled: !!group,
   });
 
-  if (!group) return null;
+  if (!group || !user) return null;
+
+  const chatData = tasks ? refineTasks(tasks) : "";
+  const isAdmin =
+    user.id === group.members.find((e) => e.role === Roles.ADMIN)?.userId;
 
   return (
     <>
@@ -59,6 +68,8 @@ export default function Team() {
             teamId={teamId}
             teamName={group.name}
             teamImage={group.image}
+            memberId={user.id}
+            isAdmin={isAdmin}
             refreshGroup={refreshGroup}
           />
         </div>
@@ -79,7 +90,7 @@ export default function Team() {
         </section>
         <section className="mb-16 flex flex-col gap-4">
           <SectionHeader title="어시스턴트" />
-          <Chat tasks={tasksResponse.data} />
+          <Chat dataContext={chatData} />
         </section>
         <section className="mb-16 flex flex-col gap-4">
           <SectionHeader

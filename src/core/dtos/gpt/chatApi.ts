@@ -1,5 +1,4 @@
 import { NextApiRequest } from "next";
-import { TaskListTasks } from "../group/group";
 
 interface Choice {
   message: {
@@ -20,7 +19,7 @@ export interface Message {
 
 export interface ChatRequestBody {
   message: string;
-  data?: TaskListTasks[];
+  data?: string;
   context?: Message[];
   contextLimit?: number;
 }

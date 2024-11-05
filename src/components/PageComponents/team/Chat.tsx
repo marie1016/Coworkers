@@ -4,10 +4,9 @@ import postChat from "@/core/api/gpt/postChat";
 import Image from "next/image";
 import Button from "@/components/@shared/UI/Button";
 import { ChatRequestBody, Message } from "@/core/dtos/gpt/chatApi";
-import { TaskListTasks } from "@/core/dtos/group/group";
 
 interface Props {
-  tasks?: TaskListTasks[];
+  dataContext?: string;
 }
 
 const MESSAGE_CLASSNAME = {
@@ -18,7 +17,7 @@ const MESSAGE_CLASSNAME = {
 
 const CONTEXT_LIMIT = 5;
 
-export default function Chat({ tasks }: Props) {
+export default function Chat({ dataContext }: Props) {
   const [isStarted, setIsStarted] = useState(false);
   const [text, setText] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -55,7 +54,7 @@ export default function Chat({ tasks }: Props) {
 
     chatMutation.mutate({
       message: text,
-      data: tasks,
+      data: dataContext,
       context,
       contextLimit: CONTEXT_LIMIT,
     });
@@ -74,7 +73,7 @@ export default function Chat({ tasks }: Props) {
     setIsStarted(true);
     chatMutation.mutate({
       message: "현재 할 일들이 전체적으로 얼마나 진행됐는지 짧게 요약해줘.",
-      data: tasks,
+      data: dataContext,
     });
   };
 
