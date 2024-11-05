@@ -1,10 +1,13 @@
-import { AddTeamForm, SubmitTeamResponse } from "@/core/dtos/group/group";
+import { PatchTeamForm, SubmitTeamResponse } from "@/core/dtos/group/group";
 import { AxiosError, AxiosResponse } from "axios";
 import axiosInstance from "../axiosInstance";
 
-export default async function addTeam(addTeamForm: AddTeamForm) {
+export default async function patchTeam(
+  teamId: string,
+  patchTeamForm: PatchTeamForm,
+) {
   const res: AxiosResponse<SubmitTeamResponse, AxiosError> = await axiosInstance
-    .post("groups", addTeamForm)
+    .patch(`groups/${teamId}`, patchTeamForm)
     .catch((e: AxiosError) => Promise.reject(e));
 
   return res;

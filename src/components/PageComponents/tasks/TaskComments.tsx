@@ -1,16 +1,16 @@
 import getTaskComments from "@/core/api/tasks/getTaskComments";
 import { Task, TaskComment } from "@/core/dtos/tasks/tasks";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { formattedShortDate } from "@/lib/utils/date";
 import Image from "next/image";
-import moment from "moment";
 import EditDropdown from "./EditDropdown";
 
 interface TaskCommentsProps {
-  selectedTaskItem: Task;
+  taskItem: Task;
 }
 
-export default function TaskComments({ selectedTaskItem }: TaskCommentsProps) {
-  const { id } = selectedTaskItem;
+export default function TaskComments({ taskItem }: TaskCommentsProps) {
+  const { id } = taskItem;
   const { data: commentsData } = useSuspenseQuery<TaskComment[]>({
     queryKey: ["taskComments", id],
     queryFn: () => getTaskComments(id),
@@ -18,7 +18,9 @@ export default function TaskComments({ selectedTaskItem }: TaskCommentsProps) {
 
   const taskComments = commentsData ?? [];
 
-  const formattedDate = (date: string) => moment(date).format("YY.MM.DD");
+  const editComment = () => {
+    console.log(editComment);
+  };
 
   return (
     <ul>
@@ -26,7 +28,7 @@ export default function TaskComments({ selectedTaskItem }: TaskCommentsProps) {
         <li key={taskComment.id} className="mt-4">
           <div className="flex items-center justify-between">
             <span>{taskComment.content}</span>
-            <EditDropdown />
+            <EditDropdown onEdit={editComment} />
           </div>
           <div className="my-4 flex items-center">
             <Image
@@ -40,7 +42,7 @@ export default function TaskComments({ selectedTaskItem }: TaskCommentsProps) {
               {taskComment.user.nickname}
             </span>
             <span className="text-text-secondary">
-              {formattedDate(taskComment.updatedAt)}
+              {formattedShortDate(taskComment.updatedAt)}
             </span>
           </div>
           <hr className="border-t border-border-primary" />

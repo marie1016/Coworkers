@@ -22,14 +22,28 @@ export interface GroupResponse {
 }
 
 export interface AddTeamForm {
-  image?: string;
+  image?: string | null;
   name: string;
 }
 
-export interface AddTeamResponse {
+export interface PatchTeamForm {
+  image?: string | null;
+  name?: string;
+}
+
+export interface SubmitTeamResponse {
   id: number;
   name: string;
   image: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AcceptInvitationForm {
+  userEmail: string;
+  token: string;
+}
+
+export interface AcceptInvitationResponse {
+  groupId: number;
 }

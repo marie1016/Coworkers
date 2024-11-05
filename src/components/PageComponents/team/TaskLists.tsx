@@ -1,5 +1,6 @@
 import { GroupTask } from "@/core/dtos/group/group";
 import Link from "next/link";
+import TaskListMenu from "./TaskListMenu";
 
 interface Props {
   tasks: GroupTask[];
@@ -21,12 +22,18 @@ export default function TaskLists({ tasks, teamId }: Props) {
     const indexClassName = `h-full w-3 absolute left-0 rounded-l-xl ${indexColors[index % 7]}`;
 
     return (
-      <Link href={`${teamId}/tasks?task=${task.id}`} key={task.id}>
-        <div className="relative flex h-10 items-center rounded-xl bg-background-secondary px-6 text-text-md font-medium text-text-primary">
-          <div className={indexClassName} />
-          {task.name}
-        </div>
-      </Link>
+      <div
+        className="relative flex h-10 items-center justify-between rounded-xl bg-background-secondary pl-6 pr-2 text-text-md font-medium text-text-primary"
+        key={task.id}
+      >
+        <div className={indexClassName} />
+        <Link href={`${teamId}/tasks?tasklist=${task.id}`}>{task.name}</Link>
+        <TaskListMenu
+          teamId={teamId}
+          taskListId={`${task.id}`}
+          name={task.name}
+        />
+      </div>
     );
   });
 }

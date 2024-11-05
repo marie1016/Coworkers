@@ -6,16 +6,19 @@ interface DropdownProps {
   children: ReactNode;
   trigger: ReactNode;
   menuClassName?: string;
+  disabled?: boolean;
 }
 
 export default function Dropdown({
   trigger,
   children,
   menuClassName,
+  disabled = false,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsOpen((prev) => !prev);
   };
 
@@ -28,7 +31,7 @@ export default function Dropdown({
 
   return (
     <div ref={dropDownRef} className="relative flex items-center">
-      <button type="button" onClick={toggleDropdown}>
+      <button type="button" onClick={toggleDropdown} disabled={disabled}>
         {trigger}
       </button>
       {isOpen && <ul className={menuClassCombined}>{children}</ul>}

@@ -26,6 +26,7 @@ const config: Config = {
           rose: "#F43F5E",
           orange: "#F97316",
           yellow: "#EAB308",
+          red: "#EF4444",
         },
         // 배경 색상
         background: {

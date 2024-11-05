@@ -36,7 +36,11 @@ export default function Members({ members }: Props) {
                 </p>
               </div>
             </div>
-            <MemberMenu />
+            <MemberMenu
+              image={member.userImage}
+              name={member.userName}
+              email={member.userEmail}
+            />
           </div>
         </div>
       ))}

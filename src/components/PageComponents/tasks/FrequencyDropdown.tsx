@@ -1,19 +1,22 @@
 import Dropdown from "@/components/@shared/UI/Dropdown";
 import DropdownItem from "@/components/@shared/UI/Item";
+import FrequencyType from "@/lib/constants/frequencyType";
 import Image from "next/image";
 import { useState } from "react";
 
 interface Option {
   label: string;
-  value: string;
+  value: FrequencyType;
 }
 
 interface FrequencyDropdownProps {
-  onChange: (value: string) => void;
+  onChange: (value: FrequencyType) => void;
+  editModeFrequency?: FrequencyType;
 }
 
 export default function FrequencyDropdown({
   onChange,
+  editModeFrequency,
 }: FrequencyDropdownProps) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -23,10 +26,10 @@ export default function FrequencyDropdown({
   };
 
   const options: Option[] = [
-    { label: "한 번", value: "ONCE" },
-    { label: "매일", value: "DAILY" },
-    { label: "주 반복", value: "WEEKLY" },
-    { label: "월 반복", value: "MONTHLY" },
+    { label: "한 번", value: FrequencyType.ONCE },
+    { label: "매일", value: FrequencyType.DAILY },
+    { label: "주 반복", value: FrequencyType.WEEKLY },
+    { label: "월 반복", value: FrequencyType.MONTHLY },
   ];
 
   return (
@@ -39,7 +42,9 @@ export default function FrequencyDropdown({
               selectedOption ? "text-text-primary" : "text-text-default"
             }
           >
-            {selectedOption ? selectedOption.label : "반복 안함"}
+            {selectedOption
+              ? selectedOption.label
+              : (editModeFrequency ?? "반복 안함")}
           </span>
           <Image
             src="/icons/icon-toggle.svg"
@@ -49,6 +54,7 @@ export default function FrequencyDropdown({
           />
         </div>
       }
+      disabled={!!editModeFrequency}
     >
       {options.map((option) => (
         <DropdownItem

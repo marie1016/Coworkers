@@ -1,44 +1,35 @@
+import AddTaskListModal from "@/components/@shared/AddTaskListModal";
 import Dropdown from "@/components/@shared/UI/Dropdown";
 import DropdownItem from "@/components/@shared/UI/Item";
 import Image from "next/image";
 import { useState } from "react";
-import PatchTeamModal from "./PatchTeamModal";
-import DeleteTeamModal from "./DeleteTeamModal";
+import { useQueryClient } from "@tanstack/react-query";
+import DeleteTaskListModal from "./DeleteTaskListModal";
 
 interface Props {
   teamId: string;
-  teamName: string;
-  teamImage: string;
-  refreshGroup: () => void;
+  taskListId: string;
+  name: string;
 }
 
-export default function TeamGear({
-  teamId,
-  teamName,
-  teamImage,
-  refreshGroup,
-}: Props) {
+export default function TaskListMenu({ teamId, taskListId, name }: Props) {
   const [isPatchModalOpen, setIsPatchModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const patchTeamForm = {
-    teamId,
-    defaultName: teamName,
-    defaultImage: teamImage,
-  };
-  const patchTeamCallback = () => {
-    refreshGroup();
-    setIsPatchModalOpen(false);
+
+  const queryClient = useQueryClient();
+  const refreshGroup = () => {
+    queryClient.invalidateQueries({ queryKey: ["group", teamId] });
   };
 
   return (
     <>
       <Dropdown
         trigger={
-          <div className="relative h-6 w-6">
-            <Image fill src="/icons/icon-gear.svg" alt="팀 설정" />
+          <div className="relative h-4 w-4">
+            <Image fill src="/icons/icon-kebab.svg" alt="메뉴" />
           </div>
         }
-        menuClassName="flex flex-col text-text-primary font-regular text-text-md w-[7.5rem] bg-background-secondary border border-solid border-border-primary right-0 top-8"
+        menuClassName="flex flex-col text-text-primary font-regular text-text-md w-[7.5rem] bg-background-secondary border border-solid border-border-primary right-0 top-6"
       >
         <DropdownItem
           onClick={() => setIsPatchModalOpen(!isPatchModalOpen)}
@@ -53,16 +44,21 @@ export default function TeamGear({
           삭제하기
         </DropdownItem>
       </Dropdown>
-      <PatchTeamModal
+      <AddTaskListModal
         isOpen={isPatchModalOpen}
         onClose={() => setIsPatchModalOpen(false)}
-        submitCallback={patchTeamCallback}
-        formValues={patchTeamForm}
+        teamId={teamId}
+        submitCallback={refreshGroup}
+        defaultPatchForm={{
+          taskListId,
+          name,
+        }}
       />
-      <DeleteTeamModal
+      <DeleteTaskListModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         teamId={teamId}
+        taskListId={taskListId}
       />
     </>
   );
