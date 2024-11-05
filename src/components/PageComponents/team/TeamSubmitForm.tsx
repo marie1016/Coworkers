@@ -5,6 +5,7 @@ import ProfileImagePreview from "@/components/@shared/UI/ProfileImagePreview";
 import addTeam from "@/core/api/group/addTeam";
 import patchTeam from "@/core/api/group/patchTeam";
 import { SubmitTeamResponse } from "@/core/dtos/group/group";
+import StandardError from "@/core/types/standardError";
 import useImageUpload from "@/lib/hooks/useImageUpload";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -34,6 +35,8 @@ export default function TeamSubmitForm({
     imagePreview,
   } = useImageUpload(defaultImage);
   const [teamName, setTeamName] = useState(defaultName);
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -53,12 +56,32 @@ export default function TeamSubmitForm({
 
       return res.data;
     },
+    onMutate: () => {
+      setIsValid(true);
+      setErrorMessage("");
+    },
     onSuccess: (data) => {
       if (!teamId) {
         router.push(`/${data.id}`);
         return;
       }
       submitCallback();
+    },
+    onError: (error: StandardError) => {
+      console.error(error);
+      switch (error.status) {
+        case 400:
+          setIsValid(false);
+          setErrorMessage("내용을 다시 확인해주세요.");
+          break;
+        case 401:
+          router.replace("/unauthorized");
+          break;
+        default:
+          setIsValid(false);
+          setErrorMessage("팀 등록에 실패했습니다. 관리자에게 문의해주세요.");
+          break;
+      }
     },
   });
 
@@ -95,6 +118,8 @@ export default function TeamSubmitForm({
           </InputLabel>
           <InputLabel label="팀 이름">
             <Input
+              isValid={isValid}
+              errorMessage={errorMessage}
               value={teamName}
               onChange={handleNameChange}
               className="w-full"
