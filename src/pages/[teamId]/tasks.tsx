@@ -11,12 +11,14 @@ import SectionHeader from "@/components/PageComponents/tasks/SectionHeader";
 import DeleteTaskModal from "@/components/PageComponents/tasks/DeleteTaskModal";
 import { AnimatePresence } from "framer-motion";
 import TaskDetail from "@/components/PageComponents/tasks/TaskDetail";
+import { useAuth } from "@/core/context/AuthProvider";
 
 export default function Tasks() {
   const router = useRouter();
   const teamId = router.query.teamId as string;
   const { tasklist } = router.query;
   const numericTaskListId = parseInt(tasklist as string, 10);
+  const { user } = useAuth(true);
 
   const [selectedTaskListId, setSelectedTaskListId] =
     useState<number>(numericTaskListId);
@@ -53,6 +55,8 @@ export default function Tasks() {
     handleTaskItemChange(taskData);
     openModal("deleteTaskModal");
   };
+
+  if (!user) return null;
 
   return (
     <div className="mx-auto my-10 h-auto w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
