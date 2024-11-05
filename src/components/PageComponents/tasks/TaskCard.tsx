@@ -59,7 +59,7 @@ export default function TaskCard({
 
   return (
     <div className="mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between sm:relative">
         <div className="flex items-center">
           <Checkbox
             className="max-w-[62.5rem] sm:w-[13rem] md:max-w-[37.5rem]"
@@ -68,14 +68,16 @@ export default function TaskCard({
             onChange={handleCheckboxChange}
             onTitleClick={() => openTaskDetail(taskItem)}
           />
-          <Image
-            className="ml-3 mr-0.5 sm:ml-12"
-            src="/icons/icon-comment.svg"
-            width={16}
-            height={16}
-            alt="댓글 아이콘"
-          />
-          {commentCount}
+          <div className="flex items-center sm:absolute sm:right-6">
+            <Image
+              className="ml-3 mr-0.5 sm:ml-12"
+              src="/icons/icon-comment.svg"
+              width={16}
+              height={16}
+              alt="댓글 아이콘"
+            />
+            {commentCount}
+          </div>
         </div>
         <EditDropdown
           onEdit={() => openEditTaskModal(taskItem)}

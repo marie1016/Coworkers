@@ -141,7 +141,8 @@ export default function AddTaskModal({
               onChange={handleInputChange}
               className="w-[21rem]"
               placeholder="할 일 제목을 입력해주세요. 30자 이하"
-              isValid={isNameValid}
+              isValid={taskData.name.length <= 30}
+              errorMessage="30자 이하로 입력해주세요"
             />
           </InputLabel>
           <InputLabel

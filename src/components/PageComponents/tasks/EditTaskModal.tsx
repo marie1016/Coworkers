@@ -63,7 +63,8 @@ export default function EditTaskModal({
     },
   });
 
-  const isFormValid = taskData.name?.trim();
+  const isFormValid =
+    taskData.name?.trim() !== "" && (taskData.name?.length ?? 0) <= 30;
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,7 +100,9 @@ export default function EditTaskModal({
               value={taskData.name}
               onChange={handleInputChange}
               className="w-[21rem]"
-              placeholder="할 일 제목을 입력해주세요"
+              placeholder="할 일 제목을 입력해주세요. 30자 이하"
+              isValid={(taskData.name?.length ?? 0) <= 30}
+              errorMessage="30자 이하로 입력해주세요"
             />
           </InputLabel>
           <InputLabel className="text-md text-text-primary" label="할 일 메모">
