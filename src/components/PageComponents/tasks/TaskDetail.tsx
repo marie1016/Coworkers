@@ -65,7 +65,7 @@ export default function TaskDetail({
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <motion.div
-        className="z-100 fixed right-0 top-0 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
+        className="taskDetail z-100 fixed right-0 top-0 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}

@@ -6,6 +6,7 @@ import Image from "next/image";
 import editTaskComment from "@/core/api/tasks/editTaskComment";
 import { useState } from "react";
 import Button from "@/components/@shared/UI/Button";
+import { useAuth } from "@/core/context/AuthProvider";
 import deleteTaskComment from "@/core/api/tasks/deleteTaskComment";
 import EditDropdown from "./EditDropdown";
 import CommentSkeleton from "./CommentSkeleton";
@@ -17,6 +18,8 @@ interface TaskCommentsProps {
 export default function TaskComments({ taskItem }: TaskCommentsProps) {
   const queryClient = useQueryClient();
   const { id } = taskItem;
+  const { user } = useAuth(true);
+  const userId = user?.id;
 
   const [comment, setComment] = useState<string>("");
   const [isEditingId, setIsEditingId] = useState<number | null>(null);
@@ -109,10 +112,12 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span>{taskComment.content}</span>
-                <EditDropdown
-                  onEdit={() => editComment(taskComment)}
-                  onDelete={() => deleteComment(taskComment.id)}
-                />
+                {taskComment.userId === userId && (
+                  <EditDropdown
+                    onEdit={() => editComment(taskComment)}
+                    onDelete={() => deleteComment(taskComment.id)}
+                  />
+                )}
               </div>
               <div className="flex items-center">
                 <Image
