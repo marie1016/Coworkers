@@ -1,6 +1,8 @@
 import "@/styles/globals.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "@/styles/datepicker.css";
+import "swiper/css";
+import "swiper/css/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { AppProps } from "next/app";

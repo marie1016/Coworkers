@@ -82,7 +82,7 @@ export default function AddTaskModal({
     },
   });
 
-  const isNameValid = taskData.name.trim();
+  const isNameValid = taskData.name.trim() !== "" && taskData.name.length <= 30;
   const isStartDateValid = taskData.startDate !== null;
   const isFrequencyTypeValid = !!taskData.frequencyType;
 
@@ -140,7 +140,8 @@ export default function AddTaskModal({
               value={taskData.name}
               onChange={handleInputChange}
               className="w-[21rem]"
-              placeholder="할 일 제목을 입력해주세요"
+              placeholder="할 일 제목을 입력해주세요. 30자 이하"
+              isValid={isNameValid}
             />
           </InputLabel>
           <InputLabel

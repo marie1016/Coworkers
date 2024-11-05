@@ -18,7 +18,7 @@ export interface Task {
   checked: boolean;
   date: string;
   updatedAt: string;
-  doneAt: string;
+  doneAt: string |null;
   recurringId: number;
   writer: {
     nickname: string;
@@ -29,7 +29,14 @@ export interface Task {
     monthDay: number;
     taskListId: number;
     groupId: number;
+    startDate: string;
+    updatedAt: string;
   };
+}
+
+export interface TaskRecurring {
+  startDate: string;
+  updatedAt: string;
 }
 
 export interface TaskComment {

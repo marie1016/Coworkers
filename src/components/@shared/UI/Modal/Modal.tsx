@@ -94,13 +94,14 @@ export default function Modal({
         <div
           className={twMerge(
             clsx(
+              "modal",
               "relative bg-background-secondary transition-transform duration-300",
               "w-auto sm:w-full",
               "mx-4 sm:mx-0",
               "max-h-full overflow-auto",
               "rounded-xl sm:rounded-b-none sm:rounded-t-xl",
               "flex flex-col p-4 pb-8",
-              "md:animate-scaleIn lg:animate-scaleIn sm:animate-slideUp",
+              "sm:animate-slideUp md:animate-scaleIn lg:animate-scaleIn",
               animationState === "fadeOut" &&
                 "animate-scaleOut sm:animate-slideDown",
             ),

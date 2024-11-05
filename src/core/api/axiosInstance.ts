@@ -1,5 +1,6 @@
 import { removeTokens, TOKENS } from "@/lib/utils/tokenStorage";
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
+// eslint-disable-next-line import/no-cycle
 import retrieveNewToken from "./user/retrieveNewToken";
 import { RefreshTokenResponse } from "../dtos/user/auth";
 
