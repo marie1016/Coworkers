@@ -10,14 +10,16 @@ interface TaskInfoProps {
   taskItem: Task;
   openTaskFormModal: () => void;
   deleteTask: () => void;
+  doneAt: string | null;
 }
 
 export default function TaskInfo({
+  doneAt,
   taskItem,
   openTaskFormModal,
   deleteTask,
 }: TaskInfoProps) {
-  const { id, name, writer, updatedAt, date, frequency, description, doneAt } =
+  const { id, name, writer, updatedAt, date, frequency, description } =
     taskItem;
 
   const writerImage = writer.image ?? "/images/image-defaultProfile.png";

@@ -9,6 +9,8 @@ import AddTaskModal from "@/components/PageComponents/tasks/AddTaskModal";
 import EditTaskModal from "@/components/PageComponents/tasks/EditTaskModal";
 import SectionHeader from "@/components/PageComponents/tasks/SectionHeader";
 import DeleteTaskModal from "@/components/PageComponents/tasks/DeleteTaskModal";
+import { AnimatePresence } from "framer-motion";
+import TaskDetail from "@/components/PageComponents/tasks/TaskDetail";
 
 export default function Tasks() {
   const router = useRouter();
@@ -26,6 +28,7 @@ export default function Tasks() {
   };
 
   const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const openTaskFormModal = () => {
     openModal("addTaskModal");
@@ -33,6 +36,22 @@ export default function Tasks() {
 
   const handleTaskItemChange = (taskItem: Task) => {
     setSelectedTaskItem(taskItem);
+  };
+
+  const closeTaskDetail = () => {
+    closeModal("taskDetail");
+    router.push(`/${teamId}/tasks?tasklist=${selectedTaskListId}`);
+  };
+
+  const openEditTaskModal = (taskData: Task) => {
+    handleTaskItemChange(taskData);
+    openModal("editTaskModal");
+    closeTaskDetail();
+  };
+
+  const openDeleteTaskModal = (taskData: Task) => {
+    handleTaskItemChange(taskData);
+    openModal("deleteTaskModal");
   };
 
   return (
@@ -73,6 +92,17 @@ export default function Tasks() {
         />
       )}
       {selectedTaskItem && <DeleteTaskModal taskItem={selectedTaskItem} />}
+      <AnimatePresence>
+        {selectedTaskItem && (
+          <TaskDetail
+            selectedDate={selectedDate}
+            taskItem={selectedTaskItem}
+            closeTaskDetail={closeTaskDetail}
+            openEditTaskModal={() => openEditTaskModal(selectedTaskItem)}
+            openDeleteTaskModal={() => openDeleteTaskModal(selectedTaskItem)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

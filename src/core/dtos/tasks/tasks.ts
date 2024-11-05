@@ -18,7 +18,7 @@ export interface Task {
   checked: boolean;
   date: string;
   updatedAt: string;
-  doneAt: string;
+  doneAt: string |null;
   recurringId: number;
   writer: {
     nickname: string;
