@@ -1,6 +1,8 @@
-import { Task } from "@/core/dtos/tasks/tasks";
+import { Task, TaskRecurring } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import { formatDate } from "@/lib/utils/date";
+import { formatDate, formatTime } from "@/lib/utils/date";
+import getTaskRecurring from "@/core/api/tasks/getTaskRecurring";
+import { useQuery } from "@tanstack/react-query";
 import { getFrequencyLabel } from "@/lib/constants/frequencyType";
 import EditDropdown from "./EditDropdown";
 
@@ -8,17 +10,31 @@ interface TaskInfoProps {
   taskItem: Task;
   openTaskFormModal: () => void;
   deleteTask: () => void;
+  doneAt: string | null;
 }
 
 export default function TaskInfo({
+  doneAt,
   taskItem,
   openTaskFormModal,
   deleteTask,
 }: TaskInfoProps) {
-  const { name, writer, updatedAt, date, frequency, description, doneAt } =
+  const { id, name, writer, updatedAt, date, frequency, description } =
     taskItem;
 
   const writerImage = writer.image ?? "/images/image-defaultProfile.png";
+
+  const { data: taskRecurringData } = useQuery<Task>({
+    queryKey: ["task", id],
+    queryFn: () =>
+      getTaskRecurring({
+        taskId: id,
+      }),
+  });
+
+  const taskRecurring: TaskRecurring | undefined = taskRecurringData?.recurring;
+
+  const startDate = taskRecurring?.startDate;
 
   return (
     <>
@@ -67,6 +83,15 @@ export default function TaskInfo({
             alt="카드캘린더 아이콘"
           />
           {formatDate(date)}
+          <span className="mx-2.5 h-2 border-l border-background-tertiary" />
+          <Image
+            className="mr-1.5"
+            src="/icons/icon-time.svg"
+            width={16}
+            height={16}
+            alt="시계 아이콘"
+          />
+          {startDate && formatTime(startDate)}
           <span className="mx-2.5 h-2 border-l border-background-tertiary" />
           <Image
             className="mr-1.5"

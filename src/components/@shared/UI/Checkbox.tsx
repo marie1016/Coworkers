@@ -28,7 +28,7 @@ export default function Checkbox({
         }}
       />
       <div
-        className={`cursor-pointer text-text-md font-regular text-text-primary hover:underline ${checked ? "line-through" : ""}`}
+        className={`cursor-pointer text-text-md font-regular text-text-primary hover:underline sm:truncate ${checked ? "line-through" : ""}`}
         onClick={() => {
           if (onTitleClick) onTitleClick();
         }}

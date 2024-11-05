@@ -1,10 +1,11 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
 import useClickOutside from "@/lib/hooks/useClickOutSide";
+import useModalStore from "@/lib/hooks/stores/modalStore";
 import TaskComments from "./TaskComments";
 import TaskInfo from "./TaskInfo";
 import CommentTextarea from "./CommentTextarea";
@@ -12,7 +13,6 @@ import CommentTextarea from "./CommentTextarea";
 interface TaskDetailProps {
   selectedDate: Date | null;
   taskItem: Task;
-  isTaskDetailOpen: boolean;
   closeTaskDetail: () => void;
   openEditTaskModal: () => void;
   openDeleteTaskModal: () => void;
@@ -20,17 +20,27 @@ interface TaskDetailProps {
 export default function TaskDetail({
   selectedDate,
   taskItem,
-  isTaskDetailOpen,
   closeTaskDetail,
   openEditTaskModal,
   openDeleteTaskModal,
 }: TaskDetailProps) {
-  const { doneAt, id } = taskItem;
+  const [task, setTask] = useState<Task>(taskItem);
+  const { doneAt, id } = task;
   const { handleClick } = usePatchTaskDone(id, doneAt, selectedDate);
+
+  const modalName = "taskDetail";
+  const isOpen = useModalStore((state) => state.modals[modalName] || false);
+
   const ref = useClickOutside(closeTaskDetail);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     const checked = doneAt ? null : new Date().toISOString();
+    setTask((prevTask) => ({
+      ...prevTask,
+      doneAt: checked,
+    }));
+
     handleClick(!!checked);
   };
 
@@ -41,7 +51,7 @@ export default function TaskDetail({
       }
     };
 
-    if (isTaskDetailOpen) {
+    if (isOpen) {
       window.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
     }
@@ -50,9 +60,9 @@ export default function TaskDetail({
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "auto";
     };
-  }, [isTaskDetailOpen, closeTaskDetail]);
+  }, [isOpen, closeTaskDetail]);
 
-  if (!isTaskDetailOpen) {
+  if (!isOpen) {
     return null;
   }
 
@@ -65,7 +75,7 @@ export default function TaskDetail({
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <motion.div
-        className="z-100 fixed right-0 top-0 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
+        className="taskDetail z-100 fixed right-0 top-0 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
@@ -82,6 +92,7 @@ export default function TaskDetail({
         />
         <TaskInfo
           taskItem={taskItem}
+          doneAt={doneAt}
           openTaskFormModal={openEditTaskModal}
           deleteTask={openDeleteTaskModal}
         />
