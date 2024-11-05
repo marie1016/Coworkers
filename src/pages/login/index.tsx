@@ -94,6 +94,11 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!validateForm()) {
+      alert("입력 값이 올바르지 않습니다. 이메일과 비밀번호를 확인해주세요.");
+      return;
+    }
+
     if (formData.email && formData.password) {
       await handleEmailLogin(formData.email, formData.password);
     } else {

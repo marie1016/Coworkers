@@ -12,6 +12,8 @@ export default function AuthHeader() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState<string>("1");
 
+  const defaultImage = "/images/image-defaultProfile.png";
+
   // 임시 더미데이터 -> 수정 예정
   const teamList = [
     { id: "1", name: "경영관리팀", image: "/images/img-team.png" },
@@ -156,11 +158,11 @@ export default function AuthHeader() {
             <div className="flex items-center justify-center gap-2">
               <Profile />
               <span className="text-lg leading-tight sm:hidden md:hidden lg:block">
-                {user?.nickname || "guest"}
+                {user?.name ?? "guest"}
               </span>
               {user?.image && (
                 <Image
-                  src={user.image}
+                  src={user.image || defaultImage}
                   width={32}
                   height={32}
                   alt="프로필 이미지"

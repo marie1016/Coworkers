@@ -9,16 +9,13 @@ import {
 } from "react";
 import { useRouter } from "next/router";
 import { signIn, signOut, useSession } from "next-auth/react";
-import axiosInstance from "@/core/api/axiosInstance";
 import { SignupRequestDto } from "@/core/dtos/auth/authDto";
-import {
-  login as loginAPI,
-  signup as signupAPI,
-} from "@/core/api/auth/authApi";
+import { signup as signupAPI } from "@/core/api/auth/authApi";
+import axios, { AxiosError } from "axios";
 
 interface ExtendedSession {
   user: {
-    nickname: string;
+    name: string;
     email: string;
     image?: string;
   };
@@ -26,7 +23,7 @@ interface ExtendedSession {
 }
 
 interface AuthContextType {
-  user: any;
+  user: ExtendedSession["user"] | null;
   accessToken: string | null;
   handleLogin: (provider: "google" | "kakao") => void;
   handleEmailLogin: (email: string, password: string) => Promise<void>;
@@ -47,7 +44,7 @@ const defaultAuthContext: AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>(defaultAuthContext);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const { data: session, status, update } = useSession();
   const router = useRouter();
   const hasNavigated = useRef(false);
@@ -55,13 +52,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const extendedSession = session as unknown as ExtendedSession;
   const { user, accessToken } = extendedSession || {};
-  const { nickname, email, image } = user || {};
+  const defaultImage = "/images/image-dafaultProfile.png";
+  const { name, email: userEmail, image = defaultImage } = user || {};
 
   useEffect(() => {
     if (status === "authenticated" && user && !hasNavigated.current) {
       console.log("로그인 상태입니다:");
-      console.log("닉네임:", nickname);
-      console.log("이메일:", email);
+      console.log("닉네임:", name);
+      console.log("이메일:", userEmail);
 
       hasNavigated.current = true;
       alert("로그인 성공");
@@ -74,60 +72,49 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const result = await signIn(provider, { redirect: false });
       if (result?.ok) {
         const updatedUser = {
-          nickname: session?.user?.name || "닉네임 없음", // 간편 로그인 시 name을 nickname으로 설정
+          name: session?.user?.name ?? "닉네임 없음",
           email: session?.user?.email,
-          image: session?.user?.image,
+          image: session?.user?.image ?? defaultImage,
         };
 
-        await update({ user: updatedUser, accessToken: session?.accessToken });
+        await update({
+          user: updatedUser,
+          accessToken: extendedSession?.accessToken,
+        });
 
         console.log("간편 로그인 성공:", updatedUser);
         router.push("/");
       } else {
         throw new Error("간편 로그인 실패");
       }
-    } catch (error) {
-      console.error("간편 로그인 실패:", error);
-      alert("간편 로그인 실패");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("간편 로그인 실패:", error.message);
+        alert(`간편 로그인 실패 : ${error.message}`);
+      } else {
+        console.error("알 수 없는 오류 발생 :", error);
+        alert("간편 로그인 중 알 수 없는 오류가 발생했습니다.");
+      }
     }
   };
 
   const handleEmailLogin = async (email: string, password: string) => {
     try {
-      setLoading(true);
-      const response = await loginAPI({ email, password });
-      if (response.data) {
-        const { accessToken, refreshToken, user } = response.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+      const result = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
 
-        axiosInstance.defaults.headers.common["Authorization"] =
-          `Bearer ${accessToken}`;
-
-        const updatedUser = {
-          nickname: user.nickname || "이름 없음",
-          email: user.email,
-          image: user.imageUrl || null,
-        };
-
-        setUser(updatedUser); // Update the user state directly
-        setAccessToken(accessToken);
-
-        console.log("로그인 성공:", updatedUser);
+      if (result?.error) {
+        alert(`로그인 실패: ${result.error}`);
+      } else {
         alert("로그인 성공");
         router.push("/");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("로그인 실패:", error);
-      if (error.response?.status === 401) {
-        alert("인증에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
-      } else if (error.response?.status === 403) {
-        alert("접근 권한이 없습니다. 관리자에게 문의하세요.");
-      } else {
-        alert("로그인 실패");
-      }
-    } finally {
-      setLoading(false);
+      alert("로그인 실패");
     }
   };
 
@@ -139,16 +126,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         alert("회원가입 성공");
         router.push("/login");
       }
-    } catch (error: any) {
-      if (error.response?.status === 400) {
-        alert("이미 존재하는 계정입니다.");
-        router.push("/login");
-      } else if (error.response) {
-        console.error("회원가입 실패:", error.response.data);
-        alert(`회원가입 실패: ${error.response.data?.message ?? "오류 발생"}`);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      if (axios.isAxiosError(axiosError)) {
+        if (axiosError.response?.status === 400) {
+          alert("이미 존재하는 계정입니다.");
+          router.push("/login");
+        } else if (axiosError.response) {
+          console.error("회원가입 실패:", axiosError.response.data);
+          alert(
+            `회원가입 실패: ${axiosError.response.data?.message ?? "오류 발생"}`,
+          );
+        }
       } else {
         console.error("회원가입 실패:", error);
-        alert(`회원가입 실패: ${error.message}`);
+        alert(`회원가입 실패: ${(error as Error).message}`);
       }
     } finally {
       setLoading(false);
@@ -163,7 +155,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const value = useMemo(
     () => ({
-      user,
+      user: { ...user, image },
       accessToken,
       handleLogin,
       handleEmailLogin,
@@ -175,7 +167,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
