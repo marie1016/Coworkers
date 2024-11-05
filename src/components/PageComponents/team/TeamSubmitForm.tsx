@@ -5,7 +5,9 @@ import ProfileImagePreview from "@/components/@shared/UI/ProfileImagePreview";
 import addTeam from "@/core/api/group/addTeam";
 import patchTeam from "@/core/api/group/patchTeam";
 import { SubmitTeamResponse } from "@/core/dtos/group/group";
+import StandardError from "@/core/types/standardError";
 import useImageUpload from "@/lib/hooks/useImageUpload";
+import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -33,6 +35,8 @@ export default function TeamSubmitForm({
     imagePreview,
   } = useImageUpload(defaultImage);
   const [teamName, setTeamName] = useState(defaultName);
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
 
@@ -40,26 +44,50 @@ export default function TeamSubmitForm({
     setTeamName(e.target.value);
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    let imageUrl: string | null = null;
-    let res: AxiosResponse<SubmitTeamResponse>;
-    try {
-      if (file) imageUrl = await getImageUrl(file);
+  const { mutate: submitMutate, isPending: isSubmitPending } = useMutation({
+    mutationFn: async () => {
+      let imageUrl: string | null = null;
+      if (file) imageUrl = (await getImageUrl(file)) ?? null;
       else if (imagePreview) imageUrl = imagePreview;
-      res = teamId
+
+      const res: AxiosResponse<SubmitTeamResponse> = teamId
         ? await patchTeam(teamId, { image: imageUrl, name: teamName })
         : await addTeam({ image: imageUrl ?? undefined, name: teamName });
-    } catch (error) {
-      alert("에러 발생: 에러 정보는 콘솔에서 확인");
+
+      return res.data;
+    },
+    onMutate: () => {
+      setIsValid(true);
+      setErrorMessage("");
+    },
+    onSuccess: (data) => {
+      if (!teamId) {
+        router.push(`/${data.id}`);
+        return;
+      }
+      submitCallback();
+    },
+    onError: (error: StandardError) => {
       console.error(error);
-      return;
-    }
-    if (!teamId) {
-      router.push(`/${res.data.id}`);
-      return;
-    }
-    submitCallback();
+      switch (error.status) {
+        case 400:
+          setIsValid(false);
+          setErrorMessage("내용을 다시 확인해주세요.");
+          break;
+        case 401:
+          router.replace("/unauthorized");
+          break;
+        default:
+          setIsValid(false);
+          setErrorMessage("팀 등록에 실패했습니다. 관리자에게 문의해주세요.");
+          break;
+      }
+    },
+  });
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    submitMutate();
   };
 
   return (
@@ -90,6 +118,8 @@ export default function TeamSubmitForm({
           </InputLabel>
           <InputLabel label="팀 이름">
             <Input
+              isValid={isValid}
+              errorMessage={errorMessage}
               value={teamName}
               onChange={handleNameChange}
               className="w-full"
@@ -98,7 +128,12 @@ export default function TeamSubmitForm({
         </div>
       </div>
       <div className="itmes-center flex w-full flex-col items-center gap-6">
-        <Button type="submit" variant="solid" size="large">
+        <Button
+          type="submit"
+          variant="solid"
+          size="large"
+          disabled={isSubmitPending}
+        >
           {teamId ? "수정하기" : "생성하기"}
         </Button>
         <p className="break-keep text-text-lg font-regular text-text-primary sm:text-text-md">
