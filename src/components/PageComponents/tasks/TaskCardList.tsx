@@ -127,6 +127,7 @@ export default function TaskCardList({
               >
                 {(draggableProvided) => (
                   <div
+                    className="mt-4 flex h-20 flex-col rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default"
                     {...draggableProvided.draggableProps}
                     {...draggableProvided.dragHandleProps}
                     ref={draggableProvided.innerRef}

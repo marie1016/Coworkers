@@ -57,7 +57,7 @@ export default function TaskCard({
   };
 
   return (
-    <div className="mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
+    <>
       <div className="flex items-center justify-between sm:relative">
         <div className="flex items-center">
           <Checkbox
@@ -102,6 +102,6 @@ export default function TaskCard({
         />
         <span>{getFrequencyLabel(frequency)}</span>
       </div>
-    </div>
+    </>
   );
 }
