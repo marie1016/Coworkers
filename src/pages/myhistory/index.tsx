@@ -45,13 +45,13 @@ export default function Myhistory() {
     setCurrentCount((prev) => prev + 3);
   };
 
-  if (isPending) {
+  if ((isPending || visibleDates.length === 0) && allHistory.length > 0) {
     return <MyhistorySkeleton />;
   }
 
   if (isError) {
     return (
-      <div className="mx-auto flex h-screen max-w-[75rem] flex-col px-6 py-10 font-medium">
+      <div className="mx-auto flex h-screen max-w-[75rem] flex-col px-6 pb-24 pt-10 font-medium">
         <h1 className="text-text-xl font-bold text-text-primary">
           마이 히스토리
         </h1>
@@ -69,7 +69,7 @@ export default function Myhistory() {
 
   if (allHistory.length === 0) {
     return (
-      <div className="mx-auto flex h-screen max-w-[75rem] flex-col px-6 py-10 font-medium">
+      <div className="mx-auto flex h-screen max-w-[75rem] flex-col px-6 pb-24 pt-10 font-medium">
         <h1 className="text-text-xl font-bold text-text-primary">
           마이 히스토리
         </h1>
@@ -81,7 +81,7 @@ export default function Myhistory() {
   }
 
   return (
-    <div className="mx-auto h-auto max-w-[75rem] px-6 py-10">
+    <div className="mx-auto h-auto max-w-[75rem] px-6 pb-24 pt-10">
       <h1 className="text-text-xl font-bold text-text-primary">
         마이 히스토리
       </h1>
