@@ -45,7 +45,7 @@ export default function Myhistory() {
     setCurrentCount((prev) => prev + 3);
   };
 
-  if ((isPending || visibleDates.length === 0) && allHistory.length > 0) {
+  if (isPending || (visibleDates.length === 0 && allHistory.length > 0)) {
     return <MyhistorySkeleton />;
   }
 

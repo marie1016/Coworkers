@@ -37,7 +37,6 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
     commentMutation.mutate(addTaskCommentForm, {
       onSuccess: () => {
         setComment("");
-        toast.success("댓글을 등록했습니다!");
       },
       onError: () => {
         toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
@@ -62,7 +61,7 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
         }
         onKeyDown={handleKeyDown}
         onInput={handleInput}
-        className="h-auto w-full resize-none overflow-hidden rounded-none border-b border-l-0 border-r-0 border-border-primary bg-background-secondary py-4 pl-0 pr-8 text-text-md outline-none placeholder:text-text-md placeholder:text-text-default"
+        className="h-auto w-full resize-none overflow-hidden rounded-none border-b border-l-0 border-r-0 border-border-primary bg-background-secondary py-4 pl-0 pr-8 text-text-md outline-none placeholder:text-text-md placeholder:text-text-default [&&]:focus:border-interaction-hover [&&]:focus:ring-0"
         placeholder="댓글을 입력하세요."
       />
       <button type="submit" disabled={commentMutation.isPending || !comment}>

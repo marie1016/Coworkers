@@ -152,7 +152,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
           ) : (
             <form className="flex flex-col gap-2">
               <textarea
-                className="h-auto w-full resize-none overflow-hidden border-none bg-background-secondary px-0 py-0 text-text-md outline-none focus:border-none focus:outline-none"
+                className="h-auto w-full resize-none overflow-hidden border-none bg-background-secondary px-0 py-0 text-text-md outline-none [&&]:focus:ring-0"
                 name="comment"
                 value={comment}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>

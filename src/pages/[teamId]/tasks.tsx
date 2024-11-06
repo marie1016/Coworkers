@@ -54,6 +54,7 @@ export default function Tasks() {
   const openDeleteTaskModal = (taskData: Task) => {
     handleTaskItemChange(taskData);
     openModal("deleteTaskModal");
+    closeTaskDetail();
   };
 
   if (!user) return null;
