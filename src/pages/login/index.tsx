@@ -7,7 +7,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/core/context/AuthProvider";
 import { validatePassword, validateEmail } from "@/lib/utils/validation";
-import { useRouter } from "next/router"; // useRouter import 추가
+import { useRouter } from "next/router";
+import Modal from "@/components/@shared/UI/Modal/Modal";
+import { sendResetPasswordEmail } from "@/core/api/auth/authApi";
 
 interface FormData {
   email: string | undefined;
@@ -20,9 +22,13 @@ interface FormErrors {
 }
 
 export default function Login() {
-  const router = useRouter(); // useRouter 사용
+  const router = useRouter();
   const { handleLogin, handleEmailLogin } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetEmailError, setResetEmailError] = useState<string | undefined>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -105,12 +111,43 @@ export default function Login() {
       try {
         await handleEmailLogin(formData.email, formData.password);
         alert("로그인 성공");
-        router.push("/"); // 메인 페이지로 이동
+        router.push("/");
       } catch (error) {
-        console.error("로그인 중 오류 발생:", error); // 에러 로그 추가
+        console.error("로그인 중 오류 발생:", error);
       }
     } else {
       alert("이메일과 비밀번호를 모두 입력해주세요.");
+    }
+  };
+
+  const handleSendResetEmail = async () => {
+    const emailError = validateEmail(resetEmail);
+    if (emailError) {
+      setResetEmailError(emailError);
+      return;
+    }
+
+    setIsLoading(true);
+    setResetEmailError(undefined);
+
+    try {
+      const redirectUrl = `http://localhost:3000`;
+      const { success, message } = await sendResetPasswordEmail({
+        email: resetEmail,
+        redirectUrl,
+      });
+
+      if (success) {
+        alert("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
+        setIsModalOpen(false);
+      } else {
+        setResetEmailError(message);
+      }
+    } catch (error) {
+      console.error("비밀번호 재설정 이메일 전송 중 오류 발생:", error);
+      setResetEmailError("비밀번호 재설정 이메일 전송 중 오류가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -164,12 +201,13 @@ export default function Login() {
                 onButtonClick={togglePasswordVisibility}
               />
             </div>
-            <Link
-              href="/resetPassword"
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
               className="flex items-center justify-end text-lg text-brand-primary underline"
             >
               비밀번호를 잊으셨나요?
-            </Link>
+            </button>
           </InputLabel>
 
           <Button type="submit" variant="solid" size="large" className="mt-4">
@@ -214,6 +252,45 @@ export default function Login() {
           </div>
         </form>
       </div>
+
+      {/* 비밀번호 재설정 모달 */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className="flex flex-col items-center gap-4 p-4">
+          <h3 className="text-lg font-semibold text-white">비밀번호 재설정</h3>
+          <p className="text-sm text-gray-300">
+            비밀번호 재설정 링크를 이메일로 보내드립니다.
+          </p>
+          <Input
+            name="resetEmail"
+            type="email"
+            placeholder="이메일을 입력하세요."
+            value={resetEmail}
+            onChange={(e) => setResetEmail(e.target.value)}
+            isValid={!resetEmailError}
+            errorMessage={resetEmailError}
+            className="w-[280px]"
+          />
+          <div className="mt-4 flex w-full justify-between gap-2">
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={() => setIsModalOpen(false)}
+              className="w-1/2"
+            >
+              닫기
+            </Button>
+            <Button
+              variant="solid"
+              size="large"
+              onClick={handleSendResetEmail}
+              className="w-1/2"
+              disabled={isLoading}
+            >
+              {isLoading ? "전송 중..." : "링크 보내기"}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

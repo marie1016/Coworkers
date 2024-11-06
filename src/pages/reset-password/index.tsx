@@ -2,9 +2,11 @@ import SetupHeader from "@/components/@shared/UI/SetupHeader";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import Input from "@/components/@shared/UI/Input";
 import Button from "@/components/@shared/UI/Button";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { validatePassword } from "@/lib/utils/validation";
 import Image from "next/image";
+import { resetPasswordWithToken } from "@/core/api/auth/authApi";
+import { useRouter } from "next/router";
 
 interface FormData {
   password: string;
@@ -17,77 +19,87 @@ interface FormErrors {
 }
 
 export default function ResetPassword() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
   const [formData, setFormData] = useState<FormData>({
     password: "",
     confirmPassword: "",
   });
-
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [token, setToken] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const urlToken = router.query.token as string;
+    if (urlToken) setToken(urlToken);
+    console.log("Token from URL:", urlToken);
+  }, [router.query.token]);
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const toggleConfirmPasswordVisibility = () =>
+    setShowConfirmPassword(!showConfirmPassword);
 
   const handleChange = ({
     target: { name, value },
   }: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [name]: value });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleBlur = ({
     target: { name, value },
   }: React.FocusEvent<HTMLInputElement>) => {
     if (name === "password") {
-      let passwordError;
-      if (!value) {
-        passwordError = "새 비밀번호를 입력해주세요.";
-      } else {
-        passwordError = validatePassword(value);
-      }
-      setFormErrors((prevErrors) => ({
-        ...prevErrors,
-        password: passwordError,
-      }));
+      setFormErrors((prev) => ({ ...prev, password: validatePassword(value) }));
     }
-
     if (name === "confirmPassword") {
-      let confirmPasswordError;
-      if (!value) {
-        confirmPasswordError = "비밀번호를 다시 입력해주세요.";
-      } else if (value !== formData.password) {
-        confirmPasswordError = "비밀번호가 일치하지 않습니다.";
-      } else {
-        confirmPasswordError = undefined;
-      }
-      setFormErrors((prevErrors) => ({
-        ...prevErrors,
-        confirmPassword: confirmPasswordError,
+      setFormErrors((prev) => ({
+        ...prev,
+        confirmPassword:
+          value === formData.password
+            ? undefined
+            : "비밀번호가 일치하지 않습니다.",
       }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const passwordError = validatePassword(formData.password) ?? undefined;
+
+    const passwordError = validatePassword(formData.password);
     const confirmPasswordError =
-      formData.password !== formData.confirmPassword
-        ? "비밀번호가 일치하지 않습니다."
-        : undefined;
+      formData.password === formData.confirmPassword
+        ? undefined
+        : "비밀번호가 일치하지 않습니다.";
 
     setFormErrors({
       password: passwordError,
       confirmPassword: confirmPasswordError,
     });
 
-    if (!passwordError && !confirmPasswordError) {
-      alert("비밀번호가 성공적으로 재설정되었습니다.");
+    if (!passwordError && !confirmPasswordError && token) {
+      setIsSubmitting(true);
+      try {
+        const response = await resetPasswordWithToken({
+          password: formData.password,
+          passwordConfirmation: formData.confirmPassword,
+          token,
+        });
+
+        if (response.status === 200) {
+          alert("비밀번호가 성공적으로 재설정되었습니다.");
+
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+
+          router.push("/login");
+        }
+      } catch (error) {
+        console.error("비밀번호 재설정 실패:", error);
+        alert("비밀번호 재설정 중 오류가 발생했습니다. 다시 시도해주세요.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -101,7 +113,6 @@ export default function ResetPassword() {
         >
           <h2 className="text-2xl text-text-primary">비밀번호 재설정</h2>
 
-          {/* 새 비밀번호 입력 필드 */}
           <InputLabel label="새 비밀번호" className="text-lg text-text-primary">
             <Input
               name="password"
@@ -130,7 +141,6 @@ export default function ResetPassword() {
             />
           </InputLabel>
 
-          {/* 비밀번호 확인 입력 필드 */}
           <InputLabel
             label="비밀번호 확인"
             className="text-lg text-text-primary"
@@ -162,8 +172,14 @@ export default function ResetPassword() {
             />
           </InputLabel>
 
-          <Button variant="solid" size="large" className="mt-4">
-            재설정
+          <Button
+            type="submit"
+            variant="solid"
+            size="large"
+            className="mt-4"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "처리 중..." : "재설정"}
           </Button>
         </form>
       </div>

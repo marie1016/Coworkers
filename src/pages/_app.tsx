@@ -19,7 +19,6 @@ function HeaderWrapper({ headerType }: { headerType?: string }) {
   const [isAuthHeaderVisible, setIsAuthHeaderVisible] = useState(false);
 
   useEffect(() => {
-    // 커스텀 인증 상태에 따라 헤더 보이기 설정
     if (user && !isPending) {
       setIsAuthHeaderVisible(true);
     } else {
