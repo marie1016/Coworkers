@@ -8,23 +8,24 @@ import "@/styles/datepicker.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState, useEffect } from "react";
-import { AuthProvider } from "@/core/context/AuthProvider";
+import { AuthProvider, useAuth } from "@/core/context/AuthProvider";
 import { SessionProvider, useSession } from "next-auth/react";
 import type { AppProps } from "next/app";
 import SetupHeader from "@/components/@shared/UI/SetupHeader";
 import AuthHeader from "@/components/@shared/UI/AuthHeader";
 
 function HeaderWrapper({ headerType }: { headerType?: string }) {
-  const { data: session, status } = useSession();
+  const { user, isPending } = useAuth();
   const [isAuthHeaderVisible, setIsAuthHeaderVisible] = useState(false);
 
   useEffect(() => {
-    if (status === "authenticated" && session?.user) {
+    // 커스텀 인증 상태에 따라 헤더 보이기 설정
+    if (user && !isPending) {
       setIsAuthHeaderVisible(true);
     } else {
       setIsAuthHeaderVisible(false);
     }
-  }, [status, session]);
+  }, [user, isPending]);
 
   if (headerType === "setup") {
     return <SetupHeader />;
