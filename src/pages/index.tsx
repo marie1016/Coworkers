@@ -1,8 +1,34 @@
-import { useAuth } from "@/core/context/AuthProvider";
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import axiosInstance from "@/core/api/axiosInstance";
+import { AxiosResponse } from "axios";
+
 import Link from "next/link";
 
 export default function Home() {
-  const { user } = useAuth();
+
+  const [userInfo, setUserInfo] = useState(INITIAL_USER_INFO);
+
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/user");
+      if (response && response.data) {
+        const { nickname, email } = response.data;
+        console.log("User Info:", { nickname, email });
+      } else {
+        console.error("User data is not available");
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
 
   return (
     <div>
@@ -25,6 +51,8 @@ export default function Home() {
       </Link>
       <br />
       <Link href="/landing">랜딩 페이지</Link>
+      <br />
+      <Link href="/account">계정 설정 페이지</Link>
       <br />
       <br />
       <h2 className="text-text-3xl">내가 속한 팀</h2>

@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
+import { useAuth } from "@/core/context/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
 import Profile from "./Profile";
 
 export default function AuthHeader() {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState<string>("1");
@@ -34,8 +38,6 @@ export default function AuthHeader() {
   const selectedTeam = teamList.find(
     (team) => team.id === selectedTeamId,
   )?.name;
-
-  const username = "김팀이";
 
   return (
     <div>
@@ -154,7 +156,7 @@ export default function AuthHeader() {
             <div className="flex items-center justify-center gap-2">
               <Profile />
               <span className="text-lg leading-tight sm:hidden md:hidden lg:block">
-                {username}
+                {user?.nickname ?? "guest"}
               </span>
             </div>
           </div>
