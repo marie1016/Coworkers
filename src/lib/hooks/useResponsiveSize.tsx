@@ -18,7 +18,7 @@ const useResponsiveSize = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', updateScale);
-      updateScale(); // 초기 값을 설정합니다.
+      updateScale();
       return () => window.removeEventListener('resize', updateScale);
     }
     return undefined;
