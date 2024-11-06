@@ -2,19 +2,47 @@ import Button from "@/components/@shared/UI/Button";
 import Input from "@/components/@shared/UI/Input";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import postInvitationAccept from "@/core/api/group/postInvitationAccept";
+import { useAuth } from "@/core/context/AuthProvider";
+import StandardError from "@/core/types/standardError";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 
 export default function Participate() {
   const [link, setLink] = useState("");
-  const router = useRouter();
-  const { email } = router.query;
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const { mutate } = useMutation({
+  const router = useRouter();
+  const { user } = useAuth(true);
+  const { email } = user ?? { email: "" };
+
+  const { mutate, isPending } = useMutation({
     mutationFn: postInvitationAccept,
+    onMutate: () => {
+      setIsValid(true);
+      setErrorMessage("");
+    },
     onSuccess: (response) => {
       router.push(`/${response.groupId}`);
+    },
+    onError: (e: StandardError) => {
+      console.error(e);
+      switch (e.status) {
+        case 400:
+          setIsValid(false);
+          setErrorMessage("유효하지 않은 초대 코드입니다.");
+          break;
+        case 401:
+          router.replace("/unauthorized");
+          break;
+        default:
+          setIsValid(false);
+          setErrorMessage(
+            "팀 참여중 에러가 발생했습니다. 관리자에게 문의해 주세요.",
+          );
+          break;
+      }
     },
   });
 
@@ -23,9 +51,11 @@ export default function Participate() {
   };
 
   const handleButtonClick = () => {
-    if (typeof email !== "string" || !link) return;
+    if (!email || !link) return;
     mutate({ userEmail: email, token: link });
   };
+
+  if (!user) return null;
 
   return (
     <div className="mx-auto mt-52 max-w-[30.75rem] px-4">
@@ -36,6 +66,8 @@ export default function Participate() {
           </h2>
           <InputLabel label="팀 링크">
             <Input
+              errorMessage={errorMessage}
+              isValid={isValid}
               className="w-full"
               placeholder="팀 링크를 입력해주세요."
               onChange={handleInputChange}
@@ -47,6 +79,7 @@ export default function Participate() {
             type="button"
             variant="solid"
             size="large"
+            disabled={isPending}
             onClick={handleButtonClick}
           >
             참여하기

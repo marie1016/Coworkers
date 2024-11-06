@@ -2,8 +2,8 @@ import AddTaskListModal from "@/components/@shared/AddTaskListModal";
 import Dropdown from "@/components/@shared/UI/Dropdown";
 import DropdownItem from "@/components/@shared/UI/Item";
 import Image from "next/image";
-import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import useModalStore from "@/lib/hooks/stores/modalStore";
 import DeleteTaskListModal from "./DeleteTaskListModal";
 
 interface Props {
@@ -13,8 +13,18 @@ interface Props {
 }
 
 export default function TaskListMenu({ teamId, taskListId, name }: Props) {
-  const [isPatchModalOpen, setIsPatchModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const patchModalName = `${taskListId}taskListPatchModal`;
+  const deleteModalName = `${taskListId}taskListDeleteModal`;
+
+  const isPatchModalOpen = useModalStore(
+    (state) => state.modals[patchModalName],
+  );
+  const isDeleteModalOpen = useModalStore(
+    (state) => state.modals[deleteModalName],
+  );
+
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const queryClient = useQueryClient();
   const refreshGroup = () => {
@@ -32,13 +42,13 @@ export default function TaskListMenu({ teamId, taskListId, name }: Props) {
         menuClassName="flex flex-col text-text-primary font-regular text-text-md w-[7.5rem] bg-background-secondary border border-solid border-border-primary right-0 top-6"
       >
         <DropdownItem
-          onClick={() => setIsPatchModalOpen(!isPatchModalOpen)}
+          onClick={() => openModal(patchModalName)}
           itemClassName="h-10 flex justify-center items-center"
         >
           수정하기
         </DropdownItem>
         <DropdownItem
-          onClick={() => setIsDeleteModalOpen(!isDeleteModalOpen)}
+          onClick={() => openModal(deleteModalName)}
           itemClassName="h-10 flex justify-center items-center"
         >
           삭제하기
@@ -46,7 +56,7 @@ export default function TaskListMenu({ teamId, taskListId, name }: Props) {
       </Dropdown>
       <AddTaskListModal
         isOpen={isPatchModalOpen}
-        onClose={() => setIsPatchModalOpen(false)}
+        onClose={() => closeModal(patchModalName)}
         teamId={teamId}
         submitCallback={refreshGroup}
         defaultPatchForm={{
@@ -56,7 +66,7 @@ export default function TaskListMenu({ teamId, taskListId, name }: Props) {
       />
       <DeleteTaskListModal
         isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        onClose={() => closeModal(deleteModalName)}
         teamId={teamId}
         taskListId={taskListId}
       />

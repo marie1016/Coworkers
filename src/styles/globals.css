@@ -1,4 +1,5 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import "flowbite";
 
 @tailwind base;
 @tailwind components;
@@ -16,4 +17,68 @@ input::-webkit-inner-spin-button,
 input::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+textarea:focus {
+  outline: none !important;
+  outline-width: 0 !important;
+  box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.swiper {
+  @apply static w-[95%] sm:w-[85%] md:w-[90%] !important;
+}
+
+.swiper-wrapper {
+  @apply static !important;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  @apply text-[20px] !important;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  @apply text-brand-primary !important;
+}
+
+.swiper-button-prev {
+  @apply left-0 !important;
+}
+
+.swiper-button-next {
+  @apply right-0 !important;
+}
+
+.swiper-button-lock {
+  @apply flex !important;
+}
+
+.swiper-slide {
+  @apply w-auto !important;
+}
+
+body::-webkit-scrollbar,
+.modal::-webkit-scrollbar,
+.taskDetail::-webkit-scrollbar {
+  @apply w-2.5;
+}
+
+body::-webkit-scrollbar-thumb,
+.modal::-webkit-scrollbar-thumb,
+.taskDetail::-webkit-scrollbar-thumb {
+  @apply rounded-xl bg-brand-primary;
+}
+
+body::-webkit-scrollbar-track,
+.modal::-webkit-scrollbar-track,
+.taskDetail::-webkit-scrollbar-track {
+  background: rgba(33, 122, 244, 0.1);
 }

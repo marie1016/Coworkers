@@ -5,12 +5,15 @@
 import "@/styles/globals.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "@/styles/datepicker.css";
+import "swiper/css";
+import "swiper/css/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState, useEffect } from "react";
 import { AuthProvider, useAuth } from "@/core/context/AuthProvider";
 import { SessionProvider, useSession } from "next-auth/react";
 import type { AppProps } from "next/app";
+
 import SetupHeader from "@/components/@shared/UI/SetupHeader";
 import AuthHeader from "@/components/@shared/UI/AuthHeader";
 
@@ -25,6 +28,7 @@ function HeaderWrapper({ headerType }: { headerType?: string }) {
       setIsAuthHeaderVisible(false);
     }
   }, [user, isPending]);
+
 
   if (headerType === "setup") {
     return <SetupHeader />;
@@ -49,6 +53,7 @@ export default function App({
   );
 
   return (
+
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
@@ -60,5 +65,6 @@ export default function App({
         </AuthProvider>
       </QueryClientProvider>
     </SessionProvider>
+
   );
 }

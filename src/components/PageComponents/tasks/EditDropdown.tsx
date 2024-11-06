@@ -4,17 +4,21 @@ import Image from "next/image";
 
 interface EditDropdownProps {
   onEdit: () => void;
+  onDelete: () => void;
 }
 
 interface Option {
   label: string;
 }
 
-export default function EditDropdown({ onEdit }: EditDropdownProps) {
-  const handleSelect = (option: Option) => {
+export default function EditDropdown({ onEdit, onDelete }: EditDropdownProps) {
+  const handleSelect = (e: React.MouseEvent, option: Option) => {
+    e.stopPropagation();
     if (option.label === "수정하기") {
       onEdit();
+      return;
     }
+    onDelete();
   };
 
   const options: Option[] = [{ label: "수정하기" }, { label: "삭제하기" }];
@@ -34,8 +38,8 @@ export default function EditDropdown({ onEdit }: EditDropdownProps) {
       {options.map((option) => (
         <DropdownItem
           key={option.label}
-          onClick={() => handleSelect(option)}
-          itemClassName="py-3 px-8 text-center"
+          onClick={(e) => handleSelect(e, option)}
+          itemClassName="py-3 px-8 text-center text-text-primary"
         >
           {option.label}
         </DropdownItem>

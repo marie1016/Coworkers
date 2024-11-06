@@ -1,4 +1,4 @@
-import FrequencyType from "@/lib/constants/frequencyType";
+import { FrequencyType } from "@/lib/constants/frequencyType";
 
 export interface TaskList {
   id: number;
@@ -7,10 +7,6 @@ export interface TaskList {
   updatedAt: string;
   groupId: number;
   displayIndex: number;
-}
-
-export interface TaskListsResponse {
-  taskLists: TaskList[];
 }
 
 export interface Task {
@@ -22,6 +18,8 @@ export interface Task {
   checked: boolean;
   date: string;
   updatedAt: string;
+  doneAt: string |null;
+  recurringId: number;
   writer: {
     nickname: string;
     image: string;
@@ -29,7 +27,16 @@ export interface Task {
   recurring: {
     weekDays: [];
     monthDay: number;
+    taskListId: number;
+    groupId: number;
+    startDate: string;
+    updatedAt: string;
   };
+}
+
+export interface TaskRecurring {
+  startDate: string;
+  updatedAt: string;
 }
 
 export interface TaskComment {
@@ -45,7 +52,7 @@ export interface TaskComment {
   };
 }
 
-export interface AddTaskCommentForm {
+export interface TaskCommentForm {
   content: string;
 }
 
@@ -59,10 +66,15 @@ export interface AddTaskForm {
 }
 
 export interface EditTaskForm {
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
+  done?: boolean;
 }
 
 export interface AddTaskListForm {
   name: string;
+}
+
+export interface TaskOrderForm {
+  displayIndex: number;
 }

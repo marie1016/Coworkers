@@ -7,7 +7,11 @@ import aspectRatio from "@tailwindcss/aspect-ratio";
 import lineClamp from "@tailwindcss/line-clamp";
 
 const config: Config = {
-  content: ["./src/**/*.{html,js,ts,jsx,tsx}"],
+  important: true,
+  content: [
+    "./src/**/*.{html,js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js",
+  ],
   theme: {
     extend: {
       colors: {
@@ -136,7 +140,14 @@ const config: Config = {
       lg: { min: "1200px" }, // PC: 1200px 이상
     },
   },
-  plugins: [forms, typography, aspectRatio, lineClamp],
+  plugins: [
+    forms,
+    typography,
+    aspectRatio,
+    lineClamp,
+    require("tailwind-scrollbar-hide"),
+    require("flowbite/plugin"),
+  ],
 };
 
 export default config;

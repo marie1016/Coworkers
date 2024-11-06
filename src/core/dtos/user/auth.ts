@@ -3,6 +3,7 @@ import { Membership } from "./membership";
 export interface UserBase {
   id: number;
 
+
   teamId: string;
 
   email: string;
@@ -12,6 +13,7 @@ export interface UserBase {
   image: string;
 
   createdAt: string;
+
 
   updatedAt: string;
 }

@@ -1,8 +1,10 @@
+
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   retryAttempted?: boolean;
 }
+
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -10,6 +12,7 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -24,6 +27,7 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   },
 );
+
 
 axiosInstance.interceptors.response.use(
   (response) => response,
@@ -60,6 +64,27 @@ axiosInstance.interceptors.response.use(
       }
     }
 
+    return Promise.reject(error);
+  },
+);
+
+axiosInstance.interceptors.response.use(
+  (res) => res,
+  async (error: AxiosError) => {
+    const originalRequest: AxiosRequestConfig = error.config ?? {};
+    const refreshToken = localStorage.getItem(TOKENS.REFRESH_TOKEN);
+    if (error.response?.status === 401 && !!refreshToken) {
+      let res: RefreshTokenResponse;
+      try {
+        res = await retrieveNewToken({ refreshToken });
+      } catch (refreshError) {
+        console.error(refreshError);
+        removeTokens();
+        return Promise.reject(error);
+      }
+      localStorage.setItem(TOKENS.ACCESS_TOKEN, res.accessToken);
+      return axiosInstance(originalRequest);
+    }
     return Promise.reject(error);
   },
 );

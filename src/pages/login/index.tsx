@@ -1,3 +1,4 @@
+
 import SetupHeader from "@/components/@shared/UI/SetupHeader";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import Input from "@/components/@shared/UI/Input";
@@ -21,6 +22,7 @@ interface FormErrors {
   password: string | undefined;
 }
 
+
 export default function Login() {
   const router = useRouter();
   const { handleLogin, handleEmailLogin } = useAuth();
@@ -35,6 +37,7 @@ export default function Login() {
     password: "",
   });
 
+
   const [formErrors, setFormErrors] = useState<FormErrors>({
     email: undefined,
     password: undefined,
@@ -43,6 +46,7 @@ export default function Login() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -102,6 +106,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+
     if (!validateForm()) {
       alert("입력 값이 올바르지 않습니다. 이메일과 비밀번호를 확인해주세요.");
       return;
@@ -149,6 +154,7 @@ export default function Login() {
     } finally {
       setIsLoading(false);
     }
+
   };
 
   return (

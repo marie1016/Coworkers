@@ -1,4 +1,6 @@
+
 import axios, { AxiosError } from "axios";
+
 import { useMutation } from "@tanstack/react-query";
 import {
   createContext,
@@ -19,10 +21,12 @@ import {
   UpdateUserResponse,
   User,
 } from "../dtos/user/auth";
+
 import updateUser from "../api/user/updateUser";
 import deleteUser from "../api/user/deleteUser";
 import { SignupRequestDto } from "../dtos/auth/authDto";
 import { signup, login } from "../api/auth/authApi";
+
 
 interface AuthValues {
   user: User | null;
@@ -32,6 +36,7 @@ interface AuthValues {
 interface AuthContextValues {
   user: User | null;
   isPending: boolean;
+
   isLoginPending: boolean;
   login: (loginForm: LoginForm) => Promise<LoginResponse>;
   logout: () => void;
@@ -42,11 +47,13 @@ interface AuthContextValues {
   handleSignup: (data: SignupRequestDto) => Promise<void>;
   handleLogout: () => void;
   loading: boolean;
+v
 }
 
 const INITIAL_AUTH_VALUES: AuthContextValues = {
   user: null,
   isPending: true,
+
   isLoginPending: false,
   login: () => Promise.reject(),
   logout: () => {},
@@ -57,6 +64,7 @@ const INITIAL_AUTH_VALUES: AuthContextValues = {
   handleSignup: async () => {},
   handleLogout: () => {},
   loading: false,
+
 };
 
 const AuthContext = createContext<AuthContextValues>(INITIAL_AUTH_VALUES);
@@ -66,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user: null,
     isPending: true,
   });
+
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -75,11 +84,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onSuccess: (data) => setAuthState({ user: data, isPending: false }),
     onError: (e) => {
       setAuthState({ user: null, isPending: false });
+
       console.error(e);
     },
   });
 
+
   const { mutateAsync: updateMe, isLoading: isUpdatePending } = useMutation({
+
     mutationFn: (updateUserForm: UpdateUserForm) => updateUser(updateUserForm),
     onSuccess: () => getMe(),
     onError: (e) => {
@@ -95,11 +107,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setAuthState({ user: null, isPending: false });
       router.push("/login");
     },
+
     onError: (e) => {
       console.error(e);
       return e;
     },
   });
+
 
   const handleLogin = async (provider: "google" | "kakao") => {
     try {
@@ -207,6 +221,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       handleSignup,
       updateMe,
       deleteMe,
+
     ],
   );
 
@@ -222,11 +237,13 @@ export function useAuth(required?: boolean) {
   const { user, isPending } = context;
   const router = useRouter();
 
+
   useEffect(() => {
     if (required && !user && !isPending) {
       router.replace(`/unauthorized`);
     }
   }, [required, user, isPending, router]);
+
 
   return context;
 }

@@ -1,4 +1,4 @@
-import { AddTaskCommentForm } from "@/core/dtos/tasks/tasks";
+import { TaskCommentForm } from "@/core/dtos/tasks/tasks";
 import { AxiosError, AxiosResponse } from "axios";
 import axiosInstance from "../axiosInstance";
 
@@ -8,9 +8,9 @@ interface AddTaskCommentParams {
 
 export default async function addTaskComment(
   { taskId }: AddTaskCommentParams,
-  addTaskCommentForm: AddTaskCommentForm,
+  addTaskCommentForm: TaskCommentForm,
 ) {
-  const res: AxiosResponse<AddTaskCommentForm, AxiosError> = await axiosInstance
+  const res: AxiosResponse<TaskCommentForm, AxiosError> = await axiosInstance
     .post(`/tasks/${taskId}/comments`, addTaskCommentForm)
     .catch((e: AxiosError) => Promise.reject(e));
   return res.data;

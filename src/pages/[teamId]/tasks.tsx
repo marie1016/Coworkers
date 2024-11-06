@@ -1,19 +1,24 @@
 import { Task } from "@/core/dtos/tasks/tasks";
-import { useState, Suspense } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import TaskLists from "@/components/PageComponents/tasks/TaskLists";
 import TaskCardList from "@/components/PageComponents/tasks/TaskCardList";
-import TaskDate from "@/components/PageComponents/tasks/TaskDate";
 import useModalStore from "@/lib/hooks/stores/modalStore";
-import TaskFormModal from "@/components/PageComponents/tasks/TaskFormModal";
-import { ErrorBoundary } from "react-error-boundary";
+import AddTaskModal from "@/components/PageComponents/tasks/AddTaskModal";
+import EditTaskModal from "@/components/PageComponents/tasks/EditTaskModal";
+import SectionHeader from "@/components/PageComponents/tasks/SectionHeader";
+import DeleteTaskModal from "@/components/PageComponents/tasks/DeleteTaskModal";
+import { AnimatePresence } from "framer-motion";
+import TaskDetail from "@/components/PageComponents/tasks/TaskDetail";
+import { useAuth } from "@/core/context/AuthProvider";
 
 export default function Tasks() {
   const router = useRouter();
-  const groupId = router.query.teamId as string;
+  const teamId = router.query.teamId as string;
   const { tasklist } = router.query;
   const numericTaskListId = parseInt(tasklist as string, 10);
+  const { user } = useAuth(true);
 
   const [selectedTaskListId, setSelectedTaskListId] =
     useState<number>(numericTaskListId);
@@ -25,60 +30,83 @@ export default function Tasks() {
   };
 
   const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
 
-  const openTaskFormModal = (taskItem: Task | null) => {
-    setSelectedTaskItem(taskItem);
-    openModal("taskFormModal");
+  const openTaskFormModal = () => {
+    openModal("addTaskModal");
   };
 
   const handleTaskItemChange = (taskItem: Task) => {
     setSelectedTaskItem(taskItem);
   };
 
+  const closeTaskDetail = () => {
+    closeModal("taskDetail");
+    router.push(`/${teamId}/tasks?tasklist=${selectedTaskListId}`);
+  };
+
+  const openEditTaskModal = (taskData: Task) => {
+    handleTaskItemChange(taskData);
+    openModal("editTaskModal");
+    closeTaskDetail();
+  };
+
+  const openDeleteTaskModal = (taskData: Task) => {
+    handleTaskItemChange(taskData);
+    openModal("deleteTaskModal");
+  };
+
+  if (!user) return null;
+
   return (
-    <div className="relative mx-auto mt-10 w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
+    <div className="mx-auto my-10 h-auto w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
       <section>
-        <h1 className="text-text-xl font-bold text-text-primary">할 일</h1>
-        <div className="my-6 flex items-center justify-between">
-          <TaskDate
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-          />
-          <p className="text-text-md font-regular text-brand-primary">
-            +새로운 목록 추가하기
-          </p>
-        </div>
+        <SectionHeader
+          teamId={teamId}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
       </section>
       <section>
         <TaskLists
-          groupId={groupId}
+          teamId={teamId}
           selectedTaskListId={selectedTaskListId}
           onTaskListClick={handleTaskListClick}
         />
-        <ErrorBoundary fallback={<div>error</div>}>
-          <Suspense fallback={<div>loading...</div>}>
-            <TaskCardList
-              groupId={groupId}
-              selectedTaskListId={selectedTaskListId}
-              selectedDate={selectedDate}
-              onTaskItemChange={handleTaskItemChange}
-            />
-          </Suspense>
-        </ErrorBoundary>
+        <TaskCardList
+          teamId={teamId}
+          selectedTaskListId={selectedTaskListId}
+          selectedDate={selectedDate}
+          onTaskItemChange={handleTaskItemChange}
+        />
       </section>
       <FloatingButton
-        className="md: md: absolute -right-8 right-0 top-[55.25rem] top-[62.06rem] sm:top-[41.06rem]"
+        className="fixed bottom-8 right-8"
         variant="solid"
         size="large"
-        onClick={() => openTaskFormModal(null)}
+        onClick={openTaskFormModal}
       >
         + 할 일 추가
       </FloatingButton>
-      <TaskFormModal
-        groupId={groupId}
-        selectedTaskListId={selectedTaskListId}
-        taskToEdit={selectedTaskItem}
-      />
+      <AddTaskModal teamId={teamId} selectedTaskListId={selectedTaskListId} />
+      {selectedTaskItem && (
+        <EditTaskModal
+          taskToEdit={selectedTaskItem}
+          selectedTaskListId={selectedTaskListId}
+        />
+      )}
+      {selectedTaskItem && <DeleteTaskModal taskItem={selectedTaskItem} />}
+      <AnimatePresence>
+        {selectedTaskItem && (
+          <TaskDetail
+            selectedDate={selectedDate}
+            taskItem={selectedTaskItem}
+            closeTaskDetail={closeTaskDetail}
+            openEditTaskModal={() => openEditTaskModal(selectedTaskItem)}
+            openDeleteTaskModal={() => openDeleteTaskModal(selectedTaskItem)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
