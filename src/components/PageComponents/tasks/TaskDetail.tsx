@@ -68,14 +68,14 @@ export default function TaskDetail({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 bg-black bg-opacity-50"
+      className="fixed inset-0 z-10 bg-opacity-0"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <motion.div
-        className="taskDetail z-100 fixed right-0 top-0 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
+        className="taskDetail fixed right-0 top-0 z-20 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}

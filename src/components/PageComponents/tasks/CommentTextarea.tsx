@@ -12,7 +12,6 @@ interface CommentTextareaProps {
 export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
   const queryClient = useQueryClient();
   const { id } = taskItem;
-
   const [comment, setComment] = useState<string>("");
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -35,10 +34,6 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
     e.preventDefault();
     const addTaskCommentForm = { content: comment };
     commentMutation.mutate(addTaskCommentForm, {
-      onSuccess: () => {
-        setComment("");
-        toast.success("댓글을 등록했습니다!");
-      },
       onError: () => {
         toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
       },

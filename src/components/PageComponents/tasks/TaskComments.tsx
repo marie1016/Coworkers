@@ -74,9 +74,6 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
 
   const deleteComment = (commentId: number) => {
     deleteMutation.mutate(commentId, {
-      onSuccess: () => {
-        toast.success("댓글을 삭제했습니다!");
-      },
       onError: () => {
         toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
       },
@@ -89,9 +86,6 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
     editMutation.mutate(
       { commentId, editTaskCommentForm },
       {
-        onSuccess: () => {
-          toast.success("댓글을 수정하였습니다!");
-        },
         onError: () => {
           toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
         },
