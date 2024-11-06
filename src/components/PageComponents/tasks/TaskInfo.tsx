@@ -1,81 +1,110 @@
-import { Task } from "@/core/dtos/tasks/tasks";
+import { Task, TaskRecurring } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import moment from "moment";
-import "moment/locale/ko";
+import { formatDate, formatTime } from "@/lib/utils/date";
+import getTaskRecurring from "@/core/api/tasks/getTaskRecurring";
+import { useQuery } from "@tanstack/react-query";
+import { getFrequencyLabel } from "@/lib/constants/frequencyType";
 import EditDropdown from "./EditDropdown";
 
 interface TaskInfoProps {
-  selectedTaskItem: Task;
+  taskItem: Task;
+  openTaskFormModal: () => void;
+  deleteTask: () => void;
+  doneAt: string | null;
+  selectedDate: Date | null;
 }
 
-export default function TaskInfo({ selectedTaskItem }: TaskInfoProps) {
-  const { name, writer, updatedAt, date, frequency, description } =
-    selectedTaskItem;
+export default function TaskInfo({
+  selectedDate,
+  doneAt,
+  taskItem,
+  openTaskFormModal,
+  deleteTask,
+}: TaskInfoProps) {
+  const { id, name, writer, updatedAt, frequency, description } = taskItem;
 
-  const formattedUpdatedAt = moment(updatedAt).format("yy.MM.DD");
-  const formattedDate = moment(date).format("yy년 MM월 DD일");
+  const writerImage = writer.image ?? "/images/image-defaultProfile.png";
 
-  let hours = new Date(date).getHours();
-  const minutes = new Date(date).getMinutes();
+  const { data: taskRecurringData } = useQuery<Task>({
+    queryKey: ["task", id],
+    queryFn: () =>
+      getTaskRecurring({
+        taskId: id,
+      }),
+  });
 
-  const period = hours >= 12 ? "오후" : "오전";
-  hours = hours % 12 || 12;
+  const taskRecurring: TaskRecurring | undefined = taskRecurringData?.recurring;
 
-  const timeString = `${period} ${hours}시 ${minutes}분`;
-
-  const WRITER_IMAGE = writer.image ?? "/images/image-defaultProfile.png";
+  const startDate = taskRecurring?.startDate;
 
   return (
     <>
-      <div className="my-4 flex items-center justify-between">
-        <span className="text-text-xl text-text-primary">{name}</span>
-        <EditDropdown />
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="flex items-center justify-between gap-2">
+      {doneAt && (
+        <div className="my-3 flex items-center gap-1.5">
           <Image
-            src={WRITER_IMAGE}
-            width={32}
-            height={32}
-            alt="프로필 이미지"
+            src="/icons/icon-check_green.svg"
+            width={16}
+            height={16}
+            alt="완료 체크 아이콘"
           />
-          <span className="text-text-md text-text-primary">
-            {writer.nickname}
+          <span className="text-text-xs text-brand-tertiary">완료</span>
+        </div>
+      )}
+      <section className="my-4 flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <span
+            className={`text-text-xl font-bold text-text-primary ${doneAt ? "line-through" : ""}`}
+          >
+            {name}
           </span>
-        </span>
-        <span className="text-text-md text-text-secondary">
-          {formattedUpdatedAt}
-        </span>
-      </div>
-      <div className="mb-6 mt-4 flex items-center text-text-xs text-text-default">
-        <Image
-          className="mr-1.5"
-          src="/icons/icon-cardCalendar.svg"
-          width={16}
-          height={16}
-          alt="카드캘린더 아이콘"
-        />
-        {formattedDate}
-        <span className="mx-2.5 h-2 border-l border-background-tertiary" />
-        <Image
-          className="mr-1.5"
-          src="/icons/icon-time.svg"
-          width={16}
-          height={16}
-          alt="시계 아이콘"
-        />
-        {timeString}
-        <span className="mx-2.5 h-2 border-l border-background-tertiary" />
-        <Image
-          className="mr-1.5"
-          src="/icons/icon-repeat.svg"
-          width={16}
-          height={16}
-          alt="반복 아이콘"
-        />
-        {frequency}
-      </div>
-      <p className="h-40 text-text-md text-text-primary">{description}</p>
+          <EditDropdown onEdit={openTaskFormModal} onDelete={deleteTask} />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="flex items-center justify-between gap-2">
+            <Image
+              src={writerImage}
+              width={32}
+              height={32}
+              alt="프로필 이미지"
+            />
+            <span className="text-text-md font-medium text-text-primary">
+              {writer.nickname}
+            </span>
+          </span>
+          <span className="text-text-md text-text-secondary">
+            {formatDate(updatedAt, "YYYY.MM.DD")}
+          </span>
+        </div>
+        <div className="flex items-center text-text-xs text-text-default">
+          <Image
+            className="mr-1.5"
+            src="/icons/icon-cardCalendar.svg"
+            width={16}
+            height={16}
+            alt="카드캘린더 아이콘"
+          />
+          <span>{selectedDate && formatDate(selectedDate)}</span>
+          <span className="mx-2.5 h-2 border-l border-background-tertiary" />
+          <Image
+            className="mr-1.5"
+            src="/icons/icon-time.svg"
+            width={16}
+            height={16}
+            alt="시계 아이콘"
+          />
+          <span> {startDate && formatTime(startDate)}</span>
+          <span className="mx-2.5 h-2 border-l border-background-tertiary" />
+          <Image
+            className="mr-1.5"
+            src="/icons/icon-repeat.svg"
+            width={16}
+            height={16}
+            alt="반복 아이콘"
+          />
+          <span> {getFrequencyLabel(frequency)}</span>
+        </div>
+      </section>
+      <p className="my-6 h-40 text-text-md text-text-primary">{description}</p>
     </>
   );
 }

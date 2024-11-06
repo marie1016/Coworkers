@@ -1,47 +1,87 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Checkbox from "@/components/@shared/UI/Checkbox";
 import Image from "next/image";
-import { useState } from "react";
-import moment from "moment";
-import "moment/locale/ko";
+import { formatDate } from "@/lib/utils/date";
+import { useRouter } from "next/router";
+import useModalStore from "@/lib/hooks/stores/modalStore";
+import { getFrequencyLabel } from "@/lib/constants/frequencyType";
+import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
 import EditDropdown from "./EditDropdown";
 
 interface TaskCardProps {
   taskItem: Task;
+  selectedDate: Date | null;
+  onTaskItemChange: (taskData: Task) => void;
 }
 
-export default function TaskCard({ taskItem: initialTask }: TaskCardProps) {
-  const [task, setTask] = useState<Task>(initialTask);
-  const { name, commentCount, frequency } = task;
+export default function TaskCard({
+  taskItem,
+  selectedDate,
+  onTaskItemChange,
+}: TaskCardProps) {
+  const { id, name, commentCount, frequency, doneAt } = taskItem;
+  const router = useRouter();
+  const teamId = router.query.teamId as string;
+  const tasklist = router.query.tasklist as string;
+  const { handleClick } = usePatchTaskDone(id, doneAt, selectedDate);
 
   const handleCheckboxChange = (checked: boolean) => {
-    const updateTask = { ...task, checked };
-    setTask(updateTask);
+    handleClick(checked);
   };
 
-  const formattedDate = moment(task.date).format("yy년 MM월 DD일");
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
+
+  const openTaskDetail = (taskData: Task) => {
+    onTaskItemChange(taskData);
+    openModal("taskDetail");
+    router.push(
+      `/${teamId}/tasks?tasklist=${tasklist}&taskItem=${taskData.id}`,
+    );
+  };
+
+  const closeTaskDetail = () => {
+    closeModal("taskDetail");
+    router.push(`/${teamId}/tasks?tasklist=${tasklist}`);
+  };
+
+  const openEditTaskModal = (taskData: Task) => {
+    onTaskItemChange(taskData);
+    openModal("editTaskModal");
+    closeTaskDetail();
+  };
+
+  const openDeleteTaskModal = (taskData: Task) => {
+    onTaskItemChange(taskData);
+    openModal("deleteTaskModal");
+  };
 
   return (
-    <div className="w-1200 mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
-      <div className="flex items-center justify-between">
+    <div className="mt-4 h-20 rounded-lg bg-background-secondary px-4 py-3 text-text-xs font-regular text-text-default">
+      <div className="flex items-center justify-between sm:relative">
         <div className="flex items-center">
           <Checkbox
+            className="max-w-[62.5rem] sm:w-[13rem] md:max-w-[37.5rem]"
             title={name}
-            checked={task.checked}
+            checked={!!doneAt}
             onChange={handleCheckboxChange}
+            onTitleClick={() => openTaskDetail(taskItem)}
           />
-          <Image
-            className="ml-3 mr-0.5 sm:ml-12"
-            src="/icons/icon-comment.svg"
-            width={16}
-            height={16}
-            alt="댓글 아이콘"
-          />
-          {commentCount}
+          <div className="flex items-center sm:absolute sm:right-6">
+            <Image
+              className="ml-3 mr-0.5 sm:ml-12"
+              src="/icons/icon-comment.svg"
+              width={16}
+              height={16}
+              alt="댓글 아이콘"
+            />
+            <span> {commentCount}</span>
+          </div>
         </div>
-        <div>
-          <EditDropdown />
-        </div>
+        <EditDropdown
+          onEdit={() => openEditTaskModal(taskItem)}
+          onDelete={() => openDeleteTaskModal(taskItem)}
+        />
       </div>
       <div className="mt-2.5 flex items-center">
         <Image
@@ -51,7 +91,7 @@ export default function TaskCard({ taskItem: initialTask }: TaskCardProps) {
           height={16}
           alt="카드캘린더 아이콘"
         />
-        {formattedDate}
+        <span>{selectedDate && formatDate(selectedDate)}</span>
         <span className="mx-2.5 h-2 border-l border-background-tertiary" />
         <Image
           className="mr-1.5"
@@ -60,7 +100,7 @@ export default function TaskCard({ taskItem: initialTask }: TaskCardProps) {
           height={16}
           alt="반복 아이콘"
         />
-        {frequency}
+        <span>{getFrequencyLabel(frequency)}</span>
       </div>
     </div>
   );

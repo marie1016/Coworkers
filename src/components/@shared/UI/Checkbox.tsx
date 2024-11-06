@@ -4,28 +4,37 @@ interface CheckboxProps {
   title: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  onTitleClick?: () => void;
+  className: string;
 }
 
-export default function Checkbox({ title, checked, onChange }: CheckboxProps) {
+export default function Checkbox({
+  title,
+  checked,
+  onChange,
+  onTitleClick,
+  className,
+}: CheckboxProps) {
   return (
-    <label className="flex items-center gap-2">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="hidden"
-      />
+    <div className={`flex items-center gap-2 ${className}`}>
       <Image
         src={checked ? "/icons/icon-faCheck.svg" : "/icons/icon-faSquare.svg"}
         width={24}
         height={24}
         alt="체크박스 아이콘"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(!checked);
+        }}
       />
       <div
-        className={`text-text-md font-regular text-text-primary ${checked ? "line-through" : ""}`}
+        className={`cursor-pointer text-text-md font-regular text-text-primary hover:underline sm:truncate ${checked ? "line-through" : ""}`}
+        onClick={() => {
+          if (onTitleClick) onTitleClick();
+        }}
       >
         {title}
       </div>
-    </label>
+    </div>
   );
 }

@@ -32,9 +32,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "postcss.config.mjs"
+    "postcss.config.mjs",
+    "src/pages/resetPassword/index.tss"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

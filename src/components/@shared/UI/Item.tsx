@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 interface DropdownItemProps {
   children: ReactNode;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
   itemClassName?: string;
 }
 

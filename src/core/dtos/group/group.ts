@@ -1,4 +1,11 @@
 import { Member } from "@/core/types/member";
+import { FrequencyType } from "@/lib/constants/frequencyType";
+
+interface BaseUser {
+  id: number;
+  nickname: string;
+  image: string | null;
+}
 
 export interface GroupTask {
   id: number;
@@ -37,4 +44,31 @@ export interface SubmitTeamResponse {
   image: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AcceptInvitationForm {
+  userEmail: string;
+  token: string;
+}
+
+export interface AcceptInvitationResponse {
+  groupId: number;
+}
+
+export interface TaskListTasks {
+  id: number;
+  name: string;
+  description: string;
+  frequency: FrequencyType;
+  displayIndex: number;
+  recurringId: number;
+  commentCount: number;
+  doneBy: {
+    user: BaseUser | null;
+  } | null;
+  writer: BaseUser;
+  date: string;
+  updatedAt: string;
+  doneAt: string | null;
+  deletedAt: string | null;
 }

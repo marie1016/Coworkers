@@ -2,14 +2,17 @@ import Dropdown from "@/components/@shared/UI/Dropdown";
 import DropdownItem from "@/components/@shared/UI/Item";
 import Image from "next/image";
 import { useState } from "react";
+import {
+  FrequencyType,
+  getFrequencyLabel,
+} from "@/lib/constants/frequencyType";
 
 interface Option {
-  label: string;
-  value: string;
+  value: FrequencyType;
 }
 
 interface FrequencyDropdownProps {
-  onChange: (value: string) => void;
+  onChange: (value: FrequencyType) => void;
 }
 
 export default function FrequencyDropdown({
@@ -23,10 +26,10 @@ export default function FrequencyDropdown({
   };
 
   const options: Option[] = [
-    { label: "한 번", value: "ONCE" },
-    { label: "매일", value: "DAILY" },
-    { label: "주 반복", value: "WEEKLY" },
-    { label: "월 반복", value: "MONTHLY" },
+    { value: FrequencyType.ONCE },
+    { value: FrequencyType.DAILY },
+    { value: FrequencyType.WEEKLY },
+    { value: FrequencyType.MONTHLY },
   ];
 
   return (
@@ -39,7 +42,9 @@ export default function FrequencyDropdown({
               selectedOption ? "text-text-primary" : "text-text-default"
             }
           >
-            {selectedOption ? selectedOption.label : "반복 안함"}
+            {selectedOption
+              ? getFrequencyLabel(selectedOption.value)
+              : "반복 안함"}
           </span>
           <Image
             src="/icons/icon-toggle.svg"
@@ -52,11 +57,11 @@ export default function FrequencyDropdown({
     >
       {options.map((option) => (
         <DropdownItem
-          key={option.label}
+          key={getFrequencyLabel(option.value)}
           onClick={() => handleSelect(option)}
           itemClassName="py-3 px-4 text-left text-text-md"
         >
-          {option.label}
+          {getFrequencyLabel(option.value)}
         </DropdownItem>
       ))}
     </Dropdown>
