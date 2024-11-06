@@ -6,6 +6,7 @@ import Modal from "@/components/@shared/UI/Modal/Modal";
 import Button from "@/components/@shared/UI/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import editTask from "@/core/api/tasks/editTask";
+import { toast } from "react-toastify";
 import { EditTaskForm, Task } from "@/core/dtos/tasks/tasks";
 
 interface EditTaskModalProps {
@@ -73,7 +74,14 @@ export default function EditTaskModal({
         name: taskData.name,
         description: taskData.description,
       };
-      editMutation.mutate(dataToSubmit);
+      editMutation.mutate(dataToSubmit, {
+        onSuccess: () => {
+          toast.success("할 일을 수정했습니다!");
+        },
+        onError: () => {
+          toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+        },
+      });
     }
   };
 

@@ -28,12 +28,13 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ToastContainer
+          toastClassName="bg-background-secondary"
           bodyClassName="text-text-primary font-sans text-text-md"
           position="top-center"
-          autoClose={3000}
+          autoClose={1000}
           pauseOnHover
-          theme="dark"
           limit={1}
+          theme="dark"
           closeOnClick
         />
         <Component {...pageProps} />

@@ -7,6 +7,7 @@ import editTaskComment from "@/core/api/tasks/editTaskComment";
 import { useState } from "react";
 import Button from "@/components/@shared/UI/Button";
 import { useAuth } from "@/core/context/AuthProvider";
+import { toast } from "react-toastify";
 import deleteTaskComment from "@/core/api/tasks/deleteTaskComment";
 import EditDropdown from "./EditDropdown";
 import CommentSkeleton from "./CommentSkeleton";
@@ -72,13 +73,30 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
   };
 
   const deleteComment = (commentId: number) => {
-    deleteMutation.mutate(commentId);
+    deleteMutation.mutate(commentId, {
+      onSuccess: () => {
+        toast.success("댓글을 삭제했습니다!");
+      },
+      onError: () => {
+        toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+      },
+    });
   };
 
   const submitCommentForm = (e: React.FormEvent, commentId: number) => {
     e.preventDefault();
     const editTaskCommentForm = { content: comment };
-    editMutation.mutate({ commentId, editTaskCommentForm });
+    editMutation.mutate(
+      { commentId, editTaskCommentForm },
+      {
+        onSuccess: () => {
+          toast.success("댓글을 수정하였습니다!");
+        },
+        onError: () => {
+          toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+        },
+      },
+    );
     setIsEditingId(null);
   };
 

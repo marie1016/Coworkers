@@ -77,7 +77,6 @@ export default function AddTaskModal({
         queryKey: ["tasks", selectedTaskListId],
       });
       closeAddTaskModal();
-      toast.success("할 일을 생성하였습니다!");
     },
     onError: (error) => {
       console.error("Error adding task:", error);
@@ -115,7 +114,14 @@ export default function AddTaskModal({
         }),
       };
 
-      addMutation.mutate(dataToSubmit);
+      addMutation.mutate(dataToSubmit, {
+        onSuccess: () => {
+          toast.success("할 일을 생성했습니다!");
+        },
+        onError: () => {
+          toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+        },
+      });
     }
   };
 
