@@ -1,0 +1,75 @@
+.react-datepicker,
+.react-datepicker__header,
+.react-datepicker__time-container .react-datepicker__time {
+  @apply rounded-xl border-border-primary bg-background-secondary text-text-primary hover:border-interaction-hover focus:border-interaction-hover focus:outline-none focus:ring-0 !important;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name,
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  @apply text-text-primary !important;
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list
+  li.react-datepicker__time-list-item--selected,
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range {
+  @apply bg-brand-primary !important;
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list
+  li.react-datepicker__time-list-item,
+.react-datepicker__day,
+.react-datepicker__month-text,
+.react-datepicker__quarter-text,
+.react-datepicker__year-text {
+  @apply hover:bg-brand-primary !important;
+}
+
+.custom-datepicker-wrapper {
+  @apply h-6;
+}
+
+.react-datepicker__time-container {
+  @apply w-24;
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list::-webkit-scrollbar {
+  @apply w-2.5; /* 스크롤바의 너비 */
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list::-webkit-scrollbar-thumb {
+  @apply /* 스크롤바의 색상 */ h-12 rounded-xl bg-brand-primary;
+}
+
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list::-webkit-scrollbar-track {
+  background: rgba(33, 122, 244, 0.1); /*스크롤바 뒷 배경 색상*/
+}

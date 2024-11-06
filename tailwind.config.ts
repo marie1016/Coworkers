@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import defaultTheme from "tailwindcss/defaultTheme";
 import forms from "@tailwindcss/forms";
 import typography from "@tailwindcss/typography";
@@ -6,7 +7,11 @@ import aspectRatio from "@tailwindcss/aspect-ratio";
 import lineClamp from "@tailwindcss/line-clamp";
 
 const config: Config = {
-  content: ["./src/**/*.{html,js,ts,jsx,tsx}"],
+  important: true,
+  content: [
+    "./src/**/*.{html,js,ts,jsx,tsx}",
+    "./node_modules/flowbite/**/*.js",
+  ],
   theme: {
     extend: {
       colors: {
@@ -25,6 +30,7 @@ const config: Config = {
           rose: "#F43F5E",
           orange: "#F97316",
           yellow: "#EAB308",
+          red: "#EF4444",
         },
         // 배경 색상
         background: {
@@ -42,7 +48,7 @@ const config: Config = {
         },
         // 테두리 색상
         border: {
-          primary: "#F8FAFC",
+          primary: "rgba(248, 250, 252, 0.1)",
         },
         // 텍스트 색상
         text: {
@@ -91,6 +97,41 @@ const config: Config = {
         semibold: "600",
         bold: "700",
       },
+
+      keyframes: {
+        slideUp: {
+          "0%": { transform: "translateY(100%)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideDown: {
+          "0%": { transform: "translateY(0)", opacity: "1" },
+          "100%": { transform: "translateY(100%)", opacity: "0" },
+        },
+        scaleIn: {
+          "0%": { transform: "scale(0.9)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        scaleOut: {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "100%": { transform: "scale(0.9)", opacity: "0" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        fadeOut: {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+      },
+      animation: {
+        slideUp: "slideUp 0.6s ease-out forwards",
+        slideDown: "slideDown 0.6s ease-out forwards",
+        scaleIn: "scaleIn 0.6s ease-out forwards",
+        scaleOut: "scaleOut 0.6s ease-out forwards",
+        fadeIn: "fadeIn 0.6s ease-out forwards",
+        fadeOut: "fadeOut 0.6s ease-out forwards",
+      },
     },
     screens: {
       // 브레이크포인트 설정
@@ -99,7 +140,14 @@ const config: Config = {
       lg: { min: "1200px" }, // PC: 1200px 이상
     },
   },
-  plugins: [forms, typography, aspectRatio, lineClamp],
+  plugins: [
+    forms,
+    typography,
+    aspectRatio,
+    lineClamp,
+    require("tailwind-scrollbar-hide"),
+    require("flowbite/plugin"),
+  ],
 };
 
 export default config;
