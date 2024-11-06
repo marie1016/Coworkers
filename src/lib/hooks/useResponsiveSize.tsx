@@ -1,26 +1,35 @@
 import { useEffect, useState } from 'react';
 
 const useResponsiveSize = () => {
-  const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const [scale, setScale] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+    height: typeof window !== 'undefined' ? window.innerHeight : 0,
+  });
 
-  const updateViewportSize = () => {
-    setViewport({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
+  const updateScale = () => {
+    if (typeof window !== 'undefined') {
+      setScale({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
   };
 
   useEffect(() => {
-    window.addEventListener('resize', updateViewportSize);
-    return () => window.removeEventListener('resize', updateViewportSize);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', updateScale);
+      updateScale(); // 초기 값을 설정합니다.
+      return () => window.removeEventListener('resize', updateScale);
+    }
+    return undefined;
   }, []);
 
-  const { width } = viewport;
+  const { width } = scale;
   const isMobile = width < 639;
   const isTablet = width >= 640 && width < 1200;
   const isPC = width >= 1200;
 
-  return { viewport, isMobile, isTablet, isPC };
+  return { scale, isMobile, isTablet, isPC };
 };
 
 export default useResponsiveSize;
