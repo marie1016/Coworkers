@@ -5,8 +5,9 @@ import Button from "@/components/@shared/UI/Button";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useAuth } from "@/lib/constants/AuthContext";
+import { useAuth } from "@/core/context/AuthProvider";
 import { validatePassword, validateEmail } from "@/lib/utils/validation";
+import { useRouter } from "next/router"; // useRouter import 추가
 
 interface FormData {
   email: string | undefined;
@@ -19,6 +20,7 @@ interface FormErrors {
 }
 
 export default function Login() {
+  const router = useRouter(); // useRouter 사용
   const { handleLogin, handleEmailLogin } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -54,7 +56,7 @@ export default function Login() {
         const emailError = validateEmail(value);
         setFormErrors((prevErrors) => ({
           ...prevErrors,
-          email: emailError ?? undefined, // 이메일 형식 검사 결과 처리
+          email: emailError ?? undefined,
         }));
       }
     }
@@ -100,7 +102,13 @@ export default function Login() {
     }
 
     if (formData.email && formData.password) {
-      await handleEmailLogin(formData.email, formData.password);
+      try {
+        await handleEmailLogin(formData.email, formData.password);
+        alert("로그인 성공");
+        router.push("/"); // 메인 페이지로 이동
+      } catch (error) {
+        console.error("로그인 중 오류 발생:", error); // 에러 로그 추가
+      }
     } else {
       alert("이메일과 비밀번호를 모두 입력해주세요.");
     }

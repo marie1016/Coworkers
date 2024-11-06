@@ -8,8 +8,8 @@ import Button from "@/components/@shared/UI/Button";
 import Image from "next/image";
 import { useState } from "react";
 import { validatePassword, validateEmail } from "@/lib/utils/validation";
-import { useAuth } from "@/lib/constants/AuthContext";
 import { SignupRequestDto } from "@/core/dtos/auth/authDto";
+import { useAuth } from "@/core/context/AuthProvider";
 
 export default function Signup() {
   const { handleSignup, handleLogin } = useAuth();
@@ -91,7 +91,7 @@ export default function Signup() {
     e.preventDefault();
     if (validateForm()) {
       const signupData: SignupRequestDto = {
-        name: formData.name,
+        nickname: formData.name,
         email: formData.email,
         password: formData.password,
         passwordConfirmation: formData.confirmPassword,

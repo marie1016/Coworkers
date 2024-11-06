@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
-import { useAuth } from "@/lib/constants/AuthContext";
+import { useAuth } from "@/core/context/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
 import Profile from "./Profile";
@@ -11,8 +11,6 @@ export default function AuthHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState<string>("1");
-
-  const defaultImage = "/images/image-defaultProfile.png";
 
   // 임시 더미데이터 -> 수정 예정
   const teamList = [
@@ -158,17 +156,8 @@ export default function AuthHeader() {
             <div className="flex items-center justify-center gap-2">
               <Profile />
               <span className="text-lg leading-tight sm:hidden md:hidden lg:block">
-                {user?.name ?? "guest"}
+                {user?.nickname ?? "guest"}
               </span>
-              {user?.image && (
-                <Image
-                  src={user.image || defaultImage}
-                  width={32}
-                  height={32}
-                  alt="프로필 이미지"
-                  className="rounded-full"
-                />
-              )}
             </div>
           </div>
         </div>

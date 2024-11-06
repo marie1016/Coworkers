@@ -13,15 +13,7 @@ export interface LoginRequestDto {
 export interface AuthResponseDto {
   accessToken: string;
   refreshToken: string;
-  user: {
-    id: number;
-    nickname: string;
-    createdAt: string;
-    updatedAt: string;
-    imageUrl: string | null;
-    teamId: string;
-    email: string;
-  };
+  user: User;
 }
 
 export type SignupResponseDto = AuthResponseDto;

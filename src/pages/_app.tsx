@@ -7,8 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import "@/styles/datepicker.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useState } from "react";
-import { AuthProvider } from "@/lib/constants/AuthContext";
+import { useState, useEffect } from "react";
+import { AuthProvider } from "@/core/context/AuthProvider";
 import { SessionProvider, useSession } from "next-auth/react";
 import type { AppProps } from "next/app";
 import SetupHeader from "@/components/@shared/UI/SetupHeader";
@@ -16,15 +16,21 @@ import AuthHeader from "@/components/@shared/UI/AuthHeader";
 
 function HeaderWrapper({ headerType }: { headerType?: string }) {
   const { data: session, status } = useSession();
+  const [isAuthHeaderVisible, setIsAuthHeaderVisible] = useState(false);
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      setIsAuthHeaderVisible(true);
+    } else {
+      setIsAuthHeaderVisible(false);
+    }
+  }, [status, session]);
 
   if (headerType === "setup") {
     return <SetupHeader />;
   }
 
-  if (status === "authenticated" && session?.user) {
-    return <AuthHeader />;
-  }
-  return <SetupHeader />;
+  return isAuthHeaderVisible ? <AuthHeader /> : <SetupHeader />;
 }
 export default function App({
   Component,
@@ -44,15 +50,15 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
           <HeaderWrapper />
           <div className="pt-[60px]">
             <Component {...pageProps} />
           </div>
           <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </SessionProvider>
   );
 }

@@ -11,6 +11,20 @@ const axiosInstance = axios.create({
   },
 });
 
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("Access Token:", accessToken);
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<{ accessToken: string }>) => {
@@ -34,10 +48,10 @@ axiosInstance.interceptors.response.use(
               refreshToken,
             },
           );
-          const newAccessToken = response.data.accessToken;
 
+          const newAccessToken = response.data.accessToken;
           localStorage.setItem("accessToken", newAccessToken);
-          axiosInstance.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
           return await axiosInstance(originalRequest);
         }
