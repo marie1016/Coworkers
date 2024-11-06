@@ -18,7 +18,7 @@ export interface Task {
   checked: boolean;
   date: string;
   updatedAt: string;
-  doneAt: string |null;
+  doneAt: string | null;
   recurringId: number;
   writer: {
     nickname: string;
@@ -77,4 +77,16 @@ export interface AddTaskListForm {
 
 export interface TaskOrderForm {
   displayIndex: number;
+}
+
+export interface History {
+  tasksDone: TaskDone[];
+}
+
+export interface TaskDone {
+  userId: number;
+  name: string;
+  doneAt: string;
+  date: string;
+  id: number;
 }

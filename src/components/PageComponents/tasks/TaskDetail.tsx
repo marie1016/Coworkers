@@ -95,6 +95,7 @@ export default function TaskDetail({
           doneAt={doneAt}
           openTaskFormModal={openEditTaskModal}
           deleteTask={openDeleteTaskModal}
+          selectedDate={selectedDate}
         />
         <div className="mt-4 text-text-md text-text-primary">
           <CommentTextarea taskItem={taskItem} />

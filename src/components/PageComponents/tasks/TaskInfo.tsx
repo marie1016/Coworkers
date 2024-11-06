@@ -11,16 +11,17 @@ interface TaskInfoProps {
   openTaskFormModal: () => void;
   deleteTask: () => void;
   doneAt: string | null;
+  selectedDate: Date | null;
 }
 
 export default function TaskInfo({
+  selectedDate,
   doneAt,
   taskItem,
   openTaskFormModal,
   deleteTask,
 }: TaskInfoProps) {
-  const { id, name, writer, updatedAt, date, frequency, description } =
-    taskItem;
+  const { id, name, writer, updatedAt, frequency, description } = taskItem;
 
   const writerImage = writer.image ?? "/images/image-defaultProfile.png";
 
@@ -82,7 +83,7 @@ export default function TaskInfo({
             height={16}
             alt="카드캘린더 아이콘"
           />
-          {formatDate(date)}
+          {selectedDate && formatDate(selectedDate)}
           <span className="mx-2.5 h-2 border-l border-background-tertiary" />
           <Image
             className="mr-1.5"
