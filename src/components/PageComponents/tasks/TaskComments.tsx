@@ -7,6 +7,7 @@ import editTaskComment from "@/core/api/tasks/editTaskComment";
 import { useState } from "react";
 import Button from "@/components/@shared/UI/Button";
 import { useAuth } from "@/core/context/AuthProvider";
+import { toast } from "react-toastify";
 import deleteTaskComment from "@/core/api/tasks/deleteTaskComment";
 import EditDropdown from "./EditDropdown";
 import CommentSkeleton from "./CommentSkeleton";
@@ -72,19 +73,36 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
   };
 
   const deleteComment = (commentId: number) => {
-    deleteMutation.mutate(commentId);
+    deleteMutation.mutate(commentId, {
+      onSuccess: () => {
+        toast.success("댓글을 삭제했습니다!");
+      },
+      onError: () => {
+        toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+      },
+    });
   };
 
   const submitCommentForm = (e: React.FormEvent, commentId: number) => {
     e.preventDefault();
     const editTaskCommentForm = { content: comment };
-    editMutation.mutate({ commentId, editTaskCommentForm });
+    editMutation.mutate(
+      { commentId, editTaskCommentForm },
+      {
+        onSuccess: () => {
+          toast.success("댓글을 수정하였습니다!");
+        },
+        onError: () => {
+          toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+        },
+      },
+    );
     setIsEditingId(null);
   };
 
   if (isError) {
     return (
-      <div className="mt-28 text-center text-text-md text-text-default">
+      <div className="mt-28 text-center text-text-md font-medium text-text-default">
         <p>댓글을 불러오는데 에러가 발생했습니다.</p>
         <p>잠시 후 다시 접속해주세요.</p>
       </div>
@@ -129,7 +147,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
                   height={32}
                   alt="프로필 이미지"
                 />
-                <span className="shrink grow basis-auto">
+                <span className="shrink grow basis-auto font-medium">
                   {taskComment.user.nickname}
                 </span>
                 <span className="text-text-secondary">
@@ -148,7 +166,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
                 }
                 onInput={handleInput}
               />
-              <div className="flex items-center justify-end gap-5">
+              <div className="flex items-center justify-end gap-5 font-semibold">
                 <button
                   className="text-text-default"
                   onClick={() => setIsEditingId(null)}

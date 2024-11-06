@@ -2,6 +2,7 @@ import { EditTaskForm, Task } from "@/core/dtos/tasks/tasks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import editTask from "@/core/api/tasks/editTask";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const usePatchTaskDone = (
   id: number,
@@ -66,7 +67,11 @@ const usePatchTaskDone = (
 
   const handleClick = (checked: boolean) => {
     const editTaskForm = { done: checked };
-    taskDoneMutation.mutate(editTaskForm);
+    taskDoneMutation.mutate(editTaskForm, {
+      onError: () => {
+        toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+      },
+    });
   };
   return {
     handleClick,

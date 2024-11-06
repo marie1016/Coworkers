@@ -1,6 +1,7 @@
 import addTaskComment from "@/core/api/tasks/addTaskComment";
 import { TaskCommentForm, Task } from "@/core/dtos/tasks/tasks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -36,6 +37,10 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
     commentMutation.mutate(addTaskCommentForm, {
       onSuccess: () => {
         setComment("");
+        toast.success("댓글을 등록했습니다!");
+      },
+      onError: () => {
+        toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
       },
     });
   };

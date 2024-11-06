@@ -32,6 +32,7 @@
     "react-dom": "^18",
     "react-error-boundary": "^4.1.2",
     "react-time-picker": "^7.0.0",
+    "react-toastify": "^10.0.6",
     "swiper": "^11.1.14",
     "tailwind-merge": "^2.5.4",
     "tailwind-scrollbar-hide": "^1.1.7",

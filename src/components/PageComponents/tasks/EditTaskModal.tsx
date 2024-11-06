@@ -6,6 +6,7 @@ import Modal from "@/components/@shared/UI/Modal/Modal";
 import Button from "@/components/@shared/UI/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import editTask from "@/core/api/tasks/editTask";
+import { toast } from "react-toastify";
 import { EditTaskForm, Task } from "@/core/dtos/tasks/tasks";
 
 interface EditTaskModalProps {
@@ -63,7 +64,8 @@ export default function EditTaskModal({
     },
   });
 
-  const isFormValid = taskData.name?.trim();
+  const isFormValid =
+    taskData.name?.trim() !== "" && (taskData.name?.length ?? 0) <= 30;
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +74,14 @@ export default function EditTaskModal({
         name: taskData.name,
         description: taskData.description,
       };
-      editMutation.mutate(dataToSubmit);
+      editMutation.mutate(dataToSubmit, {
+        onSuccess: () => {
+          toast.success("할 일을 수정했습니다!");
+        },
+        onError: () => {
+          toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+        },
+      });
     }
   };
 
@@ -99,7 +108,9 @@ export default function EditTaskModal({
               value={taskData.name}
               onChange={handleInputChange}
               className="w-[21rem]"
-              placeholder="할 일 제목을 입력해주세요"
+              placeholder="할 일 제목을 입력해주세요. 30자 이하"
+              isValid={(taskData.name?.length ?? 0) <= 30}
+              errorMessage="30자 이하로 입력해주세요"
             />
           </InputLabel>
           <InputLabel className="text-md text-text-primary" label="할 일 메모">

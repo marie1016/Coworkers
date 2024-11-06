@@ -59,7 +59,7 @@ export default function Tasks() {
   if (!user) return null;
 
   return (
-    <div className="mx-auto my-10 h-auto w-[75rem] sm:w-[21.44rem] md:w-[43.5rem]">
+    <div className="mx-auto h-auto max-w-[75rem] px-6 py-10">
       <section>
         <SectionHeader
           teamId={teamId}
