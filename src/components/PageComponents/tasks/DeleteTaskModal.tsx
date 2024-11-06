@@ -6,6 +6,7 @@ import Button from "@/components/@shared/UI/Button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import deleteTask from "@/core/api/tasks/deleteTask";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import deleteRecurring from "@/core/api/tasks/deleteRecurring";
 import { FrequencyType } from "@/lib/constants/frequencyType";
 
@@ -34,9 +35,11 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
         queryKey: ["tasks"],
       });
       closeModal(modalName);
+      toast.success("할 일을 삭제했습니다!");
     },
     onError: (error) => {
       console.error("Delete failed:", error);
+      toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요.");
     },
   });
 
@@ -50,7 +53,7 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
 
   return (
     <Modal isOpen={isOpen} onClose={() => closeModal(modalName)}>
-      <div className="flex w-80 flex-col items-center justify-between">
+      <div className="flex w-80 flex-col items-center justify-between font-medium">
         <Image
           src="/icons/icon-alert.svg"
           width={24}

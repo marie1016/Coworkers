@@ -44,6 +44,8 @@ export default function Home() {
       <br />
       <Link href="/addboard">게시물 등록 페이지</Link>
       <br />
+      <Link href="/myhistory">마이 히스토리</Link>
+      <br />
       <Link href={`/participate${user ? `?email=${user.email}` : ""}`}>
         팀 참여 페이지
       </Link>
