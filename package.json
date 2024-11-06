@@ -25,6 +25,7 @@
     "dayjs": "^1.11.13",
     "flowbite": "^2.5.2",
     "focus-trap-react": "^10.3.0",
+    "moment": "^2.30.1",
     "framer-motion": "^11.11.10",
     "next": "14.2.14",
     "next-auth": "^4.24.10",
