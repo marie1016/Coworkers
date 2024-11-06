@@ -158,7 +158,7 @@ export default function AddTaskModal({
             label="시작 날짜 및 시간"
           >
             <DatePicker
-              className="h-12 w-[21rem] rounded-xl border-border-primary bg-background-secondary text-text-primary placeholder:text-text-default hover:border-interaction-hover focus:border-interaction-hover focus:outline-none focus:ring-0"
+              className="h-12 w-[21rem] rounded-xl [&&]:border-border-primary [&&]:bg-background-secondary [&&]:text-text-primary [&&]:placeholder:text-text-default [&&]:hover:border-interaction-hover [&&]:focus:border-interaction-hover [&&]:focus:outline-none [&&]:focus:ring-0"
               onChange={handleDateChange}
               selected={new Date(taskData.startDate)}
               showTimeSelect

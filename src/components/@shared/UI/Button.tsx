@@ -57,13 +57,13 @@ export default function Button({
           /* Solid 스타일 */
           isSolid &&
             !isDisabled && [
-              "bg-brand-primary text-text-primary",
-              "hover:bg-interaction-hover",
-              "active:bg-interaction-pressed",
+              "text-text-primary [&&]:bg-brand-primary",
+              "[&&]:hover:bg-interaction-hover",
+              "[&&]:active:bg-interaction-pressed",
             ],
           isSolid &&
             isDisabled && [
-              "bg-interaction-inactive text-text-primary",
+              "text-text-primary [&&]:bg-interaction-inactive",
               "cursor-not-allowed",
             ],
           /* Outlined 스타일 */

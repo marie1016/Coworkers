@@ -93,7 +93,7 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
           <Button
             variant="outlined"
             size="large"
-            className="bg-background-inverse"
+            className="[&&]:bg-background-inverse"
             onClick={() => closeModal(modalName)}
           >
             닫기
@@ -101,7 +101,7 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
           <Button
             variant="solid"
             size="large"
-            className="bg-status-danger"
+            className="[&&]:bg-status-danger"
             onClick={handleDeleteTask}
             disabled={deleteMutation.isPending}
           >
