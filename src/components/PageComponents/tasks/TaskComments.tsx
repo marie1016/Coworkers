@@ -102,7 +102,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
 
   if (isError) {
     return (
-      <div className="mt-28 text-center text-text-md text-text-default">
+      <div className="mt-28 text-center text-text-md font-medium text-text-default">
         <p>댓글을 불러오는데 에러가 발생했습니다.</p>
         <p>잠시 후 다시 접속해주세요.</p>
       </div>
