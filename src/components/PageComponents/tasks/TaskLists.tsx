@@ -42,7 +42,7 @@ export default function TaskLists({
 
   if (taskLists?.length === 0) {
     return (
-      <div className="pt-[17rem] text-center text-text-md text-text-default sm:pt-[11rem] md:pt-[14rem]">
+      <div className="pt-[17rem] text-center text-text-md font-medium text-text-default sm:pt-[11rem] md:pt-[14rem]">
         <p>아직 할 일 목록이 없습니다.</p>
         <p>새로운 목록을 추가해보세요.</p>
       </div>

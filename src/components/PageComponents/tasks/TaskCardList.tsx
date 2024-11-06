@@ -104,7 +104,7 @@ export default function TaskCardList({
 
   if (taskItems.length === 0) {
     return (
-      <div className="pt-[19rem] text-center text-text-md text-text-default sm:pt-48 md:pt-[16rem]">
+      <div className="pt-[19rem] text-center text-text-md font-medium text-text-default sm:pt-48 md:pt-[16rem]">
         <p>아직 할 일이 없습니다.</p>
         <p>할 일을 추가해주세요.</p>
       </div>

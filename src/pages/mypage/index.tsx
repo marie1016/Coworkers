@@ -45,7 +45,7 @@ export default function Mypage() {
 
   if (allHistory.length === 0) {
     return (
-      <div className="mx-auto flex h-screen max-w-[75rem] flex-col px-6 py-10">
+      <div className="mx-auto flex h-screen max-w-[75rem] flex-col px-6 py-10 font-medium">
         <h1 className="text-text-xl font-bold text-text-primary">
           마이 히스토리
         </h1>
@@ -64,7 +64,7 @@ export default function Mypage() {
       <div className="my-6 flex flex-col gap-10">
         {visibleDates.map((visibleDate) => (
           <div key={visibleDate}>
-            <h2 className="mb-4">{visibleDate}</h2>
+            <h2 className="mb-4 text-text-lg font-medium">{visibleDate}</h2>
             <ul className="flex flex-col gap-4">
               {sortedHistory
                 .filter((taskDone) => formatDate(taskDone.date) === visibleDate)

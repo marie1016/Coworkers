@@ -10,6 +10,7 @@ import addTask from "@/core/api/tasks/addTask";
 import { AddTaskForm } from "@/core/dtos/tasks/tasks";
 import { formatDate } from "@/lib/utils/date";
 import { FrequencyType } from "@/lib/constants/frequencyType";
+import { toast } from "react-toastify";
 import FrequencyWeekly from "./FrequencyWeekly";
 import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
@@ -76,6 +77,7 @@ export default function AddTaskModal({
         queryKey: ["tasks", selectedTaskListId],
       });
       closeAddTaskModal();
+      toast.success("할 일을 생성하였습니다!");
     },
     onError: (error) => {
       console.error("Error adding task:", error);

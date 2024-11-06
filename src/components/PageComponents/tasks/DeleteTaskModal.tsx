@@ -50,7 +50,7 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
 
   return (
     <Modal isOpen={isOpen} onClose={() => closeModal(modalName)}>
-      <div className="flex w-80 flex-col items-center justify-between">
+      <div className="flex w-80 flex-col items-center justify-between font-medium">
         <Image
           src="/icons/icon-alert.svg"
           width={24}

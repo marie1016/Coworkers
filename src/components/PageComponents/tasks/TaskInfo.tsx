@@ -53,7 +53,7 @@ export default function TaskInfo({
       <section className="my-4 flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <span
-            className={`text-text-xl text-text-primary ${doneAt ? "line-through" : ""}`}
+            className={`text-text-xl font-bold text-text-primary ${doneAt ? "line-through" : ""}`}
           >
             {name}
           </span>
@@ -67,7 +67,7 @@ export default function TaskInfo({
               height={32}
               alt="프로필 이미지"
             />
-            <span className="text-text-md text-text-primary">
+            <span className="text-text-md font-medium text-text-primary">
               {writer.nickname}
             </span>
           </span>
@@ -83,7 +83,7 @@ export default function TaskInfo({
             height={16}
             alt="카드캘린더 아이콘"
           />
-          {selectedDate && formatDate(selectedDate)}
+          <span>{selectedDate && formatDate(selectedDate)}</span>
           <span className="mx-2.5 h-2 border-l border-background-tertiary" />
           <Image
             className="mr-1.5"
@@ -92,7 +92,7 @@ export default function TaskInfo({
             height={16}
             alt="시계 아이콘"
           />
-          {startDate && formatTime(startDate)}
+          <span> {startDate && formatTime(startDate)}</span>
           <span className="mx-2.5 h-2 border-l border-background-tertiary" />
           <Image
             className="mr-1.5"
@@ -101,7 +101,7 @@ export default function TaskInfo({
             height={16}
             alt="반복 아이콘"
           />
-          {getFrequencyLabel(frequency)}
+          <span> {getFrequencyLabel(frequency)}</span>
         </div>
       </section>
       <p className="my-6 h-40 text-text-md text-text-primary">{description}</p>

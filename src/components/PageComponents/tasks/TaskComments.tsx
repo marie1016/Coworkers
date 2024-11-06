@@ -129,7 +129,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
                   height={32}
                   alt="프로필 이미지"
                 />
-                <span className="shrink grow basis-auto">
+                <span className="shrink grow basis-auto font-medium">
                   {taskComment.user.nickname}
                 </span>
                 <span className="text-text-secondary">
@@ -148,7 +148,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
                 }
                 onInput={handleInput}
               />
-              <div className="flex items-center justify-end gap-5">
+              <div className="flex items-center justify-end gap-5 font-semibold">
                 <button
                   className="text-text-default"
                   onClick={() => setIsEditingId(null)}

@@ -75,7 +75,7 @@ export default function TaskCard({
               height={16}
               alt="댓글 아이콘"
             />
-            {commentCount}
+            <span> {commentCount}</span>
           </div>
         </div>
         <EditDropdown
@@ -91,7 +91,7 @@ export default function TaskCard({
           height={16}
           alt="카드캘린더 아이콘"
         />
-        {selectedDate && formatDate(selectedDate)}
+        <span>{selectedDate && formatDate(selectedDate)}</span>
         <span className="mx-2.5 h-2 border-l border-background-tertiary" />
         <Image
           className="mr-1.5"
@@ -100,7 +100,7 @@ export default function TaskCard({
           height={16}
           alt="반복 아이콘"
         />
-        {getFrequencyLabel(frequency)}
+        <span>{getFrequencyLabel(frequency)}</span>
       </div>
     </div>
   );
