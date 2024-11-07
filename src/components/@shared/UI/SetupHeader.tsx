@@ -4,7 +4,7 @@ import Button from "./Button";
 
 export default function SetupHeader() {
   return (
-    <header className="z-99 border-b-solid fixed left-0 right-0 top-0 flex h-[60px] items-center justify-between gap-2.5 border-border-primary bg-background-secondary px-4 py-5 lg:px-[360px] lg:py-3.5">
+    <header className="border-b-solid fixed left-0 right-0 top-0 z-40 flex h-[60px] items-center justify-between gap-2.5 border-border-primary bg-background-secondary px-4 py-5 [&&]:lg:px-[360px] [&&]:lg:py-3.5">
       <Link href="/">
         <Image
           src="/icons/icon-logo_coworkers_large.png"
