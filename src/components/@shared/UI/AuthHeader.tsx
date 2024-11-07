@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/core/context/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "@/core/context/AuthProvider";
 import Profile from "./Profile";
 
 export default function AuthHeader() {
@@ -63,92 +64,79 @@ export default function AuthHeader() {
               />
             </Link>
 
-            {hasTeam && (
-              <>
-                <div className="relative flex items-center sm:hidden">
+            <div className="relative flex items-center sm:hidden">
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center gap-2.5"
+              >
+                {selectedTeam ?? "팀 추가"}
+                <Image
+                  src="/icons/icon-check.png"
+                  width={16}
+                  height={16}
+                  alt="드롭다운"
+                />
+              </button>
+
+              {isDropdownOpen && (
+                <div className="fixed left-4 top-[68px] z-50 w-[218px] gap-2.5 rounded-xl bg-background-secondary p-4 lg:left-[calc((100vw-1200px)/2+10px)] lg:top-[68px]">
+                  {hasTeam ? (
+                    <ul className="font-lg gap-4">
+                      {teamList.map((team) => (
+                        <li
+                          key={team.id}
+                          className={`mb-3 flex cursor-pointer items-center justify-between gap-2.5 rounded-lg px-2 py-[7px] hover:bg-background-tertiary ${
+                            selectedTeamId === team.id
+                              ? "bg-background-tertiary"
+                              : ""
+                          }`}
+                        >
+                          <div
+                            className="flex w-full items-center gap-2"
+                            onClick={() => selectTeam(team.id)}
+                          >
+                            <Image
+                              src={team.image}
+                              width={32}
+                              height={32}
+                              alt="팀 이미지"
+                              className="rounded-md"
+                            />
+                            <span>{team.name}</span>
+                          </div>
+                          {/* 케밥 버튼 */}
+                          <button
+                            className="cursor-pointer"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Image
+                              src="/icons/icon-kebab.png"
+                              width={16}
+                              height={16}
+                              alt="케밥 버튼"
+                              onClick={() => console.log("케밥 버튼 클릭")}
+                            />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                  {/* 팀 추가하기 버튼 */}
                   <button
-                    onClick={toggleDropdown}
-                    className="flex items-center gap-2.5"
+                    onClick={() => console.log("팀 추가 클릭")}
+                    className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-border-primary py-3 text-center"
                   >
-                    {selectedTeam}
                     <Image
-                      src="/icons/icon-check.png"
+                      src="/icons/icon-plus.png"
                       width={16}
                       height={16}
-                      alt="드롭다운"
+                      alt="플러스"
                     />
+                    팀 추가하기
                   </button>
-
-                  {isDropdownOpen && (
-                    <div className="fixed left-4 top-[68px] z-50 w-[218px] gap-2.5 rounded-xl bg-background-secondary p-4 lg:left-[calc((100vw-1200px)/2+10px)] lg:top-[68px]">
-                      <ul className="font-lg gap-4">
-                        {teamList.map((team) => (
-                          <li
-                            key={team.id}
-                            className={`mb-3 flex cursor-pointer items-center justify-between gap-2.5 rounded-lg px-2 py-[7px] hover:bg-background-tertiary ${
-                              selectedTeamId === team.id
-                                ? "bg-background-tertiary"
-                                : ""
-                            }`}
-                          >
-                            <div
-                              className="flex w-full items-center gap-2"
-                              onClick={() => selectTeam(team.id)}
-                            >
-                              <Image
-                                src={team.image}
-                                width={32}
-                                height={32}
-                                alt="팀 이미지"
-                                className="rounded-md"
-                              />
-                              <span>{team.name}</span>
-                            </div>
-                            {/* 케밥 버튼 */}
-                            <button
-                              className="cursor-pointer"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Image
-                                src="/icons/icon-kebab.png"
-                                width={16}
-                                height={16}
-                                alt="케밥 버튼"
-                                onClick={() => console.log("케밥 버튼 클릭")}
-                              />
-                            </button>
-                          </li>
-                        ))}
-
-                        <button
-                          onClick={() => console.log("팀 추가 클릭")}
-                          className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-border-primary py-3 text-center"
-                        >
-                          <Image
-                            src="/icons/icon-plus.png"
-                            width={16}
-                            height={16}
-                            alt="플러스"
-                          />
-                          팀 추가하기
-                        </button>
-                      </ul>
-                    </div>
-                  )}
                 </div>
-
-                {/* 자유게시판 버튼 */}
-                <div className="flex items-center sm:hidden">
-                  <button>자유게시판</button>
-                </div>
-              </>
-            )}
-
-            {!hasTeam && (
-              <div className="flex items-center sm:hidden">
-                <button>자유게시판</button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           {/* 프로필 */}
@@ -178,25 +166,12 @@ export default function AuthHeader() {
 
         <div className="p-4 text-text-md">
           {hasTeam ? (
-            <>
-              <ul className="flex flex-col gap-[35px] text-text-primary">
-                {teamList.map((team) => (
-                  <li key={team.id}>{team.name}</li>
-                ))}
-              </ul>
-              <div className="mt-[35px]">
-                <button className="text-text-md text-brand-primary">
-                  자유게시판
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-col gap-[35px] text-text-primary">
-              <button className="text-left text-text-md text-brand-primary">
-                자유게시판
-              </button>
-            </div>
-          )}
+            <ul className="flex flex-col gap-[35px] text-text-primary">
+              {teamList.map((team) => (
+                <li key={team.id}>{team.name}</li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </div>
 
