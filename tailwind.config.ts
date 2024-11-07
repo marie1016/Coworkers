@@ -7,7 +7,6 @@ import aspectRatio from "@tailwindcss/aspect-ratio";
 import lineClamp from "@tailwindcss/line-clamp";
 
 const config: Config = {
-  important: true,
   content: [
     "./src/**/*.{html,js,ts,jsx,tsx}",
     "./node_modules/flowbite/**/*.js",

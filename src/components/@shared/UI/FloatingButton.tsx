@@ -52,10 +52,10 @@ export default function FloatingButton({
           // Solid 스타일
           isSolid &&
             !isDisabled &&
-            "bg-brand-primary text-text-primary hover:bg-interaction-hover active:bg-interaction-pressed",
+            "text-text-primary [&&]:bg-brand-primary [&&]:hover:bg-interaction-hover [&&]:active:bg-interaction-pressed",
           isSolid &&
             isDisabled &&
-            "cursor-not-allowed bg-interaction-inactive text-text-primary",
+            "cursor-not-allowed text-text-primary [&&]:bg-interaction-inactive",
           // Outlined 스타일
           isOutlined &&
             !isDisabled && [

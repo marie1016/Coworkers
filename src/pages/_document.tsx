@@ -4,12 +4,12 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <script
+        {/* <script
           src="https://accounts.google.com/gsi/client"
           async
           defer
         ></script>
-        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+        <script src="https://developers.kakao.com/sdk/js/kakao.js"></script> */}
       </Head>
       <body className="antialiased">
         <Main />

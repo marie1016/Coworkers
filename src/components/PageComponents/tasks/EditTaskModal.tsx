@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import editTask from "@/core/api/tasks/editTask";
 import { toast } from "react-toastify";
 import { EditTaskForm, Task } from "@/core/dtos/tasks/tasks";
+import handleTextArea from "@/lib/utils/handleTextArea";
 
 interface EditTaskModalProps {
   taskToEdit: Task;
@@ -45,9 +46,9 @@ export default function EditTaskModal({
     setTaskData({ ...taskData, [name]: value });
   };
 
-  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
+  const closeEditModal = () => {
+    closeModal("editTaskModal");
+    setTaskData(initialTaskData);
   };
 
   const editMutation = useMutation({
@@ -57,7 +58,7 @@ export default function EditTaskModal({
       queryClient.invalidateQueries({
         queryKey: ["tasks", selectedTaskListId],
       });
-      closeModal(modalName);
+      closeEditModal();
     },
     onError: (error) => {
       console.error("Error editing task:", error);
@@ -88,7 +89,7 @@ export default function EditTaskModal({
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={() => closeModal(modalName)} isCloseButton>
+    <Modal isOpen={isOpen} onClose={() => closeEditModal()} isCloseButton>
       <div className="h-auto w-[24rem] px-6 py-8">
         <h2 className="text-center text-text-lg text-text-primary">
           할 일 수정하기
@@ -116,7 +117,7 @@ export default function EditTaskModal({
           <InputLabel className="text-md text-text-primary" label="할 일 메모">
             <textarea
               name="description"
-              onInput={handleInput}
+              onInput={handleTextArea}
               onChange={handleInputChange}
               value={taskData.description}
               className="h-auto w-full resize-none overflow-hidden rounded-xl border-border-primary bg-background-secondary p-4 placeholder:text-text-default hover:border-interaction-hover focus:border-interaction-hover focus:outline-none focus:ring-0"

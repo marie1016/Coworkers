@@ -9,10 +9,10 @@ import Image from "next/image";
 import { useState } from "react";
 import { validatePassword, validateEmail } from "@/lib/utils/validation";
 import { SignupRequestDto } from "@/core/dtos/auth/authDto";
-import { useAuth } from "@/core/context/AuthProvider";
+import { useMutation } from "@tanstack/react-query";
+import { signup } from "@/core/api/auth/authApi";
 
 export default function Signup() {
-  const { handleSignup, handleLogin } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -87,6 +87,10 @@ export default function Signup() {
     return !Object.values(newErrors).some((error) => error !== "");
   };
 
+  const { mutateAsync: signupMutate } = useMutation({
+    mutationFn: (form: SignupRequestDto) => signup(form),
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
@@ -99,7 +103,7 @@ export default function Signup() {
 
       try {
         setIsSubmitting(true);
-        await handleSignup(signupData);
+        await signupMutate(signupData);
       } catch (error: unknown) {
         console.error("에러 :", error);
         if (error instanceof Error) {
@@ -217,7 +221,7 @@ export default function Signup() {
           <div className="flex w-full items-center justify-between">
             <span className="text-lg text-text-inverse">간편 회원가입하기</span>
             <div className="flex flex-row items-center justify-center gap-4">
-              <button type="button" onClick={() => handleLogin("google")}>
+              <button type="button" onClick={() => {}}>
                 <Image
                   src="/icons/icon-google.png"
                   alt="구글 간편 회원가입"
@@ -225,7 +229,7 @@ export default function Signup() {
                   height={42}
                 />
               </button>
-              <button type="button" onClick={() => handleLogin("kakao")}>
+              <button type="button" onClick={() => {}}>
                 <Image
                   src="/icons/icon-kakaotalk.png"
                   alt="카카오 간편 회원가입"

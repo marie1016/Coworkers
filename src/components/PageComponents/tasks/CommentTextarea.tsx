@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { useState } from "react";
+import handleTextArea from "@/lib/utils/handleTextArea";
 
 interface CommentTextareaProps {
   taskItem: Task;
@@ -14,16 +15,12 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
   const { id } = taskItem;
   const [comment, setComment] = useState<string>("");
 
-  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
-  };
-
   const commentMutation = useMutation({
     mutationFn: (addTaskCommentForm: TaskCommentForm) =>
       addTaskComment({ taskId: id }, addTaskCommentForm),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["taskComments", id] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error) => {
       console.error("Error creating comment:", error);
@@ -34,6 +31,9 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
     e.preventDefault();
     const addTaskCommentForm = { content: comment };
     commentMutation.mutate(addTaskCommentForm, {
+      onSuccess: () => {
+        setComment("");
+      },
       onError: () => {
         toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
       },
@@ -56,8 +56,8 @@ export default function CommentTextarea({ taskItem }: CommentTextareaProps) {
           setComment(e.target.value)
         }
         onKeyDown={handleKeyDown}
-        onInput={handleInput}
-        className="h-auto w-full resize-none overflow-hidden rounded-none border-b border-l-0 border-r-0 border-border-primary bg-background-secondary py-4 pl-0 pr-8 text-text-md outline-none placeholder:text-text-md placeholder:text-text-default"
+        onInput={handleTextArea}
+        className="h-auto w-full resize-none overflow-hidden rounded-none border-b border-l-0 border-r-0 border-border-primary bg-background-secondary py-4 pl-0 pr-8 text-text-md outline-none placeholder:text-text-md placeholder:text-text-default [&&]:focus:border-interaction-hover [&&]:focus:ring-0"
         placeholder="댓글을 입력하세요."
       />
       <button type="submit" disabled={commentMutation.isPending || !comment}>

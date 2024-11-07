@@ -1,6 +1,3 @@
-
-import axios, { AxiosError } from "axios";
-
 import { useMutation } from "@tanstack/react-query";
 import {
   createContext,
@@ -21,12 +18,9 @@ import {
   UpdateUserResponse,
   User,
 } from "../dtos/user/auth";
-
+import signIn from "../api/user/signIn";
 import updateUser from "../api/user/updateUser";
 import deleteUser from "../api/user/deleteUser";
-import { SignupRequestDto } from "../dtos/auth/authDto";
-import { signup, login } from "../api/auth/authApi";
-
 
 interface AuthValues {
   user: User | null;
@@ -36,35 +30,25 @@ interface AuthValues {
 interface AuthContextValues {
   user: User | null;
   isPending: boolean;
-
-  isLoginPending: boolean;
   login: (loginForm: LoginForm) => Promise<LoginResponse>;
+  isLoginPending: boolean;
   logout: () => void;
   updateMe: (updateUserForm: UpdateUserForm) => Promise<UpdateUserResponse>;
+  isUpdatePending: boolean;
   deleteMe: () => Promise<unknown>;
-  handleLogin: (provider: "google" | "kakao") => Promise<void>;
-  handleEmailLogin: (email: string, password: string) => Promise<void>;
-  handleSignup: (data: SignupRequestDto) => Promise<void>;
-  handleLogout: () => void;
-  loading: boolean;
-v
+  isDeletionPending: boolean;
 }
 
 const INITIAL_AUTH_VALUES: AuthContextValues = {
   user: null,
   isPending: true,
-
-  isLoginPending: false,
   login: () => Promise.reject(),
+  isLoginPending: false,
   logout: () => {},
   updateMe: () => Promise.reject(),
+  isUpdatePending: false,
   deleteMe: () => Promise.reject(),
-  handleLogin: async () => {},
-  handleEmailLogin: async () => {},
-  handleSignup: async () => {},
-  handleLogout: () => {},
-  loading: false,
-
+  isDeletionPending: false,
 };
 
 const AuthContext = createContext<AuthContextValues>(INITIAL_AUTH_VALUES);
@@ -75,23 +59,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isPending: true,
   });
 
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
   const { mutate: getMe } = useMutation({
     mutationFn: getUser,
-    onMutate: () => setAuthState((prev) => ({ ...prev, isPending: true })),
-    onSuccess: (data) => setAuthState({ user: data, isPending: false }),
+    onMutate: () => {
+      setAuthState((prev) => ({
+        ...prev,
+        isPending: true,
+      }));
+    },
+    onSuccess: (data) => {
+      setAuthState({
+        user: data,
+        isPending: false,
+      });
+    },
     onError: (e) => {
-      setAuthState({ user: null, isPending: false });
-
+      setAuthState({
+        user: null,
+        isPending: false,
+      });
       console.error(e);
     },
   });
 
+  const { mutateAsync: login, isPending: isLoginPending } = useMutation({
+    mutationFn: (loginForm: LoginForm) => signIn(loginForm),
+    onSuccess: (data) => {
+      const { accessToken, refreshToken } = data;
+      saveTokens({ accessToken, refreshToken });
+      getMe();
+    },
+    onError: (e) => {
+      console.error(e);
+      return e;
+    },
+  });
 
-  const { mutateAsync: updateMe, isLoading: isUpdatePending } = useMutation({
+  const logout = useCallback(() => {
+    removeTokens();
+    setAuthState({
+      user: null,
+      isPending: false,
+    });
+  }, []);
 
+  const { mutateAsync: updateMe, isPending: isUpdatePending } = useMutation({
     mutationFn: (updateUserForm: UpdateUserForm) => updateUser(updateUserForm),
     onSuccess: () => getMe(),
     onError: (e) => {
@@ -100,128 +112,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  const { mutateAsync: deleteMe, isLoading: isDeletionPending } = useMutation({
+  const { mutateAsync: deleteMe, isPending: isDeletionPending } = useMutation({
     mutationFn: deleteUser,
-    onSuccess: () => {
-      removeTokens();
-      setAuthState({ user: null, isPending: false });
-      router.push("/login");
-    },
-
+    onSuccess: () => logout(),
     onError: (e) => {
       console.error(e);
       return e;
     },
   });
 
-
-  const handleLogin = async (provider: "google" | "kakao") => {
-    try {
-      const response = await login({ provider });
-      if (response.data) {
-        saveTokens({
-          accessToken: response.data.accessToken,
-          refreshToken: response.data.refreshToken,
-        });
-        setAuthState({ user: response.data.user, isPending: false });
-        alert("로그인 성공");
-        router.push("/");
-      } else {
-        throw new Error("간편 로그인 실패");
-      }
-    } catch (error) {
-      console.error("간편 로그인 실패:", error);
-      alert("간편 로그인 중 오류가 발생했습니다.");
-    }
-  };
-
-  const handleEmailLogin = async (email: string, password: string) => {
-    try {
-      const response = await login({ email, password });
-      if (response.data) {
-        const user = response.data.user;
-        saveTokens({
-          accessToken: response.data.accessToken,
-          refreshToken: response.data.refreshToken,
-        });
-        setAuthState({ user, isPending: false });
-        alert("로그인 성공");
-        router.push("/");
-      } else {
-        throw new Error("로그인 실패");
-      }
-    } catch (error) {
-      console.error("로그인 실패:", error);
-      alert("로그인 중 오류가 발생했습니다.");
-    }
-  };
-
-  const handleSignup = async (data: SignupRequestDto) => {
-    try {
-      setLoading(true);
-      const response = await signup(data);
-
-      if (response.data) {
-        alert("회원가입 성공");
-        router.push("/login");
-      }
-    } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      if (axios.isAxiosError(axiosError)) {
-        if (axiosError.response?.status === 400) {
-          alert("이미 존재하는 계정입니다.");
-        } else if (axiosError.response) {
-          console.error("회원가입 실패:", axiosError.response.data);
-          alert(
-            `회원가입 실패: ${axiosError.response.data?.message ?? "오류 발생"}`,
-          );
-        }
-      } else {
-        console.error("회원가입 실패:", error);
-        alert(`회원가입 실패: ${(error as Error).message}`);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (localStorage.getItem(TOKENS.REFRESH_TOKEN)) {
       getMe();
-    } else {
-      setAuthState({ user: null, isPending: false });
+      return;
     }
+    setAuthState({
+      user: null,
+      isPending: false,
+    });
   }, [getMe]);
 
+  const { user, isPending } = authState;
   const authValues = useMemo(
     () => ({
-      ...authState,
-      isLoginPending: loading,
+      user,
+      isPending,
       login,
-      logout: () => {
-        removeTokens();
-        setAuthState({ user: null, isPending: false });
-        router.push("/login");
-      },
+      isLoginPending,
+      logout,
       updateMe,
+      isUpdatePending,
       deleteMe,
-      handleLogin,
-      handleEmailLogin,
-      handleSignup,
-      handleLogout: () => router.push("/login"),
-      loading,
+      isDeletionPending,
     }),
     [
-      authState,
-      loading,
-      router,
-      getMe,
-      handleLogin,
-      handleEmailLogin,
-      handleSignup,
+      user,
+      isPending,
+      login,
+      isLoginPending,
+      logout,
       updateMe,
+      isUpdatePending,
       deleteMe,
-
+      isDeletionPending,
     ],
   );
 
@@ -236,14 +169,12 @@ export function useAuth(required?: boolean) {
 
   const { user, isPending } = context;
   const router = useRouter();
-
-
+  const { asPath, isReady } = router;
   useEffect(() => {
-    if (required && !user && !isPending) {
-      router.replace(`/unauthorized`);
+    if (required && !user && !isPending && isReady) {
+      router.replace(`/unauthorized?direction=${asPath}`);
     }
-  }, [required, user, isPending, router]);
-
+  }, [required, user, isPending, isReady]);
 
   return context;
 }

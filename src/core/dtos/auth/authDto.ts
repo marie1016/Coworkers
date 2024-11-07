@@ -13,7 +13,7 @@ export interface LoginRequestDto {
 export interface AuthResponseDto {
   accessToken: string;
   refreshToken: string;
-  user: User;
+  // user: User;
 }
 
 export interface ResetPasswordEmailRequestDto {

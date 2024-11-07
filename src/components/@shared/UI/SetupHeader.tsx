@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import Button from "./Button";
 
 export default function SetupHeader() {
   return (
@@ -12,6 +13,11 @@ export default function SetupHeader() {
           alt="헤더 로고 이미지"
           className="sm:w-[102px] md:w-[102px]"
         />
+      </Link>
+      <Link href="/login">
+        <Button variant="solid" size="x-small">
+          로그인
+        </Button>
       </Link>
     </header>
   );

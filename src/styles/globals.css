@@ -19,18 +19,6 @@ input::-webkit-outer-spin-button {
   margin: 0;
 }
 
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-textarea:focus {
-  outline: none !important;
-  outline-width: 0 !important;
-  box-shadow: none;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-}
-
 .swiper {
   @apply static w-[95%] sm:w-[85%] md:w-[90%] !important;
 }
