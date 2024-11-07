@@ -1,8 +1,8 @@
-import Image from 'next/image';
+import Image from "next/image";
 
-import useResponsiveDivision from '@/lib/hooks/useResponsiveDivision';
-import IMAGE_PATHS from '@/lib/constants/imagePaths';
-import ICON_PATHS from '@/lib/constants/iconPaths';
+import useResponsiveDivision from "@/lib/hooks/useResponsiveDivision";
+import IMAGE_PATHS from "@/lib/constants/imagePaths";
+import ICON_PATHS from "@/lib/constants/iconPaths";
 
 export default function Main() {
   const { src, width, height } = useResponsiveDivision({
@@ -32,10 +32,11 @@ export default function Main() {
         width={width}
         height={height}
         className="w-full"
+        priority
       />
-      <div className="absolute sm:top-[55px] flex w-full flex-col items-center gap-1 text-center md:top-[100px] md:gap-2 lg:top-[84px] lg:gap-5">
+      <div className="absolute flex w-full flex-col items-center gap-1 text-center sm:top-[55px] md:top-[100px] md:gap-2 lg:top-[84px] lg:gap-5">
         <div className="flex h-full items-center sm:gap-1 md:gap-4 lg:gap-6">
-          <h1 className="sm:text-[24px] md:text-[40px] lg:text-[48px] lg:text-[48px] leading-[38.38px]  font-semibold">
+          <h1 className="font-semibold leading-[38.38px] sm:text-[24px] md:text-[40px] lg:text-[48px]">
             함께 만들어가는 투두 리스트
           </h1>
           <Image
@@ -43,10 +44,10 @@ export default function Main() {
             src={ICON_PATHS.REPAIR}
             width={56}
             height={56}
-            className="sm:h-7 sm:w-7 md:h-12 md:w-12 lg:h-17 lg:w-17"
+            className="lg:h-17 lg:w-17 sm:h-7 sm:w-7 md:h-12 md:w-12"
           />
         </div>
-        <h1 className="sm:text-[32px] md:text-[48px] lg:text-[64px] leading-[58.38px] font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#10B981] to-[#CEF57E]">
+        <h1 className="bg-gradient-to-r from-[#10B981] to-[#CEF57E] bg-clip-text font-semibold leading-[58.38px] text-transparent sm:text-[32px] md:text-[48px] lg:text-[64px]">
           Coworkers
         </h1>
       </div>
