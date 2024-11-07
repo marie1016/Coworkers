@@ -72,7 +72,7 @@ export default function TaskDetail({
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <motion.div
-        className="taskDetail fixed right-0 top-0 z-20 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
+        className="taskDetail fixed right-0 top-0 z-20 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary px-10 pb-16 pt-[6rem] sm:w-full sm:px-4 sm:pt-20 md:w-[27.19rem] md:px-6 md:pt-[5.25rem]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
@@ -94,7 +94,7 @@ export default function TaskDetail({
           deleteTask={openDeleteTaskModal}
           selectedDate={selectedDate}
         />
-        <div className="mt-4 text-text-md text-text-primary">
+        <div className="my-4 text-text-md text-text-primary">
           <CommentTextarea taskItem={taskItem} />
           <TaskComments taskItem={taskItem} />
         </div>
