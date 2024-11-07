@@ -1,6 +1,6 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
@@ -13,6 +13,7 @@ import CommentTextarea from "./CommentTextarea";
 interface TaskDetailProps {
   selectedDate: Date | null;
   taskItem: Task;
+  setSelectedTaskItem: React.Dispatch<React.SetStateAction<Task | null>>;
   closeTaskDetail: () => void;
   openEditTaskModal: () => void;
   openDeleteTaskModal: () => void;
@@ -20,12 +21,12 @@ interface TaskDetailProps {
 export default function TaskDetail({
   selectedDate,
   taskItem,
+  setSelectedTaskItem,
   closeTaskDetail,
   openEditTaskModal,
   openDeleteTaskModal,
 }: TaskDetailProps) {
-  const [task, setTask] = useState<Task>(taskItem);
-  const { doneAt, id } = task;
+  const { doneAt, id } = taskItem;
   const { handleClick } = usePatchTaskDone(id, doneAt, selectedDate);
 
   const modalName = "taskDetail";
@@ -36,12 +37,8 @@ export default function TaskDetail({
   const handleButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     const checked = doneAt ? null : new Date().toISOString();
-    setTask((prevTask) => ({
-      ...prevTask,
-      doneAt: checked,
-    }));
-
     handleClick(!!checked);
+    setSelectedTaskItem({ ...taskItem, doneAt: checked });
   };
 
   useEffect(() => {
@@ -68,14 +65,14 @@ export default function TaskDetail({
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 bg-black bg-opacity-50"
+      className="fixed inset-0 z-10 bg-opacity-0"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <motion.div
-        className="taskDetail z-100 fixed right-0 top-0 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
+        className="taskDetail fixed right-0 top-0 z-20 h-full w-[48.69rem] overflow-y-auto border-l border-border-primary bg-background-secondary p-10 sm:w-full md:w-[27.19rem]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}

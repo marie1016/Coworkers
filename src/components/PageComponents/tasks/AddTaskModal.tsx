@@ -11,6 +11,7 @@ import { AddTaskForm } from "@/core/dtos/tasks/tasks";
 import { formatDate } from "@/lib/utils/date";
 import { FrequencyType } from "@/lib/constants/frequencyType";
 import { toast } from "react-toastify";
+import handleTextArea from "@/lib/utils/handleTextArea";
 import FrequencyWeekly from "./FrequencyWeekly";
 import FrequencyMonthly from "./FrequencyMonthly";
 import FrequencyDropdown from "./FrequencyDropdown";
@@ -49,11 +50,6 @@ export default function AddTaskModal({
 
   const handleFrequencyChange = (value: FrequencyType) => {
     setTaskData({ ...taskData, frequencyType: value });
-  };
-
-  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
   const handleDateChange = (selectedDate: Date | null) => {
@@ -158,7 +154,7 @@ export default function AddTaskModal({
             label="시작 날짜 및 시간"
           >
             <DatePicker
-              className="h-12 w-[21rem] rounded-xl border-border-primary bg-background-secondary text-text-primary placeholder:text-text-default hover:border-interaction-hover focus:border-interaction-hover focus:outline-none focus:ring-0"
+              className="h-12 w-[21rem] rounded-xl [&&]:border-border-primary [&&]:bg-background-secondary [&&]:text-text-primary [&&]:placeholder:text-text-default [&&]:hover:border-interaction-hover [&&]:focus:border-interaction-hover [&&]:focus:outline-none [&&]:focus:ring-0"
               onChange={handleDateChange}
               selected={new Date(taskData.startDate)}
               showTimeSelect
@@ -188,7 +184,7 @@ export default function AddTaskModal({
           <InputLabel className="text-md text-text-primary" label="할 일 메모">
             <textarea
               name="description"
-              onInput={handleInput}
+              onInput={handleTextArea}
               onChange={handleInputChange}
               value={taskData.description}
               className="h-auto w-full resize-none overflow-hidden rounded-xl border-border-primary bg-background-secondary p-4 placeholder:text-text-default hover:border-interaction-hover focus:border-interaction-hover focus:outline-none focus:ring-0"

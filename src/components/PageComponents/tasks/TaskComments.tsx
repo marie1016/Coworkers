@@ -9,6 +9,7 @@ import Button from "@/components/@shared/UI/Button";
 import { useAuth } from "@/core/context/AuthProvider";
 import { toast } from "react-toastify";
 import deleteTaskComment from "@/core/api/tasks/deleteTaskComment";
+import handleTextArea from "@/lib/utils/handleTextArea";
 import EditDropdown from "./EditDropdown";
 import CommentSkeleton from "./CommentSkeleton";
 
@@ -24,11 +25,6 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
 
   const [comment, setComment] = useState<string>("");
   const [isEditingId, setIsEditingId] = useState<number | null>(null);
-
-  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.target.style.height = "auto";
-    e.target.style.height = `${e.target.scrollHeight}px`;
-  };
 
   const {
     data: commentsData,
@@ -51,6 +47,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
     }) => editTaskComment({ commentId, editTaskCommentForm }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["taskComments", id] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error) => {
       console.error("Edit failed:", error);
@@ -61,6 +58,7 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
     mutationFn: (commentId: number) => deleteTaskComment(commentId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["taskComments", id] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
     onError: (error) => {
       console.error("Delete failed:", error);
@@ -74,9 +72,6 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
 
   const deleteComment = (commentId: number) => {
     deleteMutation.mutate(commentId, {
-      onSuccess: () => {
-        toast.success("댓글을 삭제했습니다!");
-      },
       onError: () => {
         toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
       },
@@ -89,9 +84,6 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
     editMutation.mutate(
       { commentId, editTaskCommentForm },
       {
-        onSuccess: () => {
-          toast.success("댓글을 수정하였습니다!");
-        },
         onError: () => {
           toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
         },
@@ -158,13 +150,13 @@ export default function TaskComments({ taskItem }: TaskCommentsProps) {
           ) : (
             <form className="flex flex-col gap-2">
               <textarea
-                className="h-auto w-full resize-none overflow-hidden border-none bg-background-secondary px-0 py-0 text-text-md outline-none focus:border-none focus:outline-none"
+                className="h-auto w-full resize-none overflow-hidden border-none bg-background-secondary px-0 py-0 text-text-md outline-none [&&]:focus:ring-0"
                 name="comment"
                 value={comment}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                   setComment(e.target.value)
                 }
-                onInput={handleInput}
+                onInput={handleTextArea}
               />
               <div className="flex items-center justify-end gap-5 font-semibold">
                 <button

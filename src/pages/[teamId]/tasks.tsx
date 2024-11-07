@@ -54,12 +54,13 @@ export default function Tasks() {
   const openDeleteTaskModal = (taskData: Task) => {
     handleTaskItemChange(taskData);
     openModal("deleteTaskModal");
+    closeTaskDetail();
   };
 
   if (!user) return null;
 
   return (
-    <div className="mx-auto h-auto max-w-[75rem] px-6 py-10">
+    <div className="mx-auto h-auto max-w-[75rem] px-6 pb-24 pt-10">
       <section>
         <SectionHeader
           teamId={teamId}
@@ -101,6 +102,7 @@ export default function Tasks() {
           <TaskDetail
             selectedDate={selectedDate}
             taskItem={selectedTaskItem}
+            setSelectedTaskItem={setSelectedTaskItem}
             closeTaskDetail={closeTaskDetail}
             openEditTaskModal={() => openEditTaskModal(selectedTaskItem)}
             openDeleteTaskModal={() => openDeleteTaskModal(selectedTaskItem)}
