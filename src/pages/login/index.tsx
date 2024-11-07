@@ -1,4 +1,3 @@
-
 import SetupHeader from "@/components/@shared/UI/SetupHeader";
 import InputLabel from "@/components/@shared/UI/InputLabel";
 import Input from "@/components/@shared/UI/Input";
@@ -12,31 +11,24 @@ import { useRouter } from "next/router";
 import Modal from "@/components/@shared/UI/Modal/Modal";
 import { sendResetPasswordEmail } from "@/core/api/auth/authApi";
 
-interface FormData {
-  email: string | undefined;
-  password: string | undefined;
-}
-
 interface FormErrors {
   email: string | undefined;
   password: string | undefined;
 }
 
-
 export default function Login() {
   const router = useRouter();
-  const { handleLogin, handleEmailLogin } = useAuth();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [resetEmailError, setResetEmailError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-
 
   const [formErrors, setFormErrors] = useState<FormErrors>({
     email: undefined,
@@ -46,7 +38,6 @@ export default function Login() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -106,7 +97,6 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-
     if (!validateForm()) {
       alert("입력 값이 올바르지 않습니다. 이메일과 비밀번호를 확인해주세요.");
       return;
@@ -114,12 +104,12 @@ export default function Login() {
 
     if (formData.email && formData.password) {
       try {
-        await handleEmailLogin(formData.email, formData.password);
-        alert("로그인 성공");
-        router.push("/");
+        await login(formData);
       } catch (error) {
         console.error("로그인 중 오류 발생:", error);
+        return;
       }
+      router.push("/");
     } else {
       alert("이메일과 비밀번호를 모두 입력해주세요.");
     }
@@ -154,7 +144,6 @@ export default function Login() {
     } finally {
       setIsLoading(false);
     }
-
   };
 
   return (
@@ -238,7 +227,7 @@ export default function Login() {
           <div className="flex w-full items-center justify-between">
             <span className="text-lg text-text-inverse">간편 로그인하기</span>
             <div className="flex flex-row items-center justify-center gap-4">
-              <button type="button" onClick={() => handleLogin("google")}>
+              <button type="button" onClick={() => {}}>
                 <Image
                   src="/icons/icon-google.png"
                   alt="구글 간편 회원가입"
@@ -246,7 +235,7 @@ export default function Login() {
                   height={42}
                 />
               </button>
-              <button type="button" onClick={() => handleLogin("kakao")}>
+              <button type="button" onClick={() => {}}>
                 <Image
                   src="/icons/icon-kakaotalk.png"
                   alt="카카오 간편 회원가입"
