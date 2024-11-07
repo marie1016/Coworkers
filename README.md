@@ -1,40 +1,84 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<br/><br/><br/>
 
-## Getting Started
+<div align='center' ><img src='![image](https://github.com/user-attachments/assets/3953444e-fc5f-4260-97d0-e32cac66d1af)' alt="로고"/>
 
-First, run the development server:
+공통의 할 일을 만들어서 업무의 효율을 높이는 서비스
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+</div>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<br/><br/><br/>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 개발 기간
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- 2024.10.07 ~ 2024.11.11
+  <br/>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 팀원소개
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+| <a href='https://github.com/kzlsk'><img src="https://avatars.githubusercontent.com/u/152532049?v=4" width="150" height="150"/></a> | <a href='https://github.com/marie1016'><img src="https://avatars.githubusercontent.com/u/170187257?v=4" width="150" height="150"/></a> | <a href='https://avatars.githubusercontent.com/u/170187257?v=4" width="150" height="150"/></a> | <a href='https://github.com/Jaeheon96'><img src="https://avatars.githubusercontent.com/u/170187257?v=4" width="150" height="150"/></a> | <a href='https://github.com/KorpoQ'><img src="https://avatars.githubusercontent.com/u/170187257?v=4" width="150" height="150"/></a> |
+| :----------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
+|                                       김리나<br/>[@kzlsk](https://github.com/kzlsk)                                        |                                      김주은<br/>[@marie1016](https://github.com/marie1016)                                       |                                       김준완<br/>[@kjw0412c](https://github.com/kjw0412c)                                       |                                               손재헌<br/>[@Jaeheon96](https://github.com/Jaeheon96)                                                |                                        임귀태<br/>[@KorpoQ](https://github.com/KorpoQ)                                         |
+|                                               유저 기능, 계정 설정, 헤더, 인풋(공통)                                                |                                                        리스트 페이지, 마이 히스토리 페이지, 드롭다운, 체크박스(공통)                                                         |                                                                랜딩 페이지                                                                 |                                              팀페이지(생성, 참여)                                              |                                                  버튼, 모달(공통)                                                  |
 
-## Learn More
+<br/>
 
-To learn more about Next.js, take a look at the following resources:
+## 페이지 소개
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 랜딩 페이지
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+<img style='width: 333px;' src='![image](https://github.com/user-attachments/assets/1e4fa3d2-2631-499f-addb-4f9f7c80c7f0)' alt='랜딩 페이지 미리보기'/>
+<br/>
 
-## Deploy on Vercel
+- 로그인 & 회원가입
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<img style='width: 333px;' src='![image](https://github.com/user-attachments/assets/0f218a88-0d75-4bf6-8a15-39152df9c878)' alt='로그인 & 회원가입 미리보기'/>
+<br/>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- 팀 페이지
+
+<img style='width: 333px;' src='![image](https://github.com/user-attachments/assets/918f9726-24eb-49e2-a320-a2337a95ef92)' alt='팀 페이지 미리보기'/>
+<br/>
+
+- 팀 생성/참여
+
+<img style='width: 333px;' src='![image](https://github.com/user-attachments/assets/15c159a5-30c0-4760-afd3-fb9b0b7067bd)' alt='팀 생성/참여 미리보기'/>
+<br/>
+
+- 할 일 리스트 페이지
+
+<img style='width: 333px;' src='![image](https://github.com/user-attachments/assets/d99b1f72-ceb4-47ea-a1c4-a948eb609dbf)' alt='할 일 리스트 페이지 미리보기'/>
+<br/>
+
+- 할 일 상세
+
+<img style='width: 333px;' src='![image](https://github.com/user-attachments/assets/4052b886-d449-4ceb-b23d-5327cc6e8eff)' alt='할 일 상세 미리보기'/>
+<br/>
+
+- 마이히스토리 페이지
+
+<img style='width: 333px;' src='![image](https://github.com/user-attachments/assets/ea0be713-b73b-488d-9902-121e4848b1ce)' alt='마이히스토리 페이지 미리보기'/>
+<br/>
+
+## 기술 스택
+
+### 개발
+
+<div>
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white"/>
+<img src="https://img.shields.io/badge/REACT-61DAFB?style=flat-square&logo=React&logoColor=black"/>
+<img src="https://img.shields.io/badge/NEXT.js-000000?style=flat-square&logo=nextdotjs&logoColor=white"/>
+<img src="https://img.shields.io/badge/Tailwindcss-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white"/>
+<img src="https://img.shields.io/badge/Axios-5A29E4?style=flat-square&logo=axios&logoColor=white"/>
+<img src="https://img.shields.io/badge/TanstackReactQuery-FF4154?style=flat-square&logo=reactquery&logoColor=white"/>
+</div>
+
+### 협업
+
+<div>
+<img src="https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=eslint&logoColor=white"/>
+<img src="https://img.shields.io/badge/Prettier-F7B93E?style=flat-square&logo=prettier&logoColor=white"/>
+<img src="https://img.shields.io/badge/Git-181717?style=flat-square&logo=Git&logoColor=white"/>
+<img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>
+<img src="https://img.shields.io/badge/Jira-E34F26?style=for-the-badge">
+<img src="https://img.shields.io/badge/Notion-E34F26?style=for-the-badge">
+</div>
