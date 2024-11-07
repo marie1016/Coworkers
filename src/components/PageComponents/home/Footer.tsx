@@ -1,7 +1,7 @@
-import Image from 'next/image';
+import Image from "next/image";
 
-import useResponsiveDivision from '@/lib/hooks/useResponsiveDivision';
-import IMAGE_PATHS from '@/lib/constants/imagePaths';
+import useResponsiveDivision from "@/lib/hooks/useResponsiveDivision";
+import IMAGE_PATHS from "@/lib/constants/imagePaths";
 
 export default function Footer() {
   const { src } = useResponsiveDivision({
@@ -19,7 +19,7 @@ export default function Footer() {
   return (
     <footer className="relative h-[640px] w-full md:h-[940px] lg:h-[1080px]">
       <div className="absolute top-1/4 flex w-full flex-col items-center gap-4 text-center text-text-primary md:gap-6">
-        <h3 className="sm:text-[20px] md:text-[40px] lg:text-[40px] font-semibold">
+        <h3 className="font-semibold sm:text-[20px] md:text-[40px] lg:text-[40px]">
           지금 바로 시작해보세요
         </h3>
         <p className="text-[24px] sm:text-[16px]">
