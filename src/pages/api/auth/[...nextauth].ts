@@ -64,7 +64,7 @@ export const authOptions: NextAuthOptions = {
       }
       if (user) {
         const userWithNickname = user as User & { nickname?: string };
-        updatedToken.name = userWithNickname.nickname ?? userWithNickname.name;
+        updatedToken.name = userWithNickname.nickname ?? "";
       }
 
       return updatedToken;

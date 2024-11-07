@@ -1,72 +1,20 @@
-
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
-
-interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  retryAttempted?: boolean;
-}
-
+import { removeTokens, TOKENS } from "@/lib/utils/tokenStorage";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
+// eslint-disable-next-line import/no-cycle
+import retrieveNewToken from "./user/retrieveNewToken";
+import { RefreshTokenResponse } from "../dtos/user/auth";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
+axiosInstance.interceptors.request.use((config) => {
+  const reqConfig = config;
+  const accessToken = localStorage.getItem(TOKENS.ACCESS_TOKEN);
+  reqConfig.headers.Authorization = `bearer ${accessToken}`;
 
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const accessToken = localStorage.getItem("accessToken");
-    console.log("Access Token:", accessToken);
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  },
-);
-
-
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError<{ accessToken: string }>) => {
-    const originalRequest = error.config as CustomAxiosRequestConfig;
-
-    if (
-      error.response?.status === 401 &&
-      originalRequest &&
-      !originalRequest.retryAttempted
-    ) {
-      originalRequest.retryAttempted = true;
-
-      try {
-        const refreshToken = localStorage.getItem("refreshToken");
-        const teamId = localStorage.getItem("teamId");
-
-        if (refreshToken && teamId) {
-          const response = await axiosInstance.post<{ accessToken: string }>(
-            `/${teamId}/auth/refresh-token`,
-            {
-              refreshToken,
-            },
-          );
-
-          const newAccessToken = response.data.accessToken;
-          localStorage.setItem("accessToken", newAccessToken);
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-          return await axiosInstance(originalRequest);
-        }
-      } catch (err) {
-        console.error("리프레시 토큰 갱신 실패:", err);
-      }
-    }
-
-    return Promise.reject(error);
-  },
-);
+  return config;
+});
 
 axiosInstance.interceptors.response.use(
   (res) => res,

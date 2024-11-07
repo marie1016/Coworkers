@@ -1,4 +1,4 @@
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosResponse } from "axios";
 import {
   LoginResponseDto,
   LoginRequestDto,
@@ -30,19 +30,19 @@ export const sendResetPasswordEmail = async (
     );
     return { success: true, message: response.data.message };
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      console.log("서버 오류 응답:", error.response);
-      if (error.response.status === 400) {
-        return {
-          success: false,
-          message: "가입되지 않은 이메일입니다.",
-        };
-      }
-      return {
-        success: false,
-        message: error.response.data.message || "오류가 발생했습니다.",
-      };
-    }
+    // if (axios.isAxiosError(error) && error.response) {
+    //   console.log("서버 오류 응답:", error.response);
+    //   if (error.response.status === 400) {
+    //     return {
+    //       success: false,
+    //       message: "가입되지 않은 이메일입니다.",
+    //     };
+    //   }
+    //   return {
+    //     success: false,
+    //     message: error.response.data.message || "오류가 발생했습니다.",
+    //   };
+    // }
     return {
       success: false,
       message: "비밀번호 재설정 이메일 전송 요청 중 오류가 발생했습니다.",
