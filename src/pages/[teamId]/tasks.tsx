@@ -102,6 +102,7 @@ export default function Tasks() {
           <TaskDetail
             selectedDate={selectedDate}
             taskItem={selectedTaskItem}
+            setSelectedTaskItem={setSelectedTaskItem}
             closeTaskDetail={closeTaskDetail}
             openEditTaskModal={() => openEditTaskModal(selectedTaskItem)}
             openDeleteTaskModal={() => openDeleteTaskModal(selectedTaskItem)}

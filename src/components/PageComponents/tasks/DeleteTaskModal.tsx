@@ -23,6 +23,11 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
     setButtonId(Number(e.target.value));
   };
 
+  const closeDeleteModal = () => {
+    closeModal("deleteTaskModal");
+    setButtonId(0);
+  };
+
   const mutationFn =
     buttonId === 1
       ? () => deleteTask(taskItem.id)
@@ -34,7 +39,7 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
       queryClient.invalidateQueries({
         queryKey: ["tasks"],
       });
-      closeModal(modalName);
+      closeDeleteModal();
       toast.success("할 일을 삭제했습니다!");
     },
     onError: (error) => {
@@ -52,7 +57,7 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={() => closeModal(modalName)}>
+    <Modal isOpen={isOpen} onClose={() => closeDeleteModal()}>
       <div className="flex w-80 flex-col items-center justify-between font-medium">
         <Image
           src="/icons/icon-alert.svg"
@@ -103,7 +108,7 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
             size="large"
             className="[&&]:bg-status-danger"
             onClick={handleDeleteTask}
-            disabled={deleteMutation.isPending}
+            disabled={deleteMutation.isPending || buttonId === 0}
           >
             삭제하기
           </Button>

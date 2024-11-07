@@ -1,6 +1,6 @@
 import { Task } from "@/core/dtos/tasks/tasks";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import FloatingButton from "@/components/@shared/UI/FloatingButton";
 import usePatchTaskDone from "@/lib/hooks/tasks/usePatchTaskDone";
@@ -13,6 +13,7 @@ import CommentTextarea from "./CommentTextarea";
 interface TaskDetailProps {
   selectedDate: Date | null;
   taskItem: Task;
+  setSelectedTaskItem: React.Dispatch<React.SetStateAction<Task | null>>;
   closeTaskDetail: () => void;
   openEditTaskModal: () => void;
   openDeleteTaskModal: () => void;
@@ -20,12 +21,12 @@ interface TaskDetailProps {
 export default function TaskDetail({
   selectedDate,
   taskItem,
+  setSelectedTaskItem,
   closeTaskDetail,
   openEditTaskModal,
   openDeleteTaskModal,
 }: TaskDetailProps) {
-  const [task, setTask] = useState<Task>(taskItem);
-  const { doneAt, id } = task;
+  const { doneAt, id } = taskItem;
   const { handleClick } = usePatchTaskDone(id, doneAt, selectedDate);
 
   const modalName = "taskDetail";
@@ -36,12 +37,8 @@ export default function TaskDetail({
   const handleButtonClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     const checked = doneAt ? null : new Date().toISOString();
-    setTask((prevTask) => ({
-      ...prevTask,
-      doneAt: checked,
-    }));
-
     handleClick(!!checked);
+    setSelectedTaskItem({ ...taskItem, doneAt: checked });
   };
 
   useEffect(() => {

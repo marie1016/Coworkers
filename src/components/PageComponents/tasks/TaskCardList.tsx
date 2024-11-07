@@ -141,6 +141,7 @@ export default function TaskCardList({
                 )}
               </Draggable>
             ))}
+            {droppableProvided.placeholder}
           </div>
         )}
       </Droppable>

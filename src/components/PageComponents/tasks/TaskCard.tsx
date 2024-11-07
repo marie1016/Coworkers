@@ -75,7 +75,7 @@ export default function TaskCard({
               height={16}
               alt="댓글 아이콘"
             />
-            <span> {commentCount}</span>
+            <span>{commentCount}</span>
           </div>
         </div>
         <EditDropdown
