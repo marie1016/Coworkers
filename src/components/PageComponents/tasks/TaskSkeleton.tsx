@@ -1,8 +1,6 @@
-import DeferredComponent from "@/components/@shared/DeferredComponent";
-
 export default function TaskSkeleton() {
   return (
-    <DeferredComponent>
+    <>
       {Array.from({ length: 5 }).map((_, index: number) => (
         // eslint-disable-next-line react/jsx-key
         <div
@@ -19,6 +17,6 @@ export default function TaskSkeleton() {
           <span className="sr-only">Loading...</span>
         </div>
       ))}
-    </DeferredComponent>
+    </>
   );
 }

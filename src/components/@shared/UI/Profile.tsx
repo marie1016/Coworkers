@@ -24,9 +24,10 @@ export default function Profile() {
           width={24}
           height={24}
           alt="프로필 이미지"
-          className="flex cursor-pointer rounded-full"
+          className="mt-[60px]flex cursor-pointer rounded-full"
         />
       }
+
       menuClassName="border-opacity-10 absolute top-full mt-2 z-10 w-[140px] max-h-[200px] overflow-y-auto border border-border-primary bg-background-secondary"
     >
       <DropdownItem
@@ -42,6 +43,7 @@ export default function Profile() {
       >
         팀 참여
       </DropdownItem>
+
     </Dropdown>
   );
 }

@@ -1,5 +1,6 @@
 import deleteMember from "@/core/api/group/deleteMember";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 import WarningModal from "./WarningModal";
 
 interface Props {
@@ -15,16 +16,18 @@ export default function DeleteMemberModal({
   teamId,
   memberId,
 }: Props) {
-  const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { mutate } = useMutation({
     mutationFn: () => deleteMember(teamId, memberId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["group", teamId] });
+    onMutate: () => {
       onClose();
     },
+    onSuccess: () => {
+      router.push("/");
+    },
     onError: (e) => {
-      alert("멤버 삭제중 오류 발생: 오류 정보는 콘솔 확인");
+      alert("탈퇴중 오류 발생: 오류 정보는 콘솔 확인");
       console.error(e);
     },
   });
@@ -38,7 +41,7 @@ export default function DeleteMemberModal({
       isOpen={isOpen}
       onClose={onClose}
       onClick={handleButtonClick}
-      message="이 멤버를 팀에서 제외하시겠습니까?"
+      message="이 그룹에서 탈퇴하시겠습니까?"
     />
   );
 }

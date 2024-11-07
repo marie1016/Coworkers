@@ -1,40 +1,16 @@
-import { useAuth } from "@/core/context/AuthProvider";
-import Link from "next/link";
+import Main from '@/components/PageComponents/home/Main';
+import Content from '@/components/PageComponents/home/Content';
+import Footer from '@/components/PageComponents/home/Footer';
 
 export default function Home() {
-  const { user } = useAuth();
-
   return (
-    <div>
-      <Link href="/signup">회원가입 페이지</Link>
-      <br />
-      <Link href="/login">로그인 페이지</Link>
-      <br />
-      <Link href="/addteam">팀 생성하기 페이지</Link>
-      <br />
-      <Link href="/mypage">마이페이지</Link>
-      <br />
-      <Link href="/boards">자유게시판</Link>
-      <br />
-      <Link href="/addboard">게시물 등록 페이지</Link>
-      <br />
-      <Link href={`/participate${user ? `?email=${user.email}` : ""}`}>
-        팀 참여 페이지
-      </Link>
-      <br />
-      <Link href="/landing">랜딩 페이지</Link>
-      <br />
-      <br />
-      <h2 className="text-text-3xl">내가 속한 팀</h2>
-      <br />
-      {user?.memberships.map((membership) => (
-        <>
-          <Link href={`/${membership.groupId}`} key={membership.groupId}>
-            {membership.group.name}
-          </Link>
-          <br />
-        </>
-      ))}
-    </div>
+    <>
+      <main>
+        <Main />
+        <Content />
+      </main>
+      <Footer />
+    </>
+
   );
 }

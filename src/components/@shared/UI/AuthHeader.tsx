@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState } from "react";
+import { useAuth } from "@/core/context/AuthProvider";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/core/context/AuthProvider";

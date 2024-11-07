@@ -1,8 +1,6 @@
-import DeferredComponent from "@/components/@shared/DeferredComponent";
-
 export default function CommentSkeleton() {
   return (
-    <DeferredComponent>
+    <>
       {Array.from({ length: 3 }).map((_, index: number) => (
         // eslint-disable-next-line react/jsx-key
         <div
@@ -23,6 +21,6 @@ export default function CommentSkeleton() {
           <span className="sr-only">Loading...</span>
         </div>
       ))}
-    </DeferredComponent>
+    </>
   );
 }

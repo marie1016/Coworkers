@@ -25,7 +25,7 @@ export default function EditDropdown({ onEdit, onDelete }: EditDropdownProps) {
 
   return (
     <Dropdown
-      menuClassName="w-32  right-0 top-6 border border-border-primary bg-background-secondary"
+      menuClassName="w-32 right-0 top-6 border border-border-primary bg-background-secondary"
       trigger={
         <Image
           src="/icons/icon-kebab.svg"
@@ -39,7 +39,7 @@ export default function EditDropdown({ onEdit, onDelete }: EditDropdownProps) {
         <DropdownItem
           key={option.label}
           onClick={(e) => handleSelect(e, option)}
-          itemClassName="py-3 px-8 text-center"
+          itemClassName="py-3 px-8 text-center text-text-primary text-text-md"
         >
           {option.label}
         </DropdownItem>

@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import getTeamData from "@/core/api/group/getTeamData";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
 import { GroupResponse } from "@/core/dtos/group/group";
 import TaskListSkeleton from "./TaskListSkeleton";
 import TaskError from "./TaskError";
@@ -40,7 +42,7 @@ export default function TaskLists({
 
   if (taskLists?.length === 0) {
     return (
-      <div className="mx-auto mt-96 text-center text-text-md text-text-default sm:mt-56">
+      <div className="pt-[17rem] text-center text-text-md font-medium text-text-default sm:pt-[11rem] md:pt-[14rem]">
         <p>아직 할 일 목록이 없습니다.</p>
         <p>새로운 목록을 추가해보세요.</p>
       </div>
@@ -48,18 +50,36 @@ export default function TaskLists({
   }
 
   return (
-    <ul className="flex items-center gap-3">
-      {taskLists?.map((taskList) => (
-        <li
-          key={taskList.id}
-          onClick={() => onTaskListClick(taskList.id)}
-          className={`text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
-        >
-          <Link href={`/${teamId}/tasks?tasklist=${taskList.id}`}>
-            {taskList.name}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <div className="relative">
+      <Swiper
+        spaceBetween={18}
+        modules={[Navigation]}
+        breakpoints={{
+          1200: {
+            slidesPerView: 10,
+          },
+          640: {
+            slidesPerView: 6,
+          },
+          0: {
+            slidesPerView: 3,
+          },
+        }}
+        navigation
+      >
+        {taskLists?.map((taskList) => (
+          <SwiperSlide key={taskList.id}>
+            <div
+              onClick={() => onTaskListClick(taskList.id)}
+              className={`max-w-[8rem] truncate text-center text-text-lg font-medium ${selectedTaskListId === taskList.id ? "text-text-tertiary underline" : "text-text-default"}`}
+            >
+              <Link href={`/${teamId}/tasks?tasklist=${taskList.id}`}>
+                {taskList.name}
+              </Link>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
   );
 }

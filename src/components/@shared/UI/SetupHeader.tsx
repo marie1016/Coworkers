@@ -11,6 +11,7 @@ export default function SetupHeader() {
           width={158}
           height={32}
           alt="헤더 로고 이미지"
+          className="sm:w-[102px] md:w-[102px]"
         />
       </Link>
       <Link href="/login">
