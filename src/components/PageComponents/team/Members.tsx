@@ -8,7 +8,7 @@ interface Props {
 
 export default function Members({ members }: Props) {
   return (
-    <div className="grid grid-cols-3 gap-6 sm:grid-cols-1 sm:gap-4 md:grid-cols-2">
+    <div className="[&&]:grid [&&]:grid-cols-3 [&&]:gap-6 [&&]:sm:grid-cols-1 [&&]:sm:gap-4 [&&]:md:grid-cols-2">
       {members.map((member) => (
         <div
           className="h-[4.625rem] cursor-default rounded-2xl bg-background-secondary px-6 py-5"

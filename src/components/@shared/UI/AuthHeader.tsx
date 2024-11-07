@@ -1,25 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/core/context/AuthProvider";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from "@/core/context/AuthProvider";
 import Profile from "./Profile";
 
 export default function AuthHeader() {
+  const router = useRouter();
+
   const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedTeamId, setSelectedTeamId] = useState<string>("1");
+  const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
 
-  // 임시 더미데이터 -> 수정 예정
-  const teamList = [
-    { id: "1", name: "경영관리팀", image: "/images/img-team.png" },
-    { id: "2", name: "프로덕트팀", image: "/images/img-team.png" },
-    { id: "3", name: "마케팅팀", image: "/images/img-team.png" },
-    { id: "4", name: "콘텐츠팀", image: "/images/img-team.png" },
-  ];
+  const teamList =
+    user?.memberships.map((team) => ({
+      id: team.groupId,
+      name: team.group.name,
+      image: team.group.image,
+    })) ?? [];
 
   const hasTeam = teamList.length > 0;
 
@@ -31,18 +32,25 @@ export default function AuthHeader() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const selectTeam = (teamId: string) => {
+  const selectTeam = (teamId: number) => {
     setSelectedTeamId(teamId);
     setIsDropdownOpen(false);
   };
 
-  const selectedTeam = teamList.find(
-    (team) => team.id === selectedTeamId,
-  )?.name;
+  const selectedTeam =
+    teamList.find((team) => team.id === selectedTeamId)?.name ?? null;
+
+  useEffect(() => {
+    if (router.isReady && typeof router.query.teamId === "string") {
+      setSelectedTeamId(Number(router.query.teamId));
+      return;
+    }
+    setSelectedTeamId(null);
+  }, [router.isReady, router.query.teamId]);
 
   return (
     <div>
-      <header className="z-99 fixed left-0 right-0 top-0 flex h-[60px] items-center justify-between gap-2.5 border-b border-border-primary border-opacity-10 bg-background-secondary px-4">
+      <header className="fixed left-0 right-0 top-0 z-40 flex h-[60px] items-center justify-between gap-2.5 border-b border-border-primary border-opacity-10 bg-background-secondary px-4">
         <div className="flex w-full items-center justify-between gap-4 md:gap-8 lg:mx-auto lg:max-w-[1200px]">
           <div className="flex items-center gap-4 md:gap-8 lg:gap-12">
             {/* 햄버거 버튼: 모바일에서만 보임 */}
@@ -64,12 +72,12 @@ export default function AuthHeader() {
               />
             </Link>
 
-            <div className="relative flex items-center sm:hidden">
+            <div className="relative flex items-center [&&]:sm:hidden">
               <button
                 onClick={toggleDropdown}
                 className="flex items-center gap-2.5"
               >
-                {selectedTeam ?? "팀 추가"}
+                {selectedTeam ?? "내가 속한 팀"}
                 <Image
                   src="/icons/icon-check.png"
                   width={16}
@@ -90,13 +98,14 @@ export default function AuthHeader() {
                               ? "bg-background-tertiary"
                               : ""
                           }`}
+                          onClick={() => router.push(`/${team.id}`)}
                         >
                           <div
                             className="flex w-full items-center gap-2"
                             onClick={() => selectTeam(team.id)}
                           >
                             <Image
-                              src={team.image}
+                              src={team.image ?? "/icons/icon-user.png"}
                               width={32}
                               height={32}
                               alt="팀 이미지"
@@ -123,7 +132,7 @@ export default function AuthHeader() {
                   ) : null}
                   {/* 팀 추가하기 버튼 */}
                   <button
-                    onClick={() => console.log("팀 추가 클릭")}
+                    onClick={() => router.push("/addteam")}
                     className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-border-primary py-3 text-center"
                   >
                     <Image
