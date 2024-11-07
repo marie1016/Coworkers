@@ -1,4 +1,4 @@
-import useResponsiveSize from './useResponsiveSize';
+import useResponsiveSize from "./useResponsiveSize";
 
 interface ImageDetail {
   src: string;
@@ -20,7 +20,7 @@ const useResponsiveDivision = (defaultSrc: ImageDetails) => {
     if (isTablet) return defaultSrc.tablet;
     if (isPC) return defaultSrc.pc;
 
-    return { src: '', width: 0, height: 0 };
+    return { src: "", width: 0, height: 0 };
   };
 
   const { src, width, height } = getImageDetails();
