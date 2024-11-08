@@ -59,7 +59,7 @@ export default function App({
         <AuthProvider>
           <HeaderWrapper />
           <ToastContainer
-            toastClassName="bg-background-secondary"
+            toastClassName="[&&]:bg-background-secondary"
             bodyClassName="text-text-primary font-sans text-text-md"
             position="top-center"
             autoClose={1000}

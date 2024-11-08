@@ -99,7 +99,7 @@ export default function DeleteTaskModal({ taskItem }: { taskItem: Task }) {
             variant="outlined"
             size="large"
             className="[&&]:bg-background-inverse"
-            onClick={() => closeModal(modalName)}
+            onClick={closeDeleteModal}
           >
             닫기
           </Button>
