@@ -47,6 +47,7 @@
 
 .custom-datepicker-wrapper {
   @apply h-6;
+  z-index: 200;
 }
 
 .react-datepicker__time-container {
