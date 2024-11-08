@@ -16,7 +16,7 @@ export default function Checkbox({
   className,
 }: CheckboxProps) {
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex cursor-pointer items-center gap-2 ${className}`}>
       <Image
         src={checked ? "/icons/icon-faCheck.svg" : "/icons/icon-faSquare.svg"}
         width={24}
@@ -28,7 +28,7 @@ export default function Checkbox({
         }}
       />
       <div
-        className={`cursor-pointer text-text-md font-regular text-text-primary hover:underline sm:truncate ${checked ? "line-through" : ""}`}
+        className={`text-text-md font-regular text-text-primary hover:underline sm:truncate ${checked ? "line-through" : ""}`}
         onClick={() => {
           if (onTitleClick) onTitleClick();
         }}
