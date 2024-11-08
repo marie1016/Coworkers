@@ -30,6 +30,7 @@ interface AuthValues {
 interface AuthContextValues {
   user: User | null;
   isPending: boolean;
+  getMe: () => void;
   login: (loginForm: LoginForm) => Promise<LoginResponse>;
   isLoginPending: boolean;
   logout: () => void;
@@ -42,6 +43,7 @@ interface AuthContextValues {
 const INITIAL_AUTH_VALUES: AuthContextValues = {
   user: null,
   isPending: true,
+  getMe: () => {},
   login: () => Promise.reject(),
   isLoginPending: false,
   logout: () => {},
@@ -137,6 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user,
       isPending,
+      getMe,
       login,
       isLoginPending,
       logout,
@@ -148,6 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [
       user,
       isPending,
+      getMe,
       login,
       isLoginPending,
       logout,

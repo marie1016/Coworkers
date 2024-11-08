@@ -14,7 +14,7 @@ export default function Participate() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const router = useRouter();
-  const { user } = useAuth(true);
+  const { user, getMe } = useAuth(true);
   const { email } = user ?? { email: "" };
 
   const { mutate, isPending } = useMutation({
@@ -25,6 +25,7 @@ export default function Participate() {
     },
     onSuccess: (response) => {
       router.push(`/${response.groupId}`);
+      getMe();
     },
     onError: (e: StandardError) => {
       console.error(e);
