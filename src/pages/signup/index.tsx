@@ -118,7 +118,7 @@ export default function Signup() {
   return (
     <div>
       <SetupHeader />
-      <div className="mt-[160px] flex w-full items-center justify-center sm:mt-[84px]">
+      <div className="my-[160px] flex w-full items-center justify-center sm:my-[84px]">
         <form
           className="flex flex-col items-center gap-6 sm:w-[343px]"
           onSubmit={handleSubmit}
@@ -169,7 +169,7 @@ export default function Signup() {
                   alt="비밀번호 보기"
                 />
               }
-              buttonClassName="absolute top-1/2 transform -translate-y-1/2 right-3"
+              buttonClassName="absolute right-3 top-3"
               onButtonClick={togglePasswordVisibility}
             />
           </InputLabel>
@@ -195,7 +195,7 @@ export default function Signup() {
                   alt="비밀번호 보기"
                 />
               }
-              buttonClassName="absolute right-3 top-1/2 transform -translate-y-1/2"
+              buttonClassName="absolute right-3 top-3"
               onButtonClick={toggleConfirmPasswordVisibility}
             />
           </InputLabel>
