@@ -1,6 +1,6 @@
 import AddTaskListModal from "@/components/@shared/AddTaskListModal";
 import Dropdown from "@/components/@shared/UI/Dropdown";
-import DropdownItem from "@/components/@shared/UI/Item";
+import DropdownItem from "@/components/@shared/UI/DropdownItem";
 import Image from "next/image";
 import { useQueryClient } from "@tanstack/react-query";
 import useModalStore from "@/lib/hooks/stores/modalStore";
