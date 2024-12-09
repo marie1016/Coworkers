@@ -1,5 +1,5 @@
 import Dropdown from "@/components/@shared/UI/Dropdown";
-import DropdownItem from "@/components/@shared/UI/Item";
+import DropdownItem from "@/components/@shared/UI/DropdownItem";
 import Image from "next/image";
 
 interface EditDropdownProps {

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useAuth } from "@/core/context/AuthProvider";
 import Dropdown from "./Dropdown";
-import DropdownItem from "./Item";
+import DropdownItem from "./DropdownItem";
 
 export default function Profile() {
   const router = useRouter();
