@@ -11,8 +11,12 @@ import { validatePassword, validateEmail } from "@/lib/utils/validation";
 import { SignupRequestDto } from "@/core/dtos/auth/authDto";
 import { useMutation } from "@tanstack/react-query";
 import { signup } from "@/core/api/auth/authApi";
+import { useRouter } from "next/router";
+import { useAuth } from "@/core/context/AuthProvider";
 
 export default function Signup() {
+  const router = useRouter();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -102,8 +106,11 @@ export default function Signup() {
       };
 
       try {
+        const { email, password } = formData;
         setIsSubmitting(true);
         await signupMutate(signupData);
+        await login({ email, password });
+        router.push("/");
       } catch (error: unknown) {
         console.error("에러 :", error);
         if (error instanceof Error) {
