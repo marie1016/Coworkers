@@ -44,11 +44,3 @@ export default function Input({
     </div>
   );
 }
-
-Input.defaultProps = {
-  buttonContent: null,
-  errorMessage: "",
-  isValid: true,
-  buttonClassName: "",
-  onButtonClick: () => {},
-};
