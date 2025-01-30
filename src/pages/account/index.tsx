@@ -84,12 +84,10 @@ export default function AccountSettings() {
                 type="password"
                 placeholder="비밀번호"
                 className="relative w-full rounded-xl bg-gray-800 px-4 py-2 text-white"
-                buttonContent={
-                  <Button variant="solid" size="x-small">
-                    변경하기
-                  </Button>
-                }
-                buttonClassName="absolute top-1/2 transform -translate-y-1/2 right-3"
+                buttonContent="변경하기"
+                buttonClassName="absolute top-1/2 transform -translate-y-1/2 right-3 flex items-center justify-center gap-2.5 rounded-xl text-center font-[Pretendard] font-semibold transition-all duration-200 h-8 w-auto min-w-[80px] text-sm leading-[17px]    text-text-primary [&&]:bg-brand-primary
+              [&&]:hover:bg-interaction-hover
+              [&&]:active:bg-interaction-pressed"
               />
             </InputLabel>
 
@@ -103,7 +101,7 @@ export default function AccountSettings() {
                 저장하기
               </Button>
             </div>
-            <button className="text-point-red mt-2 flex items-center gap-2">
+            <button className="mt-2 flex items-center gap-2 text-point-red">
               <Image
                 src="/icons/icon-secession.png"
                 width={24}
