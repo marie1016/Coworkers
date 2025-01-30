@@ -18,6 +18,10 @@ export default function Profile() {
     router.push("/participate");
   };
 
+  const handleAccountClick = () => {
+    router.push("/account");
+  };
+
   const handleLogout = () => {
     logout();
     router.push("/");
@@ -43,7 +47,7 @@ export default function Profile() {
         마이 히스토리
       </DropdownItem>
       <DropdownItem
-        onClick={() => {}}
+        onClick={handleAccountClick}
         itemClassName="px-4 py-2 text-center text-md font-regular text-text-primary"
       >
         계정 설정
