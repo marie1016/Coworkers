@@ -8,6 +8,7 @@ import { useAuth } from "@/core/context/AuthProvider";
 import AuthHeader from "@/components/@shared/UI/AuthHeader";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import DeleteAccountModal from "@/components/PageComponents/account/DeleteAccountModal";
+import ChangePasswordModal from "@/components/PageComponents/account/ChangePasswordModal";
 
 export default function AccountSettings() {
   const { user } = useAuth(true);
@@ -36,6 +37,10 @@ export default function AccountSettings() {
 
   const openDeleteAccountModal = () => {
     openModal("deleteAccountModal");
+  };
+
+  const openChangePasswordModal = () => {
+    openModal("changePasswordModal");
   };
 
   return (
@@ -91,10 +96,11 @@ export default function AccountSettings() {
             <InputLabel label="비밀번호">
               <Input
                 type="password"
-                placeholder="비밀번호"
+                placeholder="●●●●●●●●●"
                 disabled
                 className="relative w-full rounded-xl bg-gray-800 px-4 py-2 text-white"
                 buttonContent="변경하기"
+                onButtonClick={openChangePasswordModal}
                 buttonClassName="absolute top-1/2 transform -translate-y-1/2 right-3 flex items-center justify-center gap-2.5 rounded-xl text-center font-[Pretendard] font-semibold transition-all duration-200 h-8 w-auto min-w-[80px] text-sm leading-[17px]    text-text-primary [&&]:bg-brand-primary
               [&&]:hover:bg-interaction-hover
               [&&]:active:bg-interaction-pressed"
@@ -127,6 +133,7 @@ export default function AccountSettings() {
         </div>
       </div>
       <DeleteAccountModal />
+      <ChangePasswordModal />
     </div>
   );
 }
