@@ -9,11 +9,17 @@ import AuthHeader from "@/components/@shared/UI/AuthHeader";
 import useModalStore from "@/lib/hooks/stores/modalStore";
 import DeleteAccountModal from "@/components/PageComponents/account/DeleteAccountModal";
 import ChangePasswordModal from "@/components/PageComponents/account/ChangePasswordModal";
+import { useMutation } from "@tanstack/react-query";
+import updateUser from "@/core/api/user/updateUser";
+import { UpdateUserForm } from "@/core/dtos/user/auth";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 export default function AccountSettings() {
+  const router = useRouter();
   const { user } = useAuth(true);
   const openModal = useModalStore((state) => state.openModal);
-  const defaultProfileImage = "/icons/icon-addProfile.png";
+  const defaultProfileImage = user?.image ?? "/icons/icon-addProfile.png";
   const {
     fileInputValue,
     file,
@@ -21,17 +27,34 @@ export default function AccountSettings() {
     getImageUrl,
     imagePreview,
   } = useImageUpload(defaultProfileImage);
+  const [nickName, setNickName] = useState(user?.nickname);
 
   const handleProfileClick = () => {
     document.getElementById("fileInput")?.click();
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setNickName(value);
+  };
+
+  const updateUserMutation = useMutation({
+    mutationFn: (newFormData: UpdateUserForm) => updateUser(newFormData),
+    onSuccess: () => {
+      router.push("/");
+    },
+    onError: (error) => {
+      console.error("계정 업데이트 중 오류 발생:", error);
+    },
+  });
+
   const handleUploadClick = async () => {
     if (!file) return;
     try {
-      await getImageUrl(file);
+      const imageUrl = await getImageUrl(file);
+      updateUserMutation.mutate({ image: imageUrl, nickname: nickName });
     } catch (e) {
-      alert("이미지 업로드 실패");
+      alert("계정 업데이트 실패");
     }
   };
 
@@ -81,6 +104,9 @@ export default function AccountSettings() {
                 type="text"
                 placeholder={user?.nickname}
                 className="w-full rounded-xl bg-gray-800 px-4 py-2 text-white"
+                onChange={handleInputChange}
+                value={nickName}
+                name="nickname"
               />
             </InputLabel>
 

@@ -91,8 +91,7 @@ export default function ChangePasswordModal() {
       updatePasswordMutation.mutate(formData);
     }
   };
-  console.log(formData);
-  console.log(formErrors);
+
   return (
     <Modal isOpen={isOpen} onClose={closeChangePasswordModal}>
       <div className="h-auto w-[24rem] overflow-x-hidden px-6 py-8">

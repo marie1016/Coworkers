@@ -43,7 +43,7 @@ export interface LoginForm {
 export interface LoginResponse extends Tokens, UserBase {}
 
 export interface UpdateUserForm {
-  nickname?: string;
+  nickname?: string | undefined;
 
   image: string;
 }
