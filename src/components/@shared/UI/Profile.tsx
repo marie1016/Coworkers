@@ -6,8 +6,8 @@ import DropdownItem from "./DropdownItem";
 
 export default function Profile() {
   const router = useRouter();
-  const { logout } = useAuth();
-  const profileImageUrl = "/icons/icon-user.png";
+  const { logout, user } = useAuth();
+  const profileImageUrl = user?.image ?? "/icons/icon-user.png";
 
   // 드롭다운 항목 클릭 핸들러 정의 -> 수정 예정
   const handleMyHistoryClick = () => {

@@ -3,7 +3,6 @@ import { Membership } from "./membership";
 export interface UserBase {
   id: number;
 
-
   teamId: string;
 
   email: string;
@@ -13,7 +12,6 @@ export interface UserBase {
   image: string;
 
   createdAt: string;
-
 
   updatedAt: string;
 }
@@ -45,11 +43,21 @@ export interface LoginForm {
 export interface LoginResponse extends Tokens, UserBase {}
 
 export interface UpdateUserForm {
-  nickname?: string;
+  nickname?: string | undefined;
 
   image: string;
 }
 
 export interface UpdateUserResponse {
+  message: string;
+}
+
+export interface UpdatePasswordForm {
+  passwordConfirmation: string;
+
+  password: string;
+}
+
+export interface UpdatePasswordResponse {
   message: string;
 }
