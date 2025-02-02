@@ -34,7 +34,11 @@ export default function Dropdown({
       <button type="button" onClick={toggleDropdown} disabled={disabled}>
         {trigger}
       </button>
-      {isOpen && <ul className={menuClassCombined}>{children}</ul>}
+      {isOpen && (
+        <ul onClick={toggleDropdown} className={menuClassCombined}>
+          {children}
+        </ul>
+      )}
     </div>
   );
 }

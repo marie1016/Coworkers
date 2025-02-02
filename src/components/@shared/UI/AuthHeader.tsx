@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useEffect, useState } from "react";
 import { useAuth } from "@/core/context/AuthProvider";
+import useClickOutside from "@/lib/hooks/useClickOutSide";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,6 +32,8 @@ export default function AuthHeader() {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const dropDownRef = useClickOutside(toggleDropdown);
 
   const selectTeam = (teamId: number) => {
     setSelectedTeamId(teamId);
@@ -87,7 +90,10 @@ export default function AuthHeader() {
               </button>
 
               {isDropdownOpen && (
-                <div className="fixed left-4 top-[68px] z-50 w-[218px] gap-2.5 rounded-xl bg-background-secondary p-4 lg:left-[calc((100vw-1200px)/2+10px)] lg:top-[68px]">
+                <div
+                  className="fixed left-4 top-[68px] z-50 w-[218px] gap-2.5 rounded-xl bg-background-secondary p-4 lg:left-[calc((100vw-1200px)/2+10px)] lg:top-[68px]"
+                  ref={dropDownRef}
+                >
                   {hasTeam ? (
                     <ul className="font-lg gap-4">
                       {teamList.map((team) => (
