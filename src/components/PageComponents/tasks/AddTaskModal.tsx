@@ -115,7 +115,7 @@ export default function AddTaskModal({
           toast.success("할 일을 생성했습니다!");
         },
         onError: () => {
-          toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요");
+          toast.error("에러가 발생했습니다. 잠시 후 다시 시도해주세요.");
         },
       });
     }

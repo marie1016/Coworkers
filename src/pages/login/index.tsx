@@ -10,6 +10,7 @@ import { validatePassword, validateEmail } from "@/lib/utils/validation";
 import { useRouter } from "next/router";
 import Modal from "@/components/@shared/UI/Modal/Modal";
 import { sendResetPasswordEmail } from "@/core/api/auth/authApi";
+import { toast } from "react-toastify";
 
 interface FormErrors {
   email: string | undefined;
@@ -97,21 +98,22 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      alert("입력 값이 올바르지 않습니다. 이메일과 비밀번호를 확인해주세요.");
+    if (!formData.email || !formData.password) {
+      toast.error("이메일과 비밀번호를 모두 입력해주세요.");
       return;
     }
-
-    if (formData.email && formData.password) {
-      try {
-        await login(formData);
-      } catch (error) {
-        console.error("로그인 중 오류 발생:", error);
-        return;
-      }
+    if (!validateForm()) {
+      toast.error(
+        "입력 값이 올바르지 않습니다. 이메일과 비밀번호를 확인해주세요.",
+      );
+      return;
+    }
+    try {
+      await login(formData);
       router.push("/");
-    } else {
-      alert("이메일과 비밀번호를 모두 입력해주세요.");
+    } catch (error) {
+      console.error("로그인 중 오류 발생:", error);
+      toast.error("로그인 중 오류 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
@@ -133,7 +135,7 @@ export default function Login() {
       });
 
       if (success) {
-        alert("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
+        toast.success("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
         setIsModalOpen(false);
       } else {
         setResetEmailError(message);

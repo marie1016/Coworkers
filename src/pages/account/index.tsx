@@ -14,6 +14,7 @@ import updateUser from "@/core/api/user/updateUser";
 import { UpdateUserForm } from "@/core/dtos/user/auth";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function AccountSettings() {
   const router = useRouter();
@@ -54,7 +55,7 @@ export default function AccountSettings() {
       const imageUrl = await getImageUrl(file);
       updateUserMutation.mutate({ image: imageUrl, nickname: nickName });
     } catch (e) {
-      alert("계정 업데이트 실패");
+      toast.error("계정 업데이트에 실패했습니다.");
     }
   };
 
