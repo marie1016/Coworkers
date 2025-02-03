@@ -13,6 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { signup } from "@/core/api/auth/authApi";
 import { useRouter } from "next/router";
 import { useAuth } from "@/core/context/AuthProvider";
+import { toast } from "react-toastify";
 
 export default function Signup() {
   const router = useRouter();
@@ -114,7 +115,7 @@ export default function Signup() {
       } catch (error: unknown) {
         console.error("에러 :", error);
         if (error instanceof Error) {
-          alert("회원가입 실패: " + error.message);
+          toast.error("회원가입 실패: " + error.message);
         }
       } finally {
         setIsSubmitting(false);
