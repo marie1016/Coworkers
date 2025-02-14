@@ -151,7 +151,7 @@ export default function Login() {
   return (
     <div>
       <SetupHeader />
-      <div className="my-[160px] flex w-full items-center justify-center sm:my-[84px]">
+      <div className="mx-auto mt-[8.75rem] flex w-full items-center justify-center sm:mt-6 md:mt-[6.25rem]">
         <form
           className="flex flex-col items-center gap-6 sm:w-[343px]"
           onSubmit={handleSubmit}
@@ -226,7 +226,7 @@ export default function Login() {
             <div className="w-full border-t border-border-primary" />
           </div>
 
-          <div className="flex w-full items-center justify-between">
+          <div className="mb-20 flex w-full items-center justify-between">
             <span className="text-lg text-text-inverse">간편 로그인하기</span>
             <div className="flex flex-row items-center justify-center gap-4">
               <button type="button" onClick={() => {}}>
