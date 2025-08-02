@@ -39,9 +39,9 @@ export default function Content() {
         </Button>
       </div>
       <div className="w-full rounded-3xl bg-brand-gradient p-px">
-        <div className="gradient-border rounded-40 flex w-full flex-col rounded-[calc(1.5rem-1px)] bg-background-primary p-2 px-[54px] dark:bg-gray-900 md:px-[81px] lg:px-[174px]">
-          <div className="mx-auto flex flex-col items-center md:w-full md:flex-row md:justify-around lg:w-full lg:flex-row lg:justify-around">
-            <div className="flex-start order-2 flex w-full flex-col gap-4 sm:my-12 md:w-40 lg:w-52">
+        <div className="gradient-border rounded-40 w-full rounded-[calc(1.5rem-1px)] bg-background-primary px-[54px] dark:bg-gray-900 md:px-[81px] lg:px-[174px]">
+          <div className="mx-auto flex flex-col items-center p-2 md:w-full md:flex-row md:justify-around lg:w-full lg:flex-row lg:justify-around">
+            <div className="flex-start order-2 flex flex-col gap-4 sm:my-12 md:w-40 lg:w-52">
               <Image
                 alt="폴더 랜딩아이콘"
                 src={ICON_PATHS.LANDING_FOLDER}
@@ -63,7 +63,7 @@ export default function Content() {
           </div>
         </div>
       </div>
-      <div className="flex w-full rounded-3xl border-[1px] border-[rgba(248,250,252,0.1)] bg-background-secondary px-[54px] md:px-[81px] lg:px-[174px]">
+      <div className="w-full rounded-3xl border-[1px] border-[rgba(248,250,252,0.1)] bg-background-secondary px-[54px] md:px-[81px] lg:px-[174px]">
         <div className="mx-auto flex flex-col items-center md:w-full md:flex-row md:justify-around lg:w-full lg:flex-row lg:justify-around">
           <Image
             alt="멤버 초대 랜딩이미지"
@@ -72,7 +72,7 @@ export default function Content() {
             height={338}
             className="order-2 md:pb-[81px]"
           />
-          <div className="flex-start order-1 flex w-full flex-col gap-4 sm:order-2 sm:my-12 md:w-40 md:items-end lg:w-52">
+          <div className="flex-start order-1 flex flex-col gap-4 sm:order-2 sm:my-12 md:w-40 md:items-end lg:w-52">
             <Image
               alt="이메일 랜딩아이콘"
               src={ICON_PATHS.LANDING_EMAIL}
@@ -86,7 +86,7 @@ export default function Content() {
           </div>
         </div>
       </div>
-      <div className="flex w-full rounded-3xl bg-slate-950 px-[54px] lg:px-[174px] lg:px-[81px]">
+      <div className="w-full rounded-3xl bg-slate-950 px-[54px] lg:px-[174px] lg:px-[81px]">
         <div className="mx-auto flex flex-col items-center p-2 md:w-full md:flex-row md:justify-around lg:w-full lg:flex-row lg:justify-around">
           <Image
             alt="투두 기능 랜딩이미지"
@@ -95,7 +95,7 @@ export default function Content() {
             height={338}
             className="md:pb-[51px]"
           />
-          <div className="flex-start my-12 flex w-full flex-col gap-4 md:w-40 lg:w-52">
+          <div className="flex-start my-12 flex flex-col gap-4 md:w-40 lg:w-52">
             <Image
               alt="이메일 체크아이콘"
               src={ICON_PATHS.LANDING_CHECK}
