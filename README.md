@@ -2,7 +2,7 @@
 
 <div align='center' ><img src='https://github.com/user-attachments/assets/56529be8-e0ca-421a-b335-63401644c6dc' alt="로고"/>
 
-공통의 할 일을 만들어서 업무의 효율을 높이는 서비스</br><a href="http://coworkers02.vercel.app/">Coworkers</a>
+공통의 할 일을 만들어서 업무의 효율을 높이는 서비스</br><a href="https://coworkers-todo.vercel.app/">Coworkers</a>
 
 </div>
 
