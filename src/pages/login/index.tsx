@@ -151,7 +151,7 @@ export default function Login() {
   return (
     <div>
       <SetupHeader />
-      <div className="mx-auto mt-[8.75rem] flex w-full items-center justify-center sm:mt-6 md:mt-[6.25rem]">
+      <div className="mx-auto mt-[7rem] flex w-full items-center justify-center sm:mt-6 md:mt-[5rem]">
         <form
           className="flex flex-col items-center gap-6 sm:w-[343px]"
           onSubmit={handleSubmit}
@@ -216,36 +216,6 @@ export default function Login() {
             <Link href="/signup" className="text-brand-primary underline">
               가입하기
             </Link>
-          </div>
-
-          <div className="mt-2 flex w-full items-center justify-center">
-            <div className="w-full border-t border-border-primary" />
-            <span className="px-4 text-center text-lg text-text-inverse">
-              OR
-            </span>
-            <div className="w-full border-t border-border-primary" />
-          </div>
-
-          <div className="mb-20 flex w-full items-center justify-between">
-            <span className="text-lg text-text-inverse">간편 로그인하기</span>
-            <div className="flex flex-row items-center justify-center gap-4">
-              <button type="button" onClick={() => {}}>
-                <Image
-                  src="/icons/icon-google.png"
-                  alt="구글 간편 회원가입"
-                  width={42}
-                  height={42}
-                />
-              </button>
-              <button type="button" onClick={() => {}}>
-                <Image
-                  src="/icons/icon-kakaotalk.png"
-                  alt="카카오 간편 회원가입"
-                  width={42}
-                  height={42}
-                />
-              </button>
-            </div>
           </div>
         </form>
       </div>

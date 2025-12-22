@@ -12,7 +12,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState, useEffect } from "react";
 import { AuthProvider, useAuth } from "@/core/context/AuthProvider";
-import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
 import { ToastContainer } from "react-toastify";
 
@@ -54,26 +53,24 @@ export default function App({
   );
 
   return (
-    <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <HeaderWrapper />
-          <ToastContainer
-            toastClassName="[&&]:bg-background-secondary"
-            bodyClassName="text-text-primary font-sans text-text-md"
-            position="top-center"
-            autoClose={1000}
-            pauseOnHover
-            limit={1}
-            theme="dark"
-            closeOnClick
-          />
-          <div className="pt-[60px]">
-            <Component {...pageProps} />
-          </div>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </AuthProvider>
-      </QueryClientProvider>
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <HeaderWrapper />
+        <ToastContainer
+          toastClassName="[&&]:bg-background-secondary"
+          bodyClassName="text-text-primary font-sans text-text-md"
+          position="top-center"
+          autoClose={1000}
+          pauseOnHover
+          limit={1}
+          theme="dark"
+          closeOnClick
+        />
+        <div className="pt-[60px]">
+          <Component {...pageProps} />
+        </div>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
